@@ -1,0 +1,12 @@
+#Main config bot
+
+#Url request telegramm
+URL:
+
+#Bot telegramm token
+token:
+
+#Default number repetition
+repeat_default:
+
+

@@ -1,0 +1,7 @@
+#Configure polling
+
+#Set time polling, second
+polling: 5
+long_polling: 60
+
+#Configure web-hucks
