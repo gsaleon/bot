@@ -1,20 +1,32 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
 import qualified Data.ByteString as B (readFile)
 import           Control.Monad        (mzero)
 import           Control.Applicative  ((<$>), (<*>))
+--import           Control.Exception
 import           Data.Aeson
-import           Data.Monoid          ((<>))
+--import           Data.Monoid          ((<>))
 import           System.Environment   (getExecutablePath)
-import           Control.Applicative
+--import           System.IO
+--import           Control.Applicative
 
-data Setup = Setup { urlTelegramm   :: String
-                   , tokenTelegramm :: String
+data Setup = Setup { urlTelegramm           :: String
+                   , tokenTelegramm         :: String
                    , repeatDefaultTelegramm :: Int
-                   , timePollingSecunds :: Int
-                   , language :: String
+                   , timePollingSecunds     :: Int
+                   , logLevelDefault        :: String
+                   }
+
+data FilePath = String
+
+--data Parse = Parse Setup
+
+data SetupCommandLine = SetupCommandLine
+                   { repeatDefault  :: Int
+                   , timePollingSec :: Int
                    }
 
 instance FromJSON Setup where
@@ -22,15 +34,36 @@ instance FromJSON Setup where
                                    <*> setup .: "tokenTelegramm"
                                    <*> setup .: "repeatDefaultTelegramm"
                                    <*> setup .: "timePollingSecunds"
-                                   <*> setup .: "language"
+                                   <*> setup .: "logLevelDefault"
   parseJSON _              = mzero
 
 printPretty :: Setup -> String
 printPretty (Setup urlTelegramm tokenTelegramm repeatDefaultTelegramm
-             timePollingSecunds language)
+             timePollingSecunds logLevelDefault)
   = urlTelegramm ++ " -> " ++ tokenTelegramm ++ " -> "
     ++ show repeatDefaultTelegramm ++ " -> " ++ show timePollingSecunds
-    ++ " -> " ++ language
+    ++ " -> " ++ show logLevelDefault
+{--
+parseCommandLine :: Parser Setup
+parseCommandLine = Setup
+     <$> argument auto
+          ( metavar "INTEGER"
+         <> help "Number of repeat input value, default value - 3" )
+     <*> argument auto
+          ( metavar "INTEGER"
+         <> help "Number of time polling, default value - 60, sec" )
+     <*> argument str 
+          ( metavar "LOGLEVELDEFAULT"
+         <> help "LogLevelDefault - debug" )   
+
+checkSetup :: SetupCommandLine -> Setup -> IO ()
+checkSetup (SetupCommandLine repeatDefault timePollingSec)
+           (Setup repeatDefaultTelegramm timePollingSecunds) =
+            do
+              let repeatDefaultTelegramm = repeatDefault
+              let timePollingSecunds = timePollingSec
+              printPretty setup
+--}
 
 main :: IO ()
 main = do
@@ -41,12 +74,29 @@ main = do
   putStrLn $ show systemPath
 -- Читаем файл настроек
   let sysPathConfig = systemPath ++ "/config/config.ini"
+{--
+  handle (\(e :: IOException) -> print e >> return Nothing) $ do
+    h <- openFile sysPathConfig ReadMode
+    putStrLn $ show Just h
+    return (Just h)
+-- Ошибки открытия файла    
+    isAlreadyInUseError если файл уже открыт и не может быть открыт повторно;
+    isDoesNotExistError, если файл не существует; или
+    isPermissionError, если у пользователя нет разрешения на открытие файла.
+--}
   rawJSON <- B.readFile sysPathConfig
--- Проверки, связанные с чтением файла, опущены...
   let result = decodeStrict rawJSON
   putStrLn $ case result of
         Nothing    -> "Invalid JSON!"
         Just setup -> printPretty setup
+{--
+  execParser opts >>= checkSetup --???
+    where
+      opts = info (helper <*> parseCommandLine)
+             ( fullDesc
+            <> progDesc "Telegramm and VK bot"
+            <> header "Telegramm and VK bot - repeather"
+             )
 --}
 
 --Make systemPath
@@ -59,5 +109,5 @@ makeSystemPath sPS = concat . map (\x -> "/" ++ x)
 replacing :: Char -> Char -> String -> String
 replacing _  _ [] = []
 replacing cs cd (x:xs)
-  | x == cs = cd : replacing cs cd xs
+  | x == cs = cd  : replacing cs cd xs
   | otherwise = x : replacing cs cd xs
