@@ -9,7 +9,7 @@ import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson
 --import           Data.Monoid          ((<>))
-import           System.Environment   (getExecutablePath)
+import           System.Environment   (getExecutablePath, getArgs)
 --import           System.IO
 --import           Control.Applicative
 
@@ -44,9 +44,17 @@ printPretty (Setup urlTelegramm tokenTelegramm repeatDefaultTelegramm
     ++ show repeatDefaultTelegramm ++ " -> " ++ show timePollingSecunds
     ++ " -> " ++ show logLevelDefault
 
+--Определения типов, использующихся в программе
 data Service = Telegramm | Vcontakte deriving Show
 
+data LogLevel = Debug
+              | Info
+              | Warning
+              | Error
+              deriving Show
 
+data CommandLineHandle m = CommandLineHandle
+  { readCommandLine :: String -> m () }
 
 {--
 parseCommandLine :: Parser Setup
@@ -72,6 +80,9 @@ checkSetup (SetupCommandLine repeatDefault timePollingSec)
 
 main :: IO ()
 main = do
+--Читаем аргументы командной строки и исполняем их при необходимости
+  commandLine <- getArgs
+  commandLineValue <- parseCommandLine commandLineHandle commandLine
 --Определяем пути к каталогу
   systemPathStart <- getExecutablePath
   let systemPath = makeSystemPath systemPathStart
@@ -103,6 +114,11 @@ main = do
             <> header "Telegramm and VK bot - repeather"
              )
 --}
+
+--Parse command line
+parseCommandLine :: String -> Maybe a
+parseCommandLine commandLineHandle commandLine = 
+  _
 
 --Make systemPath
 makeSystemPath :: String -> String
