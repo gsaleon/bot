@@ -43,6 +43,11 @@ printPretty (Setup urlTelegramm tokenTelegramm repeatDefaultTelegramm
   = urlTelegramm ++ " -> " ++ tokenTelegramm ++ " -> "
     ++ show repeatDefaultTelegramm ++ " -> " ++ show timePollingSecunds
     ++ " -> " ++ show logLevelDefault
+
+data Service = Telegramm | Vcontakte deriving Show
+
+
+
 {--
 parseCommandLine :: Parser Setup
 parseCommandLine = Setup
@@ -105,9 +110,4 @@ makeSystemPath sPS = concat . map (\x -> "/" ++ x)
   $ take ((length sP) - 2) sP
     where sP = words $ map (\x -> if x == '/' then ' ' else x) sPS
 
--- Replacing all symbols 'cs' to symbol 'cd' in string.
-replacing :: Char -> Char -> String -> String
-replacing _  _ [] = []
-replacing cs cd (x:xs)
-  | x == cs = cd  : replacing cs cd xs
-  | otherwise = x : replacing cs cd xs
+

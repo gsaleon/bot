@@ -1,0 +1,25 @@
+This program is a repetition bot in telegram and VKontakte services.
+
+Use with default parameters - ./bot or bot (with Path in command line).
+Use with other parameters   - run with command line arguments:
+-h or --help - this message
+-s tel or --service=telegramm - service Telegramm (default)
+-s vc or --service=vkontakte - service Vcontakte
+(You can choose only one of these services.You can run two instances of
+the program with different services).
+-r n or --repeat=n n={1..5} - number repeat (defaut value=3)
+-l v v={d,i,w,e} or --loglevel v v={debug,info,warning,error},
+defaul value=info.
+
+Quantity and order of entering command line arguments is unimportant.
+The default settings are located in the corresponding files in this
+directory (JSON). In these files, you can change only the number of
+repetitions, the logging level and the help information output by the bot,
+if you change the names and tokens, the program's performance will be disrupted.
+
+Examples usage:
+./bot
+./bot --help
+./bot -s vc --loglevel=error
+./bot --service=telegramm -r 2 -l d
+
