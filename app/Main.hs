@@ -3,15 +3,19 @@
 
 module Main where
 
-import qualified Data.ByteString as B (readFile)
+--import qualified Data.ByteString as B (readFile)
 import           Control.Monad        (mzero)
 import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson
 --import           Data.Monoid          ((<>))
-import           System.Environment   (getExecutablePath, getArgs)
+import           System.Environment   (getArgs)
 --import           System.IO
 --import           Control.Applicative
+
+
+import           Services.ParseCommandLine
+
 
 data Setup = Setup { urlTelegramm           :: String
                    , tokenTelegramm         :: String
@@ -20,14 +24,11 @@ data Setup = Setup { urlTelegramm           :: String
                    , logLevelDefault        :: String
                    }
 
-data FilePath = String
-
---data Parse = Parse Setup
-
 data SetupCommandLine = SetupCommandLine
                    { repeatDefault  :: Int
                    , timePollingSec :: Int
                    }
+
 
 instance FromJSON Setup where
   parseJSON (Object setup) = Setup <$> setup .: "urlTelegramm"
@@ -44,52 +45,31 @@ printPretty (Setup urlTelegramm tokenTelegramm repeatDefaultTelegramm
     ++ show repeatDefaultTelegramm ++ " -> " ++ show timePollingSecunds
     ++ " -> " ++ show logLevelDefault
 
+
 --Определения типов, использующихся в программе
+type FilePathBot = String
+
+newtype Repeat = Repeat Int
+
 data Service = Telegramm | Vcontakte deriving Show
 
-data LogLevel = Debug
-              | Info
-              | Warning
-              | Error
-              deriving Show
-
-data CommandLineHandle m = CommandLineHandle
-  { readCommandLine :: String -> m () }
-
-{--
-parseCommandLine :: Parser Setup
-parseCommandLine = Setup
-     <$> argument auto
-          ( metavar "INTEGER"
-         <> help "Number of repeat input value, default value - 3" )
-     <*> argument auto
-          ( metavar "INTEGER"
-         <> help "Number of time polling, default value - 60, sec" )
-     <*> argument str 
-          ( metavar "LOGLEVELDEFAULT"
-         <> help "LogLevelDefault - debug" )   
-
-checkSetup :: SetupCommandLine -> Setup -> IO ()
-checkSetup (SetupCommandLine repeatDefault timePollingSec)
-           (Setup repeatDefaultTelegramm timePollingSecunds) =
-            do
-              let repeatDefaultTelegramm = repeatDefault
-              let timePollingSecunds = timePollingSec
-              printPretty setup
---}
+data LogLevel = Debug | Info | Warning | Error deriving Show
 
 main :: IO ()
 main = do
---Читаем аргументы командной строки и исполняем их при необходимости
-  commandLine <- getArgs
-  commandLineValue <- parseCommandLine commandLineHandle commandLine
---Определяем пути к каталогу
-  systemPathStart <- getExecutablePath
-  let systemPath = makeSystemPath systemPathStart
-  putStrLn $ show systemPathStart
-  putStrLn $ show systemPath
--- Читаем файл настроек
-  let sysPathConfig = systemPath ++ "/config/config.ini"
+--       Читаем аргументы командной строки
+         commandLine <- getArgs
+         putStrLn $ show commandLine
+         let commandLineValue = parseLine commandLine
+         putStrLn $ show commandLineValue
+{--
+--       Определяем пути
+         systemPathStart <- getExecutablePath
+         let systemPath = makeSystemPath systemPathStart
+         putStrLn $ show systemPathStart
+         putStrLn $ show systemPath
+--       Читаем файл настроек
+         let sysPathConfig = systemPath ++ "/config/config.ini"
 {--
   handle (\(e :: IOException) -> print e >> return Nothing) $ do
     h <- openFile sysPathConfig ReadMode
@@ -105,25 +85,10 @@ main = do
   putStrLn $ case result of
         Nothing    -> "Invalid JSON!"
         Just setup -> printPretty setup
-{--
-  execParser opts >>= checkSetup --???
-    where
-      opts = info (helper <*> parseCommandLine)
-             ( fullDesc
-            <> progDesc "Telegramm and VK bot"
-            <> header "Telegramm and VK bot - repeather"
-             )
---}
-
---Parse command line
-parseCommandLine :: String -> Maybe a
-parseCommandLine commandLineHandle commandLine = 
-  _
 
 --Make systemPath
-makeSystemPath :: String -> String
+makeSystemPath :: FilePathBot -> FilePathBot
 makeSystemPath sPS = concat . map (\x -> "/" ++ x)
   $ take ((length sP) - 2) sP
     where sP = words $ map (\x -> if x == '/' then ' ' else x) sPS
-
-
+--}

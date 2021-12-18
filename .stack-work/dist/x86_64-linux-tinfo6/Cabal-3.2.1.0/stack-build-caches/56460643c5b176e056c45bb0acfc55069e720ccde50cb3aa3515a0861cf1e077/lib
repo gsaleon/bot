@@ -1,0 +1,20 @@
+/home/gsaleon/MyProject/bot/README.md:
+  hash: f534815946dc7e4923c71545865b2a58ed84d5d7eb4c0f7463bf4a239e8579e7
+/home/gsaleon/MyProject/bot/src/Services/ParseCommandLine.hs:
+  hash: b3cfc0fdf19de35e08ce54bdc0eaa3dce1dc086c2e22ec6fe81834f2a367bbde
+/home/gsaleon/MyProject/bot/ChangeLog.md:
+  hash: 3bf0975fc1a216be669b46c73ae4fc6a98baa74faff3347a4a2e43677faa1487
+/home/gsaleon/MyProject/bot/bot-main.cabal:
+  hash: eda4e7fcb88e5f1b53feb519f6e6719962f3cf6cd85ba3cdf995b4eb52ccc67b
+/home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/cabal_macros.h:
+  hash: 78c7fe8c58960ed7c223fe3bb87077ac52f3e83c0b0105534d0f9fcdd163bce9
+/usr/include/stdc-predef.h:
+  hash: 7afa7fcfd2a1ac2d5fe86672db5828460a736519680da0b9fac4d91e5f227817
+/home/gsaleon/.stack/programs/x86_64-linux/ghc-tinfo6-8.10.7/lib/ghc-8.10.7/include/ghcversion.h:
+  hash: c013160c9aa8a98f4638616496dce720c23ceca8ef9d6b3212b654642fbda5e4
+/home/gsaleon/MyProject/bot/src/Lib.hs:
+  hash: 11d6d255cb397fa45980eb516ea685146565d9de2108c4eea356ea41db8364be
+/home/gsaleon/MyProject/bot/package.yaml:
+  hash: be7775b764f07d6d0cd823b16d2e9dbc294ed50eafb68d779a04acf5762e00dc
+/home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/Paths_bot_main.hs:
+  hash: 0b809417ed12d1eeef1628514a48463603fe3e99d64edde64e38f1b58c9b2d3a
