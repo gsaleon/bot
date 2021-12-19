@@ -3,7 +3,7 @@
   "nameTelegramm": "repeat_send_bot",
   "userNameTelegramm": "RepeatSend_bot",
   "tokenTelegramm": "2100731571:AAGIjVTEVJXymGPbU31hQGUiz11qmMB_q00",
-  "description": "...",
-  "about": "...",
+  "description": "This is a repetitions bot for Telegramm and Vcontakte",
+  "about": "someText about bot",
   "command": "/start, /help, /repeat, /value, /quit ..."
 }

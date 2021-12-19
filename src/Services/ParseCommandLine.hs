@@ -8,7 +8,11 @@ parseLine str = if null str
                       then ["help"]
                       else if elem "parsingError" pars
                              then ["parsingError"]
-                             else pars
+                             else
+        if length (filter (\x -> take 7 x == "polling") pars) > 1 ||
+           length (filter (\x -> take 6 x == "repeat") pars) > 1
+          then ["multipleValue"]
+          else pars
 
 parseLine' :: [String] -> [String] -> [String]
 parseLine' acc [] = acc
