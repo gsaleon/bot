@@ -5,7 +5,7 @@ module Main where
 
 --import qualified Data.ByteString as B (readFile)
 import           Control.Monad        (mzero)
-import           Control.Applicative  ((<$>), (<*>))
+--import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson
 --import           Data.Monoid          ((<>))

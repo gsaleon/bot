@@ -1,16 +1,55 @@
 module Services.ParseCommandLine (parseLine) where
 
-
 parseLine :: [String] -> [String]
 parseLine str = if null str
                   then ["notInput"]
-                  else let pars = parseLine' str in
+                  else let pars = parseLine' [] str in
                     if elem "help" pars
                       then ["help"]
                       else if elem "parsingError" pars
                              then ["parsingError"]
                              else pars
 
+parseLine' :: [String] -> [String] -> [String]
+parseLine' acc [] = acc
+parseLine' acc (x:xs) = parseLine' (acc ++ (f x)) xs
+  where
+    f x = if take 2 x == "--"
+            then [parsingLong x]
+            else if head x == '-'
+                   then if length x > 1
+                          then together [] (drop 1 x)
+                          else ["parsingError"]
+                   else ["parsingError"]
+
+parsingLong :: String -> String
+parsingLong x = case take 9 x of
+  "--repeat=" -> "repeat=" ++ drop 9 x
+  "--polling" -> "polling=" ++ drop 10 x
+  _           -> "parsingError"
+
+together :: [String] -> String -> [String]
+together acc []     = acc
+together acc (y:ys) = if y == 'r' || y == 'p'
+                        then together (acc ++ [parsingShort y (y:ys)]) []
+                        else together (acc ++ [parsingShort y (y:ys)]) ys
+
+parsingShort :: Char -> String -> String
+parsingShort y l = if length l > 1 && (y == 'r' || y == 'p')
+                     then case y of
+                       'r' -> "repeat=" ++ drop 2 l
+                       'p' -> "polling=" ++ drop 2 l
+                     else case y of 
+                       'h' -> "help"
+                       't' -> "telegramm"
+                       'v' -> "vkontakte"
+                       'd' -> "debug"
+                       'i' -> "info"
+                       'w' -> "warning"
+                       'e' -> "error"
+                       _   -> "parsingError"
+
+{--
 parseLine' :: [String] -> [String]
 parseLine' str = map (\x -> f x) str
   where
@@ -34,8 +73,8 @@ parseLine' str = map (\x -> f x) str
                        else if take 10 x == "--polling="
                               then "polling=" ++ drop 10 x
                               else "parsingError"
-              _   -> cas : " parsingError!!! " ++ x
-
+              _   -> "parsingError"
+--}
 {--
 parseLine :: [String] -> [String]
 parseLine str = parseLine' (unwords str) arg
