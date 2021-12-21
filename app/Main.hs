@@ -12,13 +12,12 @@ import           Data.Aeson
 import           System.Environment   (getArgs, getExecutablePath)
 --import           System.IO
 --import           Control.Applicative
-import           Debug.Trace                     -- для отладки, по готовности проги - удалить!!
+import           Debug.Trace()                     -- для отладки, по готовности проги - удалить!!
+import           System.FilePath
 
 import           Services.ParseCommandLine
 
 --Определения типов, использующихся в программе
-type FilePathBot = String
-
 newtype Repeat = Repeat Int
 
 newtype Polling = Polling Int
@@ -66,16 +65,23 @@ instance FromJSON SetupDefault where
                                    <*> setupDefault .: "logLevelDefault"
   parseJSON _                     = mzero
 
-printPretty :: SetupTelegramm -> String
-printPretty (SetupTelegramm urlTelegramm nameTelegramm userNameTelegramm
-             tokenTelegramm description about command) =
-  "urlTelegramm - " ++ urlTelegramm ++ "\n" ++
-  "tokenTelegramm - " ++ tokenTelegramm ++
-  "userNameTelegramm - " ++ userNameTelegramm ++
-  "tokenTelegramm - " ++ tokenTelegramm ++
-  "description - " ++ description ++
-  "about - " ++ about ++
-  "command - " ++ command
+printPrettyTelegramm :: SetupTelegramm -> String
+printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
+     userNameTelegramm tokenTelegramm description about command) =
+  "urlTelegramm - "      ++ urlTelegramm ++ "\n" ++
+  "tokenTelegramm - "    ++ tokenTelegramm ++ "\n" ++
+  "userNameTelegramm - " ++ userNameTelegramm ++ "\n" ++
+  "tokenTelegramm - "    ++ tokenTelegramm ++ "\n" ++
+  "description - "       ++ description ++ "\n" ++
+  "about - "             ++ about ++ "\n" ++
+  "command - "           ++ command
+
+printPrettySetup :: SetupDefault -> String
+printPrettySetup (SetupDefault pollingDefault repeatDefault
+     logLevelDefault) =
+  "pollingDefault - "    ++ show pollingDefault ++ "\n" ++
+  "repeatDefault - "     ++ show repeatDefault ++ "\n" ++
+  "logLevelDefault - "   ++ show logLevelDefault
 
 main :: IO ()
 main = do
@@ -91,7 +97,8 @@ main = do
          putStrLn ("systemPathStart - " ++ show systemPathStart)
          putStrLn ("systemPath - " ++ show systemPath)
 --       Читаем файл настроек
---         let sysPathConfig = systemPath ++ "/config/config.ini"
+         let sysPathConfig = systemPath ++ "/config/configBot"
+         let sysPathTelegramm = systemPath ++ "/config/configTelegramm"
 {--
   handle (\(e :: IOException) -> print e >> return Nothing) $ do
     h <- openFile sysPathConfig ReadMode
@@ -102,16 +109,21 @@ main = do
     isDoesNotExistError, если файл не существует; или
     isPermissionError, если у пользователя нет разрешения на открытие файла.
 --}
-{--
-  rawJSON <- B.readFile sysPathConfig
-  let result = decodeStrict rawJSON
-  putStrLn $ case result of
-        Nothing    -> "Invalid JSON!"
-        Just setup -> printPretty setup
---}
+         rawJSONConfig <- B.readFile sysPathConfig
+         let result = decodeStrict rawJSONConfig 
+         putStrLn $ case result of
+           Nothing           -> "Invalid JSON!"
+           Just setupDefault -> printPrettySetup setupDefault
+
+         rawJSONTelegramm <- B.readFile sysPathTelegramm
+         let result = decodeStrict rawJSONTelegramm
+         putStrLn $ case result of
+           Nothing             -> "Invalid JSON!"
+           Just setupTelegramm -> printPrettyTelegramm setupTelegramm
+
 --Make systemPath
-makeSystemPath :: FilePathBot -> FilePathBot
-makeSystemPath sPS = concat . map (\x -> "/" ++ x)
-                   $ take ((length sP) - 2) sP
+makeSystemPath :: FilePath -> FilePath
+makeSystemPath sPS = concatMap (\x -> "/" ++ x)
+                   $ take (length sP - 2) sP
     where sP = words $ map (\x -> if x == '/' then ' ' else x) sPS
 

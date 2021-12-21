@@ -23,9 +23,10 @@ dependencies:
 - base >= 4.7 && < 5
 - bytestring
 - aeson
+- filepath
 
 library:
-  source-dirs: src
+  source-dirs:           src
 
 executables:
   bot-main-exe:
