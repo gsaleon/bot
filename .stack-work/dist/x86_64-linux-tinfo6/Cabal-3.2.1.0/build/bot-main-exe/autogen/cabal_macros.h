@@ -88,15 +88,15 @@
   (major1) == 0 && (major2) == 28 && (minor) <= 5)
 #endif /* MIN_TOOL_VERSION_c2hs */
 
-/* tool cpphs-1.20.8 */
+/* tool cpphs-1.20.9 */
 #ifndef TOOL_VERSION_cpphs
-#define TOOL_VERSION_cpphs "1.20.8"
+#define TOOL_VERSION_cpphs "1.20.9"
 #endif /* TOOL_VERSION_cpphs */
 #ifndef MIN_TOOL_VERSION_cpphs
 #define MIN_TOOL_VERSION_cpphs(major1,major2,minor) (\
   (major1) <  1 || \
   (major1) == 1 && (major2) <  20 || \
-  (major1) == 1 && (major2) == 20 && (minor) <= 8)
+  (major1) == 1 && (major2) == 20 && (minor) <= 9)
 #endif /* MIN_TOOL_VERSION_cpphs */
 
 /* tool doctest-0.16.0 */

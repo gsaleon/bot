@@ -1,0 +1,11 @@
+module App.Handlers.HandleCommandLine where
+
+
+
+data LogCommandLine m = LogCommandLine
+  { logCommandLine :: String -> Maybe a }
+
+
+
+
+
