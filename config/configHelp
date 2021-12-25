@@ -1,14 +1,14 @@
 This program is a repetition-bot in telegram and VKontakte services.
-
-Usage with default parameters: Main
-Usage with other parameters  : Main with command line options:
+Usage with default parameters or with other parameters:
+>stack run
+>stack run -- -[options](--options)
 
 Available options:
 -h, --help                                 - Show this help text
--s tel, --service=telegramm                - service Telegramm (default)
--s vc or --service=vkontakte               - service Vcontakte
--r n, --repeat=n n={1..5}                  - number repeat (defaut = 3)
--l v v={d,i,w,e},
+-t, --service=telegramm                - service Telegramm (default)
+-v or --service=vkontakte               - service Vcontakte
+-r=n, --repeat=n n={1..5}                  - number repeat (defaut = 3)
+-l=v v={d,i,w,e},
 --loglevel v v={debug,info,warning,error}  - level logging (defaul = info)
 
 You can choose only one of these services. You can run two instances of
@@ -23,8 +23,8 @@ be disrupted. If an erroneous input of arguments is made, the program will
 use the default values.
 
 Examples usage:
-Main
-Main --help
-Main -s vc --loglevel=error
-Main --service=telegramm -r 2 -l d
+>stack run
+>stack run -- --help
+>stack run -- -t --loglevel=error
+>stack run --service=telegramm -r=2 -l=d
 

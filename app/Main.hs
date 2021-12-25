@@ -4,36 +4,41 @@
 
 module Main where
 
+--import           Prelude hiding       (Either, Left, Right)
 --import qualified Data.Text as T
 import qualified Data.ByteString as B (readFile)
 --import           System.IO            (openFile)
-import           Control.Monad        (mzero)
+import           Control.Monad        (mzero, when)
 import           Control.Exception    (catch)
-import           System.IO.Error      (isAlreadyExistsError
-                                      , isDoesNotExistError
-                                      , isEOFError, isUserError
-                                      , isPermissionError)
+import           System.IO.Error      (isAlreadyExistsError, isDoesNotExistError
+                                      , isEOFError, isPermissionError)
 --import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson
+import           Data.Either
 --import           Data.Monoid          ((<>))
 import           System.Environment   (getArgs, getExecutablePath)
 --import           System.IO
 --import           Control.Applicative
 import           Debug.Trace()                     -- для отладки, по готовности проги - удалить!!
 --import           System.FilePath
+import           System.Exit          (die)
+
 
 import           Services.ParseCommandLine
 --import           App.Handlers.LogCommandLine
 
 --Определения типов, использующихся в программе
-newtype Repeat = Repeat Int
-
-newtype Polling = Polling Int
+data Os = Linux | Windows deriving Show
 
 data Service = Telegramm | Vcontakte deriving Show
 
 data LogLevel = Debug | Info | Warning | Error deriving (Eq, Ord, Show)
+
+--data SetupLocal = SetupLocal Service LogLevel SetupGeneral SetupTelegramm
+--                | SetupLocal Service LogLevel SetupGeneral SetupVcontakte
+
+data Either a b = Left String | Right [String] deriving Show
 
 data SetupTelegramm = SetupTelegramm
                     { urlTelegramm         :: String
@@ -75,119 +80,136 @@ instance FromJSON SetupVcontakte where
     <*> setupVcontakte .: "descriptionVcontakte"
     <*> setupVcontakte .: "aboutVcontakte"
     <*> setupVcontakte .: "commandVcontakte"
-  parseJSON _                     = mzero
+  parseJSON _                       = mzero
 
-data SetupDefault = SetupDefault
+data SetupGeneral = SetupGeneral
                   { pollingDefault    :: Int
                   , repeatDefault     :: Int
                   , logLevelDefault   :: String
                   }
 
-instance FromJSON SetupDefault where
-  parseJSON (Object setupDefault) = SetupDefault
-    <$> setupDefault .: "pollingDefault"
-    <*> setupDefault .: "repeatDefault"
-    <*> setupDefault .: "logLevelDefault"
+instance FromJSON SetupGeneral where
+  parseJSON (Object setupGeneral) = SetupGeneral
+    <$> setupGeneral .: "pollingGeneral"
+    <*> setupGeneral .: "repeatGeneral"
+    <*> setupGeneral .: "logLevelGeneral"
   parseJSON _                     = mzero
 
 printPrettyVcontakte :: SetupVcontakte -> String
 printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
      userNameVcontakte tokenVcontakte descriptionVcontakte
-     aboutVcontakte commandVcontakte) =
-  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
+     aboutVcontakte commandVcontakte) = ""
+{--  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "userNameVcontakte -    " ++ userNameVcontakte    ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "descriptionVcontakte - " ++ descriptionVcontakte ++ "\n" ++
   "aboutVcontakte -       " ++ aboutVcontakte       ++ "\n" ++
   "commandVcontakte -     " ++ commandVcontakte
-
+--}
 printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
      userNameTelegramm tokenTelegramm descriptionTelegramm
-     aboutTelegramm commandTelegramm) =
-  "urlTelegramm -         " ++ urlTelegramm         ++ "\n" ++
+     aboutTelegramm commandTelegramm) = ""
+{--  "urlTelegramm -         " ++ urlTelegramm         ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
   "userNameTelegramm -    " ++ userNameTelegramm    ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
   "descriptionTelegramm - " ++ descriptionTelegramm ++ "\n" ++
   "aboutTelegramm -       " ++ aboutTelegramm       ++ "\n" ++
   "commandTelegramm -     " ++ commandTelegramm
-
-printPrettySetup :: SetupDefault -> String
-printPrettySetup (SetupDefault pollingDefault repeatDefault
-     logLevelDefault) =
-  "pollingDefault -    " ++ show pollingDefault ++ "\n" ++
-  "repeatDefault -     " ++ show repeatDefault  ++ "\n" ++
-  "logLevelDefault -   " ++ show logLevelDefault
-
+--}
+printPrettySetup :: SetupGeneral -> String
+printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
+     logLevelGeneral) = ""
+{--  "pollingGeneral -       " ++ show pollingGeneral ++ "\n" ++
+  "repeatGeneral -        " ++ show repeatGeneral  ++ "\n" ++
+  "logLevelGeneral -      " ++ show logLevelGeneral
+--}
 main :: IO ()
 main = do
          putStrLn ("---------Start---------")
 --       Читаем аргументы командной строки
          commandLine <- getArgs
          let commandLineParse = parseLine commandLine
+         let commandLineParseErr = lefts [commandLineParse]
          putStrLn ("commandLineParse - " ++ show commandLineParse)
---       И инициализируем переменные, при необходимости выводим хелп
+         putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
+--       Инициализируем переменные, при необходимости выводим хелп
 --       Определяем пути
          systemPathStart <- getExecutablePath
-         let systemPath = makeSystemPath systemPathStart
+         let systemPath = fst $ makeSystemPath systemPathStart
 --         putStrLn ("systemPathStart - " ++ show systemPathStart)
          putStrLn ("systemPath - " ++ show systemPath)
 --       Проверяем и читаем файлы настроек
          let sysPathConfig = systemPath ++ "/config/configBot"
          let sysPathTelegramm = systemPath ++ "/config/configTelegramm"
          let sysPathVcontakte = systemPath ++ "/config/configVcontakte"
-         catch (readFile sysPathConfig >>= putStrLn)
-          (\out ->  case out of
-              _  | isAlreadyExistsError out -> putStrLn "Error: File configBot alredy exists"
-              _  | isDoesNotExistError out  -> putStrLn "Error: File configBot not found"
-              _  | isEOFError out           -> putStrLn "Error: End of file configBot"
-              _  | isUserError out          -> putStrLn "Error: User raised an exception"
-              _  | isPermissionError out    -> putStrLn "Error: We don't have permission to read this file configBot"
-              _                             -> putStrLn "Uncaught exception configBot" >> ioError out
-          )
-         catch (readFile sysPathVcontakte >>= putStrLn)
-          (\out ->  case out of
-              _  | isAlreadyExistsError out -> putStrLn "Error: File configTelegramm alredy exists"
-              _  | isDoesNotExistError out  -> putStrLn "Error: File configTelegramm not found"
-              _  | isEOFError out           -> putStrLn "Error: End of file configTelegramm"
-              _  | isUserError out          -> putStrLn "Error: User raised an exception"
-              _  | isPermissionError out    -> putStrLn "Error: We don't have permission to read this file configTelegramm"
-              _                             -> putStrLn "Uncaught exception configTelegramm" >> ioError out
-          )
-         catch (readFile sysPathTelegramm >>= putStrLn)
-          (\out ->  case out of
-              _  | isAlreadyExistsError out -> putStrLn "Error: File configTelegramm alredy exists"
-              _  | isDoesNotExistError out  -> putStrLn "Error: File configTelegramm not found"
-              _  | isEOFError out           -> putStrLn "Error: End of file configTelegramm"
-              _  | isUserError out          -> putStrLn "Error: User raised an exception"
-              _  | isPermissionError out    -> putStrLn "Error: We don't have permission to read this file configTelegramm"
-              _                             -> putStrLn "Uncaught exception configTelegramm" >> ioError out
-          )
+         let sysPathHelp = systemPath ++ "/config/configHelp"
+         mapM_ (\(x, y) ->
+                  catch (readFile x >>= (\a -> putStr ""))
+                    (\e ->  case e of
+                      _  | isAlreadyExistsError e -> error 
+                             ("Error: File " ++ y ++ " alredy exists")
+                      _  | isDoesNotExistError e  -> error
+                             ("Error: File " ++ y ++ " not found")
+                      _  | isEOFError e           -> error
+                             ("Error: End of file " ++ y)
+                      _  | isPermissionError e    -> error
+                             ("Error: We don't have permission to read this file " ++ y)
+                      _                           -> putStrLn
+                             ("Uncaught exception " ++ y) >> ioError e
+                    )
+               ) [(sysPathConfig,    "configBot")
+                 ,(sysPathVcontakte, "configVcontakte")
+                 ,(sysPathTelegramm, "configTelegramm")
+                 ,(sysPathHelp,      "configHelp")]
 
          rawJSONConfig <- B.readFile sysPathConfig
-         let result = decodeStrict rawJSONConfig 
-         putStrLn $ case result of
-           Nothing           -> "Invalid JSON!"
-           Just setupDefault -> printPrettySetup setupDefault
-
+         let setupGeneral = decodeStrict rawJSONConfig 
+         putStrLn $ case setupGeneral of
+           Nothing           -> "Invalid configGeneral JSON!"
+           Just setupGeneral -> printPrettySetup setupGeneral
          rawJSONTelegramm <- B.readFile sysPathTelegramm
-         let result = decodeStrict rawJSONTelegramm
-         putStrLn $ case result of
-           Nothing             -> "Invalid JSON!"
+         let setupTelegramm = decodeStrict rawJSONTelegramm
+         putStrLn $ case setupTelegramm of
+           Nothing             -> "Invalid configTelegramm JSON!"
            Just setupTelegramm -> printPrettyTelegramm setupTelegramm
-
          rawJSONVcontakte <- B.readFile sysPathVcontakte
-         let result = decodeStrict rawJSONVcontakte
-         putStrLn $ case result of
-           Nothing             -> "Invalid JSON!"
+         let setupVcontakte = decodeStrict rawJSONVcontakte
+         putStrLn $ case setupVcontakte of
+           Nothing             -> "Invalid configVcontakte JSON!"
            Just setupVcontakte -> printPrettyVcontakte setupVcontakte
 
-makeSystemPath :: FilePath -> FilePath
-makeSystemPath str = (makeSystemPath' str) ++ "/bot/"
-makeSystemPath' [] = []
-makeSystemPath' (x0:x1:x2:x3:x4:xs)
-  | x0:x1:x2:x3:x4:[] /= "/bot/" = x0 : makeSystemPath' (x1:x2:x3:x4:xs)
-  | otherwise            = []
+--       Выводим полную справку если она задана в коммандной строке или
+--       короткую, если есть ошибки парсинга, а также перезаписываем
+--       данные конфигов данными в командной строке, если они есть
+         when (commandLineParseErr == "help") $ do
+                      helpBig <- readFile sysPathHelp
+                      putStrLn (helpBig)
+                      die "Stop running"
+         when (commandLineParseErr == "parsingError") $ do
+                      die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+         when (commandLineParseErr == "multipleValue") $ do
+                      die "Multiple Value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
 
+
+         putStrLn ("---------Stop---------")
+
+--нам необходимо для конфигов использовать окружение и Writer, чтобы
+--не таскать "с собой" значения параметров через всю прогу.
+
+makeSystemPath :: FilePath -> (FilePath, Os)
+makeSystemPath str =
+  if '/' `elem` str
+    then ((makeSystemPath' str) ++ "/bot/", Linux)
+    else ((makeSystemPath'' str) ++ "\\bot", Windows)
+  where
+    makeSystemPath' [] = []
+    makeSystemPath' (x0:x1:x2:x3:x4:xs)
+      | x0:x1:x2:x3:x4:[] /= "/bot/" = x0 : makeSystemPath' (x1:x2:x3:x4:xs)
+      | otherwise                    = []
+    makeSystemPath'' [] = []
+    makeSystemPath'' (x0:x1:x2:x3:x4:xs)
+      | x0:x1:x2:x3:x4:[] /= "\\bot" = x0 : makeSystemPath'' (x1:x2:x3:x4:xs)
+      | otherwise                    = []

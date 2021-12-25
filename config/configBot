@@ -1,5 +1,5 @@
 {
-  "pollingDefault": 60,
-  "repeatDefault": 3,
-  "logLevelDefault": "info"
+  "pollingGeneral": 60,
+  "repeatGeneral": 3,
+  "logLevelGeneral": "info"
 }

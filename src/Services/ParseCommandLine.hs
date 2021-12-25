@@ -1,18 +1,22 @@
 module Services.ParseCommandLine (parseLine) where
 
-parseLine :: [String] -> [String]
+import Prelude hiding (Either, Left, Right)
+
+data Either a b = Left String | Right [String] deriving Show
+
+--parseLine :: [String] -> Either String [String]
 parseLine str = if null str
-                  then ["notInput"]
+                  then Left "notInput"
                   else let pars = parseLine' [] str in
                     if elem "help" pars
-                      then ["help"]
+                      then Left "help"
                       else if elem "parsingError" pars
-                             then ["parsingError"]
+                             then Left "parsingError"
                              else
         if length (filter (\x -> take 7 x == "polling") pars) > 1 ||
            length (filter (\x -> take 6 x == "repeat") pars) > 1
-          then ["multipleValue"]
-          else pars
+          then Left "multipleValue"
+          else Right pars
 
 parseLine' :: [String] -> [String] -> [String]
 parseLine' acc [] = acc
