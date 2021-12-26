@@ -5,10 +5,10 @@ Usage with default parameters or with other parameters:
 
 Available options:
 -h, --help                                 - Show this help text
--t, --service=telegramm                - service Telegramm (default)
--v or --service=vkontakte               - service Vcontakte
+-t, --service=telegramm                    - service Telegramm (default)
+-v or --service=vkontakte                  - service Vcontakte
 -r=n, --repeat=n n={1..5}                  - number repeat (defaut = 3)
--l=v v={d,i,w,e},
+-{d,i,w,e},
 --loglevel v v={debug,info,warning,error}  - level logging (defaul = info)
 
 You can choose only one of these services. You can run two instances of
@@ -26,5 +26,5 @@ Examples usage:
 >stack run
 >stack run -- --help
 >stack run -- -t --loglevel=error
->stack run --service=telegramm -r=2 -l=d
+>stack run --service=telegramm -r=2 -d
 

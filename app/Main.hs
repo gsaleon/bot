@@ -1,10 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
---import           Prelude hiding       (Either, Left, Right)
 --import qualified Data.Text as T
 import qualified Data.ByteString as B (readFile)
 --import           System.IO            (openFile)
@@ -15,7 +13,6 @@ import           System.IO.Error      (isAlreadyExistsError, isDoesNotExistError
 --import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson
-import           Data.Either
 --import           Data.Monoid          ((<>))
 import           System.Environment   (getArgs, getExecutablePath)
 --import           System.IO
@@ -35,10 +32,12 @@ data Service = Telegramm | Vcontakte deriving Show
 
 data LogLevel = Debug | Info | Warning | Error deriving (Eq, Ord, Show)
 
+data WorkValue = WorkValue Service SetupGeneral SetupTelegramm SetupVcontakte
+
 --data SetupLocal = SetupLocal Service LogLevel SetupGeneral SetupTelegramm
 --                | SetupLocal Service LogLevel SetupGeneral SetupVcontakte
 
-data Either a b = Left String | Right [String] deriving Show
+--data Parse a b = Err String | Value [String] deriving Show
 
 data SetupTelegramm = SetupTelegramm
                     { urlTelegramm         :: String
@@ -83,9 +82,9 @@ instance FromJSON SetupVcontakte where
   parseJSON _                       = mzero
 
 data SetupGeneral = SetupGeneral
-                  { pollingDefault    :: Int
-                  , repeatDefault     :: Int
-                  , logLevelDefault   :: String
+                  { pollingGeneral    :: Int
+                  , repeatGeneral     :: Int
+                  , logLevelGeneral   :: String
                   }
 
 instance FromJSON SetupGeneral where
@@ -128,11 +127,11 @@ printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
 --}
 main :: IO ()
 main = do
-         putStrLn ("---------Start---------")
+         putStrLn ("------------------Start--------------------")
 --       Читаем аргументы командной строки
          commandLine <- getArgs
          let commandLineParse = parseLine commandLine
-         let commandLineParseErr = lefts [commandLineParse]
+         let commandLineParseErr = fromLeft "value" commandLineParse
          putStrLn ("commandLineParse - " ++ show commandLineParse)
          putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
 --       Инициализируем переменные, при необходимости выводим хелп
@@ -184,20 +183,37 @@ main = do
 --       Выводим полную справку если она задана в коммандной строке или
 --       короткую, если есть ошибки парсинга, а также перезаписываем
 --       данные конфигов данными в командной строке, если они есть
-         when (commandLineParseErr == "help") $ do
-                      helpBig <- readFile sysPathHelp
-                      putStrLn (helpBig)
-                      die "Stop running"
-         when (commandLineParseErr == "parsingError") $ do
-                      die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+         when (commandLineParseErr == "help")          $ do
+           helpBig <- readFile sysPathHelp
+           putStrLn (helpBig)
+           die "Stop running"
+         when (commandLineParseErr == "parsingError")  $ do
+           die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
          when (commandLineParseErr == "multipleValue") $ do
-                      die "Multiple Value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
-
-
-         putStrLn ("---------Stop---------")
+           die "Multiple Value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+         when (commandLineParseErr == "value")         $ do
+--           workValue <- newValue commandLineParse SetupGeneral
+--             SetupVcontakte SetupTelegramm
+         
+         putStrLn ("--------------------Stop---------------------")
 
 --нам необходимо для конфигов использовать окружение и Writer, чтобы
 --не таскать "с собой" значения параметров через всю прогу.
+{--
+newValue :: Parse a b -> SetupGeneral -> SetupVcontakte
+  -> SetupTelegramm -> WorkValue
+newValue commandLineParse setupGeneral setupVcontakte setupTelegramm = 
+  if ("vcontakte" `elem` snd . fromRight $ commandLineParse)
+    then _ WorkValue Vcontakte SetupGeneral SetupVcontakte
+    else _ WorkValue Telegramm SetupGeneral SetupTelegramm
+--}
+fromLeft :: String -> Parse a b -> String
+fromLeft _ (Err a) = a
+fromLeft a _       = a
+
+--fromRight :: String -> Parse a b -> [(String,String)]
+fromRight _ (Value a) = a
+fromLeftRight a _     = a
 
 makeSystemPath :: FilePath -> (FilePath, Os)
 makeSystemPath str =
@@ -213,3 +229,4 @@ makeSystemPath str =
     makeSystemPath'' (x0:x1:x2:x3:x4:xs)
       | x0:x1:x2:x3:x4:[] /= "\\bot" = x0 : makeSystemPath'' (x1:x2:x3:x4:xs)
       | otherwise                    = []
+

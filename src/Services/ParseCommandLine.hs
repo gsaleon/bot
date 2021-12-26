@@ -1,22 +1,24 @@
-module Services.ParseCommandLine (parseLine) where
+module Services.ParseCommandLine (parseLine, findStr, 
+                                  Parse(Err, Value)) where
 
-import Prelude hiding (Either, Left, Right)
+data Parse a b = Err String | Value [(String,String)] deriving Show
 
-data Either a b = Left String | Right [String] deriving Show
-
---parseLine :: [String] -> Either String [String]
+parseLine :: [String] -> Parse a b
 parseLine str = if null str
-                  then Left "notInput"
+                  then Err "notInput"
                   else let pars = parseLine' [] str in
                     if elem "help" pars
-                      then Left "help"
+                      then Err "help"
                       else if elem "parsingError" pars
-                             then Left "parsingError"
+                             then Err "parsingError"
                              else
-        if length (filter (\x -> take 7 x == "polling") pars) > 1 ||
-           length (filter (\x -> take 6 x == "repeat") pars) > 1
-          then Left "multipleValue"
-          else Right pars
+  if 
+      length (filter (\x -> take 7 x == "polling" ) pars) > 1 ||
+      length (filter (\x -> take 6 x == "repeat"  ) pars) > 1 ||
+      length (filter (\x -> take 7 x == "service" ) pars) > 1 ||
+      length (filter (\x -> take 8 x == "loglevel") pars) > 1
+    then Err "multipleValue"
+    else Value (parsingValue pars)
 
 parseLine' :: [String] -> [String] -> [String]
 parseLine' acc [] = acc
@@ -31,10 +33,19 @@ parseLine' acc (x:xs) = parseLine' (acc ++ (f x)) xs
                    else ["parsingError"]
 
 parsingLong :: String -> String
-parsingLong x = case take 9 x of
-  "--repeat=" -> "repeat=" ++ drop 9 x
-  "--polling" -> "polling=" ++ drop 10 x
-  _           -> "parsingError"
+parsingLong x =
+  if findStr x "repeat"
+    then "repeat: " ++ drop 9 x
+    else if findStr x "polling"
+      then "polling: " ++ drop 10 x
+      else case take 15 x of
+        "--service=teleg" -> "service: telegramm"
+        "--service=vcont" -> "service: vcontakte"
+        "--loglevel=debu" -> "loglevel: debug"
+        "--loglevel=info" -> "loglevel: info"
+        "--loglevel=warn" -> "loglevel: warning"
+        "--loglevel=erro" -> "loglevel: error"
+        _                 -> "parsingError"
 
 together :: [String] -> String -> [String]
 together acc []     = acc
@@ -45,17 +56,26 @@ together acc (y:ys) = if y == 'r' || y == 'p'
 parsingShort :: Char -> String -> String
 parsingShort y l = if length l > 1 && (y == 'r' || y == 'p')
                      then case y of
-                       'r' -> "repeat=" ++ drop 2 l
-                       'p' -> "polling=" ++ drop 2 l
+                       'r' -> "repeat: " ++ drop 2 l
+                       'p' -> "polling: " ++ drop 2 l
                      else case y of 
                        'h' -> "help"
-                       't' -> "telegramm"
-                       'v' -> "vkontakte"
-                       'd' -> "debug"
-                       'i' -> "info"
-                       'w' -> "warning"
-                       'e' -> "error"
+                       't' -> "service: telegramm"
+                       'v' -> "service: vkontakte"
+                       'd' -> "loglevel: debug"
+                       'i' -> "loglevel: info"
+                       'w' -> "loglevel: warning"
+                       'e' -> "loglevel: error"
                        _   -> "parsingError"
+
+parsingValue :: [String] -> [(String,String)]
+parsingValue = map (\x -> (head $ words x, last $ words x))
+
+findStr :: String -> String -> Bool
+findStr [] _ = False
+findStr s@(x:xs) pat
+  | pat == (take (length pat) s) = True
+  | otherwise                    = findStr xs pat
 
 {--
 parseLine' :: [String] -> [String]
