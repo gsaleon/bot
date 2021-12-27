@@ -61,7 +61,7 @@ parsingShort y l = if length l > 1 && (y == 'r' || y == 'p')
                      else case y of 
                        'h' -> "help"
                        't' -> "service: telegramm"
-                       'v' -> "service: vkontakte"
+                       'v' -> "service: vcontakte"
                        'd' -> "loglevel: debug"
                        'i' -> "loglevel: info"
                        'w' -> "loglevel: warning"

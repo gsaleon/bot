@@ -2,4 +2,5 @@
   "pollingGeneral": 60,
   "repeatGeneral": 3,
   "logLevelGeneral": "info"
+  "serviceGeneral": "telegramm"
 }

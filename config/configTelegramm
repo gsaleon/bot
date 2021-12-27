@@ -6,4 +6,5 @@
   "descriptionTelegramm": "This is a repetitions bot for Telegramm and Vcontakte",
   "aboutTelegramm": "someText about bot",
   "commandTelegramm": "/start, /help, /repeat, /value, /quit ..."
+  "questionTelegrammRepeat": "Who are you?"
 }

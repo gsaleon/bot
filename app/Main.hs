@@ -13,6 +13,7 @@ import           System.IO.Error      (isAlreadyExistsError, isDoesNotExistError
 --import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson
+import           Data.List            (find)
 --import           Data.Monoid          ((<>))
 import           System.Environment   (getArgs, getExecutablePath)
 --import           System.IO
@@ -20,6 +21,7 @@ import           System.Environment   (getArgs, getExecutablePath)
 import           Debug.Trace()                     -- для отладки, по готовности проги - удалить!!
 --import           System.FilePath
 import           System.Exit          (die)
+import           Data.Maybe           (isJust)
 
 
 import           Services.ParseCommandLine
@@ -32,22 +34,21 @@ data Service = Telegramm | Vcontakte deriving Show
 
 data LogLevel = Debug | Info | Warning | Error deriving (Eq, Ord, Show)
 
-data WorkValue = WorkValue Service SetupGeneral SetupTelegramm SetupVcontakte
+data WorkValue = WorkValue SetupGeneral SetupTelegramm SetupVcontakte deriving Show
 
 --data SetupLocal = SetupLocal Service LogLevel SetupGeneral SetupTelegramm
 --                | SetupLocal Service LogLevel SetupGeneral SetupVcontakte
 
---data Parse a b = Err String | Value [String] deriving Show
-
 data SetupTelegramm = SetupTelegramm
-                    { urlTelegramm         :: String
-                    , nameTelegramm        :: String
-                    , userNameTelegramm    :: String
-                    , tokenTelegramm       :: String
-                    , descriptionTelegramm :: String
-                    , aboutTelegramm       :: String
-                    , commandTelegramm     :: String
-                    }
+                    { urlTelegramm            :: String
+                    , nameTelegramm           :: String
+                    , userNameTelegramm       :: String
+                    , tokenTelegramm          :: String
+                    , descriptionTelegramm    :: String
+                    , aboutTelegramm          :: String
+                    , commandTelegramm        :: String
+                    , questionTelegrammRepeat :: String
+                    } deriving Show
 
 instance FromJSON SetupTelegramm where
   parseJSON (Object setupTelegramm) = SetupTelegramm
@@ -58,6 +59,7 @@ instance FromJSON SetupTelegramm where
     <*> setupTelegramm .: "descriptionTelegramm"
     <*> setupTelegramm .: "aboutTelegramm"
     <*> setupTelegramm .: "commandTelegramm"
+    <*> setupTelegramm .: "questionTelegrammRepeat"
   parseJSON _                       = mzero
 
 data SetupVcontakte = SetupVcontakte
@@ -68,7 +70,7 @@ data SetupVcontakte = SetupVcontakte
                     , descriptionVcontakte :: String
                     , aboutVcontakte       :: String
                     , commandVcontakte     :: String
-                    }
+                    } deriving Show
 
 instance FromJSON SetupVcontakte where
   parseJSON (Object setupVcontakte) = SetupVcontakte
@@ -85,19 +87,21 @@ data SetupGeneral = SetupGeneral
                   { pollingGeneral    :: Int
                   , repeatGeneral     :: Int
                   , logLevelGeneral   :: String
-                  }
+                  , serviceGeneral    :: String
+                  } deriving Show
 
 instance FromJSON SetupGeneral where
   parseJSON (Object setupGeneral) = SetupGeneral
     <$> setupGeneral .: "pollingGeneral"
     <*> setupGeneral .: "repeatGeneral"
     <*> setupGeneral .: "logLevelGeneral"
+    <*> setupGeneral .: "serviceGeneral"
   parseJSON _                     = mzero
 
 printPrettyVcontakte :: SetupVcontakte -> String
 printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
      userNameVcontakte tokenVcontakte descriptionVcontakte
-     aboutVcontakte commandVcontakte) = ""
+     aboutVcontakte commandVcontakte questionTelegrammRepeat) = ""
 {--  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "userNameVcontakte -    " ++ userNameVcontakte    ++ "\n" ++
@@ -109,21 +113,23 @@ printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
 printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
      userNameTelegramm tokenTelegramm descriptionTelegramm
-     aboutTelegramm commandTelegramm) = ""
+     aboutTelegramm commandTelegramm questionTelegrammRepeat) = ""
 {--  "urlTelegramm -         " ++ urlTelegramm         ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
   "userNameTelegramm -    " ++ userNameTelegramm    ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
   "descriptionTelegramm - " ++ descriptionTelegramm ++ "\n" ++
   "aboutTelegramm -       " ++ aboutTelegramm       ++ "\n" ++
-  "commandTelegramm -     " ++ commandTelegramm
+  "commandTelegramm -     " ++ commandTelegramm     ++ "\n" ++
+  "questionTelegrammRepeat"
 --}
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
-     logLevelGeneral) = ""
-{--  "pollingGeneral -       " ++ show pollingGeneral ++ "\n" ++
-  "repeatGeneral -        " ++ show repeatGeneral  ++ "\n" ++
-  "logLevelGeneral -      " ++ show logLevelGeneral
+     logLevelGeneral serviceGeneral) = ""
+{--  "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
+  "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
+  "logLevelGeneral -      " ++ show logLevelGeneral ++ "\n" ++
+  "serviceGeneral -       " ++ show serviceGeneral
 --}
 main :: IO ()
 main = do
@@ -132,8 +138,10 @@ main = do
          commandLine <- getArgs
          let commandLineParse = parseLine commandLine
          let commandLineParseErr = fromLeft "value" commandLineParse
+         let commandLineParseValue = fromRight [("","")] commandLineParse
          putStrLn ("commandLineParse - " ++ show commandLineParse)
          putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
+         putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
 --       Инициализируем переменные, при необходимости выводим хелп
 --       Определяем пути
          systemPathStart <- getExecutablePath
@@ -155,7 +163,8 @@ main = do
                       _  | isEOFError e           -> error
                              ("Error: End of file " ++ y)
                       _  | isPermissionError e    -> error
-                             ("Error: We don't have permission to read this file " ++ y)
+                             ("Error: We don't have permission to read this \
+                               \ file " ++ y)
                       _                           -> putStrLn
                              ("Uncaught exception " ++ y) >> ioError e
                     )
@@ -188,32 +197,51 @@ main = do
            putStrLn (helpBig)
            die "Stop running"
          when (commandLineParseErr == "parsingError")  $ do
-           die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+           die "Usage stack run -- -[Args] or stack run -- -h (--help) \
+             \ for help"
          when (commandLineParseErr == "multipleValue") $ do
-           die "Multiple Value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+           die "Multiple Value arguments. Usage stack run -- -[Args] or \
+             \ stack run -- -h (--help) for help"
          when (commandLineParseErr == "value")         $ do
---           workValue <- newValue commandLineParse SetupGeneral
---             SetupVcontakte SetupTelegramm
+           let valueParse = fromRight [("","")] commandLineParse
+           let pollingGeneral workValue =
+                 if isJust $ find ((=="polling:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="polling:") . fst) valueParse
+--                      concat $ map (\x -> case x of ("polling:", y) -> y ; _ -> "") valueParse
+                   else pollingGeneral setupGeneral
+           let repeatGeneral workValue =
+                 if isJust $ find ((=="repeat:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="repeat:") . fst) valueParse
+                   else repeatGeneral setupGeneral
+           let loglevelGeneral workValue =
+                 if isJust $ find ((=="loglevel:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="loglevel:") . fst) valueParse
+                   else loglevelGeneral setupGeneral
+           let serviceGeneral workValue =
+                 if isJust $ find ((=="service:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="service:") . fst) valueParse
+                   else serviceGeneral setupGeneral
+
+
          
          putStrLn ("--------------------Stop---------------------")
 
---нам необходимо для конфигов использовать окружение и Writer, чтобы
---не таскать "с собой" значения параметров через всю прогу.
-{--
-newValue :: Parse a b -> SetupGeneral -> SetupVcontakte
-  -> SetupTelegramm -> WorkValue
-newValue commandLineParse setupGeneral setupVcontakte setupTelegramm = 
-  if ("vcontakte" `elem` snd . fromRight $ commandLineParse)
-    then _ WorkValue Vcontakte SetupGeneral SetupVcontakte
-    else _ WorkValue Telegramm SetupGeneral SetupTelegramm
+--data WorkValue = WorkValue SetupGeneral SetupTelegramm SetupVcontakte
+
+--newValue :: Parse a b -> SetupGeneral -> SetupVcontakte
+--  -> SetupTelegramm -> WorkValue
+{--newValue commandLineParse setupGeneral setupVcontakte setupTelegramm = 
+  if (findStr (snd $ fromRight [("","")] commandLineParse) "vcontakte")
+    then WorkValue Vcontakte SetupGeneral SetupTelegramm SetupVcontakte
+    else _
 --}
 fromLeft :: String -> Parse a b -> String
 fromLeft _ (Err a) = a
 fromLeft a _       = a
 
---fromRight :: String -> Parse a b -> [(String,String)]
-fromRight _ (Value a) = a
-fromLeftRight a _     = a
+fromRight :: [(String,String)] -> Parse a b -> [(String,String)]
+fromRight _ (Value b) = b
+fromRight b _         = b
 
 makeSystemPath :: FilePath -> (FilePath, Os)
 makeSystemPath str =
