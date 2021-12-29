@@ -17,9 +17,6 @@ data Service = Telegramm | Vcontakte
 data LogLevel = Debug | Info | Warning | Error
   deriving (Eq, Ord, Show)
 
-data WorkValue = WorkValue SetupGeneral SetupTelegramm SetupVcontakte
-  deriving Show
-
 data SetupTelegramm = SetupTelegramm
                     { urlTelegramm            :: String
                     , nameTelegramm           :: String
@@ -89,7 +86,8 @@ printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "descriptionVcontakte - " ++ descriptionVcontakte ++ "\n" ++
   "aboutVcontakte -       " ++ aboutVcontakte       ++ "\n" ++
-  "commandVcontakte -     " ++ commandVcontakte
+  "commandVcontakte -     " ++ commandVcontakte     ++ "\n" ++
+  "----------------------end printPrettyVcontakte------------"
 
 printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
@@ -102,7 +100,8 @@ printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
   "descriptionTelegramm - " ++ descriptionTelegramm ++ "\n" ++
   "aboutTelegramm -       " ++ aboutTelegramm       ++ "\n" ++
   "commandTelegramm -     " ++ commandTelegramm     ++ "\n" ++
-  "questionTelegrammRepeat"
+  "questionTelegrammRepeat" ++ "\n" ++
+  "----------------------end printPrettyTelegramm------------"
 
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
@@ -110,8 +109,81 @@ printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
   "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
   "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
   "logLevelGeneral -      " ++ show logLevelGeneral ++ "\n" ++
-  "serviceGeneral -       " ++ show serviceGeneral
+  "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++
+  "----------------------end printPrettySetup----------------"
 
+{--
+           let valueParse = fromRight [("","")] commandLineParse
+           let pollingGeneral workValue =
+                 if isJust $ find ((=="polling:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="polling:") . fst) valueParse
+--                      concat $ map (\x -> case x of ("polling:", y) -> y ; _ -> "") valueParse
+                   else pollingGeneral setupGeneral
+           let repeatGeneral workValue =
+                 if isJust $ find ((=="repeat:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="repeat:") . fst) valueParse
+                   else repeatGeneral setupGeneral
+           let loglevelGeneral workValue =
+                 if isJust $ find ((=="loglevel:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="loglevel:") . fst) valueParse
+                   else loglevelGeneral setupGeneral
+           let serviceGeneral workValue =
+                 if isJust $ find ((=="service:") . fst) valueParse
+                   then snd $ fromJust $ find ((=="service:") . fst) valueParse
+                   else serviceGeneral setupGeneral
+--}
+
+valueParse :: Parse a b -> [(String,String)]
+valueParse commandLineParse = fromRight [("","")] commandLineParse
+
+fromCommandLine :: SetupGeneral -> [(String,String)] -> SetupGeneral
+fromCommandLine p v =
+  if (isJust $ find ((=="polling:") . fst) v)
+    then 
+      let x = read $ snd $ fromJust $ find ((=="polling:") . fst) v :: Int
+        in fromCommandLine {pollingGeneral  = x}
+    else   fromCommandLine {pollingGeneral  = pollingGeneral (p)}
+  if (isJust $ find ((=="repeat:") . fst) v)
+    then 
+      let x = read $ snd $ fromJust $ find ((=="repeat:") . fst) v :: Int
+        in fromCommandLine {repeatGeneral   = x}
+    else   fromCommandLine {repeatGeneral   = repeatGeneral (p)}
+  if (isJust $ find ((=="loglevel:") . fst) v)
+    then 
+      let x = snd $ fromJust $ find ((=="loglevel:") . fst) v
+        in fromCommandLine {logLevelGeneral = x}
+    else   fromCommandLine {logLevelGeneral = logLevelGeneral (p)}
+  if (isJust $ find ((=="service:") . fst) v)
+    then 
+      let x = snd $ fromJust $ find ((=="service:") . fst) v
+        in fromCommandLine {serviceGeneral  = x}
+    else   fromCommandLine {serviceGeneral  = serviceGeneral (p)}
+
+
+{--
+  if isJust $ find ((=="polling:") . fst) valueParse
+    then snd $ fromJust $ find ((=="polling:") . fst) valueParse
+--       concat $ map (\x -> case x of ("polling:", y) -> y ; _ -> "") valueParse
+    else repeatGeneral setupGeneral
+
+--repeatGeneral ::
+repeatGeneral workValue =
+  if isJust $ find ((=="repeat:") . fst) valueParse
+    then snd $ fromJust $ find ((=="repeat:") . fst) valueParse
+    else repeatGeneral setupGeneral
+
+--loglevelGeneral ::
+loglevelGeneral workValue =
+  if isJust $ find ((=="loglevel:") . fst) valueParse
+    then snd $ fromJust $ find ((=="loglevel:") . fst) valueParse
+    else loglevelGeneral setupGeneral
+
+--serviceGeneral ::
+serviceGeneral workValue =
+  if isJust $ find ((=="service:") . fst) valueParse
+    then snd $ fromJust $ find ((=="service:") . fst) valueParse
+    else serviceGeneral setupGeneral
+--}
 fromLeft :: String -> Parse a b -> String
 fromLeft _ (Err a) = a
 fromLeft a _       = a

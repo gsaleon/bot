@@ -16,7 +16,7 @@ import           System.IO.Error      (isAlreadyExistsError, isDoesNotExistError
 --import           Control.Applicative  ((<$>), (<*>))
 --import           Control.Exception
 import           Data.Aeson           (decodeStrict)
-import           Data.List            (find)
+--import           Data.List            (find)
 --import           Data.Monoid          ((<>))
 import           System.Environment   (getArgs, getExecutablePath)
 --import           System.IO
@@ -24,7 +24,7 @@ import           System.Environment   (getArgs, getExecutablePath)
 import           Debug.Trace()                     -- для отладки, по готовности проги - удалить!!
 --import           System.FilePath
 import           System.Exit          (die)
-import           Data.Maybe           (isJust, fromJust)
+import           Data.Maybe           (fromJust)
 
 import           Services.ParseCommandLine
 import           Lib
@@ -41,6 +41,7 @@ main = do
          putStrLn ("commandLineParse - " ++ show commandLineParse)
          putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
          putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
+         putStrLn ("")
 --       Инициализируем переменные, при необходимости выводим хелп
 --       Определяем пути
          systemPathStart <- getExecutablePath
@@ -102,39 +103,10 @@ main = do
            die "Multiple Value arguments. Usage stack run -- -[Args] or \
              \ stack run -- -h (--help) for help"
          when (commandLineParseErr == "value")         $ do
-           let valueParse = fromRight [("","")] commandLineParse
-           let pollingGeneral workValue =
-                 if isJust $ find ((=="polling:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="polling:") . fst) valueParse
---                      concat $ map (\x -> case x of ("polling:", y) -> y ; _ -> "") valueParse
-                   else pollingGeneral setupGeneral
-           let repeatGeneral workValue =
-                 if isJust $ find ((=="repeat:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="repeat:") . fst) valueParse
-                   else repeatGeneral setupGeneral
-           let loglevelGeneral workValue =
-                 if isJust $ find ((=="loglevel:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="loglevel:") . fst) valueParse
-                   else loglevelGeneral setupGeneral
-           let serviceGeneral workValue =
-                 if isJust $ find ((=="service:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="service:") . fst) valueParse
-                   else serviceGeneral setupGeneral
+           let p = fromJust setupGeneral
+           putStrLn (printPrettySetup p)
            
-           
+         putStrLn ("--------------------Stop---------------------")
 
-
-         
-           putStrLn ("--------------------Stop---------------------")
-
---data WorkValue = WorkValue SetupGeneral SetupTelegramm SetupVcontakte
-
---newValue :: Parse a b -> SetupGeneral -> SetupVcontakte
---  -> SetupTelegramm -> WorkValue
-{--newValue commandLineParse setupGeneral setupVcontakte setupTelegramm = 
-  if (findStr (snd $ fromRight [("","")] commandLineParse) "vcontakte")
-    then WorkValue Vcontakte SetupGeneral SetupTelegramm SetupVcontakte
-    else _
---}
 
 

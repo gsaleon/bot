@@ -1,6 +1,6 @@
 {
   "pollingGeneral": 60,
   "repeatGeneral": 3,
-  "logLevelGeneral": "info"
+  "logLevelGeneral": "info",
   "serviceGeneral": "telegramm"
 }
