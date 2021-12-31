@@ -1,7 +1,7 @@
 module Services.ParseCommandLine (parseLine, findStr, 
                                   Parse(Err, Value)) where
 
-data Parse a b = Err String | Value [(String,String)] deriving Show
+data Parse a b = Err String | Value [(String, String)] deriving Show
 
 parseLine :: [String] -> Parse a b
 parseLine str = if null str

@@ -33,22 +33,22 @@ import           Lib
 main :: IO ()
 main = do
          putStrLn ("------------------Start--------------------")
---       Читаем аргументы командной строки
+--       Read command line arguments
          commandLine <- getArgs
          let commandLineParse = parseLine commandLine
          let commandLineParseErr = fromLeft "value" commandLineParse
          let commandLineParseValue = fromRight [("","")] commandLineParse
-         putStrLn ("commandLineParse - " ++ show commandLineParse)
-         putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
-         putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
+--         putStrLn ("commandLineParse - " ++ show commandLineParse)
+--         putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
+--         putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
          putStrLn ("")
---       Инициализируем переменные, при необходимости выводим хелп
---       Определяем пути
+--       Initialising, make system path
          systemPathStart <- getExecutablePath
          let systemPath = fst $ makeSystemPath systemPathStart
+         let operSystem = snd $ makeSystemPath systemPathStart
 --         putStrLn ("systemPathStart - " ++ show systemPathStart)
-         putStrLn ("systemPath - " ++ show systemPath)
---       Проверяем и читаем файлы настроек
+--         putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
+--       Control and read config files
          let sysPathConfig = systemPath ++ "/config/configBot"
          let sysPathTelegramm = systemPath ++ "/config/configTelegramm"
          let sysPathVcontakte = systemPath ++ "/config/configVcontakte"
@@ -89,9 +89,7 @@ main = do
            Nothing             -> "Invalid configVcontakte JSON!"
            Just setupVcontakte -> printPrettyVcontakte setupVcontakte
 
---       Выводим полную справку если она задана в коммандной строке или
---       короткую, если есть ошибки парсинга, а также перезаписываем
---       данные конфигов данными в командной строке, если они есть
+--       Write help, initialising with command line arguments
          when (commandLineParseErr == "help")          $ do
            helpBig <- readFile sysPathHelp
            putStrLn (helpBig)
@@ -103,10 +101,13 @@ main = do
            die "Multiple Value arguments. Usage stack run -- -[Args] or \
              \ stack run -- -h (--help) for help"
          when (commandLineParseErr == "value")         $ do
-           let p = fromJust setupGeneral
-           putStrLn (printPrettySetup p)
+           let workGeneral = fromCommandLine (fromJust setupGeneral) commandLineParseValue
+           putStrLn ("Start with next value paramets (not default value)")
+           putStrLn (printPrettySetup workGeneral)
+         when (commandLineParseErr == "notInput")         $ do
+           let workGeneral = fromJust setupGeneral
+           putStrLn ("Start with default value paramets")
+           putStrLn (printPrettySetup workGeneral)
            
          putStrLn ("--------------------Stop---------------------")
-
-
 

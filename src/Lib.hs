@@ -3,6 +3,8 @@
 module Lib where
 
 import           Control.Monad        (mzero)
+import           Data.Maybe           (fromJust, isJust)
+import           Data.List            (find)
 import           Data.Aeson
 
 import           Services.ParseCommandLine (Parse(Err, Value))
@@ -112,30 +114,27 @@ printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
   "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++
   "----------------------end printPrettySetup----------------"
 
+fromCommandLine :: SetupGeneral ->[(String, String)] -> SetupGeneral
+fromCommandLine s cL = SetupGeneral { pollingGeneral  = a
+                                    , repeatGeneral   = b
+                                    , logLevelGeneral = c
+                                    , serviceGeneral  = d
+                                    }
+  where
+    a = if (isJust $ find ((=="polling:") . fst) cL)
+          then read $ snd $ fromJust $ find ((=="polling:") . fst) cL :: Int
+          else pollingGeneral s
+    b = if (isJust $ find ((=="repeat:") . fst) cL)
+          then read $ snd $ fromJust $ find ((=="repeat:") . fst) cL :: Int
+          else repeatGeneral s
+    c = if (isJust $ find ((=="loglevel:") . fst) cL)
+          then snd $ fromJust $ find ((=="loglevel:") . fst) cL
+          else logLevelGeneral s 
+    d = if (isJust $ find ((=="service:") . fst) cL)
+          then snd $ fromJust $ find ((=="service:") . fst) cL
+          else serviceGeneral s  
+
 {--
-           let valueParse = fromRight [("","")] commandLineParse
-           let pollingGeneral workValue =
-                 if isJust $ find ((=="polling:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="polling:") . fst) valueParse
---                      concat $ map (\x -> case x of ("polling:", y) -> y ; _ -> "") valueParse
-                   else pollingGeneral setupGeneral
-           let repeatGeneral workValue =
-                 if isJust $ find ((=="repeat:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="repeat:") . fst) valueParse
-                   else repeatGeneral setupGeneral
-           let loglevelGeneral workValue =
-                 if isJust $ find ((=="loglevel:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="loglevel:") . fst) valueParse
-                   else loglevelGeneral setupGeneral
-           let serviceGeneral workValue =
-                 if isJust $ find ((=="service:") . fst) valueParse
-                   then snd $ fromJust $ find ((=="service:") . fst) valueParse
-                   else serviceGeneral setupGeneral
---}
-
-valueParse :: Parse a b -> [(String,String)]
-valueParse commandLineParse = fromRight [("","")] commandLineParse
-
 fromCommandLine :: SetupGeneral -> [(String,String)] -> SetupGeneral
 fromCommandLine p v =
   if (isJust $ find ((=="polling:") . fst) v)
@@ -158,32 +157,8 @@ fromCommandLine p v =
       let x = snd $ fromJust $ find ((=="service:") . fst) v
         in fromCommandLine {serviceGeneral  = x}
     else   fromCommandLine {serviceGeneral  = serviceGeneral (p)}
-
-
-{--
-  if isJust $ find ((=="polling:") . fst) valueParse
-    then snd $ fromJust $ find ((=="polling:") . fst) valueParse
---       concat $ map (\x -> case x of ("polling:", y) -> y ; _ -> "") valueParse
-    else repeatGeneral setupGeneral
-
---repeatGeneral ::
-repeatGeneral workValue =
-  if isJust $ find ((=="repeat:") . fst) valueParse
-    then snd $ fromJust $ find ((=="repeat:") . fst) valueParse
-    else repeatGeneral setupGeneral
-
---loglevelGeneral ::
-loglevelGeneral workValue =
-  if isJust $ find ((=="loglevel:") . fst) valueParse
-    then snd $ fromJust $ find ((=="loglevel:") . fst) valueParse
-    else loglevelGeneral setupGeneral
-
---serviceGeneral ::
-serviceGeneral workValue =
-  if isJust $ find ((=="service:") . fst) valueParse
-    then snd $ fromJust $ find ((=="service:") . fst) valueParse
-    else serviceGeneral setupGeneral
 --}
+
 fromLeft :: String -> Parse a b -> String
 fromLeft _ (Err a) = a
 fromLeft a _       = a
@@ -204,5 +179,5 @@ makeSystemPath str =
       | otherwise                    = []
     makeSystemPath'' [] = []
     makeSystemPath'' (x0:x1:x2:x3:x4:xs)
-      | x0:x1:x2:x3:x4:[] /= "\\bot" = x0 : makeSystemPath'' (x1:x2:x3:x4:xs)
+      | x0:x1:x2:x3:x4:[] /= "\\bot\\" = x0 : makeSystemPath'' (x1:x2:x3:x4:xs)
       | otherwise                    = []
