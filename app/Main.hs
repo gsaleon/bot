@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Main (
@@ -29,7 +28,7 @@ import           Data.Maybe           (fromJust)
 import           Services.ParseCommandLine
 import           Lib
 import           App.Types.Config
---import           App.Handlers.LogCommandLine
+import           App.Types.HandleLog
 
 main :: IO ()
 main = do

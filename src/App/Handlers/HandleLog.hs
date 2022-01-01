@@ -1,4 +1,4 @@
-module App.Handlers.LogCommandLine (logCommandLine) where
+module App.Handlers.HandleLog where
 
 
 data LogCommandLine m = LogCommandLine

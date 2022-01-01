@@ -25,10 +25,16 @@ source-repository head
 
 library
   exposed-modules:
-      App.Handlers.LogCommandLine
+      App.Handlers.HandleLog
+      App.Handlers.HandleTelegramm
+      App.Handlers.HandleVcontakte
       App.Types.Config
+      App.Types.HandleLog
       Lib
+      Services.LogM
       Services.ParseCommandLine
+      Services.Telegramm
+      Services.Vcontakte
   other-modules:
       Paths_bot_main
   hs-source-dirs:

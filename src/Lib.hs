@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Lib where
 
 import           Data.Maybe           (fromJust, isJust)
@@ -63,31 +61,6 @@ fromCommandLine s cL = SetupGeneral { pollingGeneral  = a
     d = if (isJust $ find ((=="service:") . fst) cL)
           then snd $ fromJust $ find ((=="service:") . fst) cL
           else serviceGeneral s  
-
-{--
-fromCommandLine :: SetupGeneral -> [(String,String)] -> SetupGeneral
-fromCommandLine p v =
-  if (isJust $ find ((=="polling:") . fst) v)
-    then 
-      let x = read $ snd $ fromJust $ find ((=="polling:") . fst) v :: Int
-        in fromCommandLine {pollingGeneral  = x}
-    else   fromCommandLine {pollingGeneral  = pollingGeneral (p)}
-  if (isJust $ find ((=="repeat:") . fst) v)
-    then 
-      let x = read $ snd $ fromJust $ find ((=="repeat:") . fst) v :: Int
-        in fromCommandLine {repeatGeneral   = x}
-    else   fromCommandLine {repeatGeneral   = repeatGeneral (p)}
-  if (isJust $ find ((=="loglevel:") . fst) v)
-    then 
-      let x = snd $ fromJust $ find ((=="loglevel:") . fst) v
-        in fromCommandLine {logLevelGeneral = x}
-    else   fromCommandLine {logLevelGeneral = logLevelGeneral (p)}
-  if (isJust $ find ((=="service:") . fst) v)
-    then 
-      let x = snd $ fromJust $ find ((=="service:") . fst) v
-        in fromCommandLine {serviceGeneral  = x}
-    else   fromCommandLine {serviceGeneral  = serviceGeneral (p)}
---}
 
 fromLeft :: String -> Parse a b -> String
 fromLeft _ (Err a) = a

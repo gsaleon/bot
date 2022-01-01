@@ -12,8 +12,8 @@ data Os = Linux | Windows
 data Service = Telegramm | Vcontakte
   deriving Show
 
-data LogLevel = Debug | Info | Warning | Error
-  deriving (Eq, Ord, Show)
+--data LogLevel = Debug | Info | Warning | Error
+--  deriving (Eq, Ord, Show)
 
 data SetupTelegramm = SetupTelegramm
                     { urlTelegramm            :: String
