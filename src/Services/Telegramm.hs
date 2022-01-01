@@ -1,2 +1,2 @@
-module App.Services.Telegramm where
+module Services.Telegramm where
 

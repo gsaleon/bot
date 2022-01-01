@@ -1,9 +1,9 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (
-             main,  LogLevel (Debug, Info, Warning, Error)
+module Main ( main,  LogLevel (Debug, Info, Warning, Error)
             , Os (Linux, Windows), Service (Telegramm, Vcontakte)
-             ) where
+            , sysPath, logSet
+            ) where
 
 --import qualified Data.Text as T
 import qualified Data.ByteString as B (readFile)
@@ -49,10 +49,13 @@ main = do
 --         putStrLn ("systemPathStart - " ++ show systemPathStart)
          putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
 --       Control and read config files
-         let sysPathConfig = systemPath ++ "/config/configBot"
+         let sysPathConfig    = systemPath ++ "/config/configBot"
          let sysPathTelegramm = systemPath ++ "/config/configTelegramm"
          let sysPathVcontakte = systemPath ++ "/config/configVcontakte"
-         let sysPathHelp = systemPath ++ "/config/configHelp"
+         let sysPathHelp      = systemPath ++ "/config/configHelp"
+         firstLogData1 <- firstLogData
+         putStrLn firstLogData1
+         putStrLn ("")
          mapM_ (\(x, y) ->
                   catch (readFile x >>= (\a -> putStr ""))
                     (\e ->  case e of
@@ -101,13 +104,19 @@ main = do
            die "Multiple Value arguments. Usage stack run -- -[Args] or \
              \ stack run -- -h (--help) for help"
          when (commandLineParseErr == "value")         $ do
+           let mess0 = "with value define command line"
            let workGeneral = fromCommandLine (fromJust setupGeneral) commandLineParseValue
-           putStrLn ("Start with next value paramets (not default value)")
+           putStrLn ("Start " ++ mess0)
            putStrLn (printPrettySetup workGeneral)
          when (commandLineParseErr == "notInput")         $ do
+           let mess0 = "with with default value paramets"
            let workGeneral = fromJust setupGeneral
-           putStrLn ("Start with default value paramets")
+           putStrLn ("Start " ++ mess0)
            putStrLn (printPrettySetup workGeneral)
+
+--       Write log about start programm
+         let mess = "Start " ++ mess0
+         logM handleLog mess
            
          putStrLn ("--------------------Stop---------------------")
 

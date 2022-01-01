@@ -1,2 +1,2 @@
-module App.Services.LogM where
+module Services.LogM where
 

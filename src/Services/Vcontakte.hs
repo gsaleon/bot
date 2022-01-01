@@ -1,2 +1,2 @@
-module App.Services.Vcontakte where
+module Services.Vcontakte where
 
