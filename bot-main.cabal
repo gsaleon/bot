@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       App.Handlers.LogCommandLine
+      App.Types.Config
       Lib
       Services.ParseCommandLine
   other-modules:

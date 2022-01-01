@@ -28,6 +28,7 @@ import           Data.Maybe           (fromJust)
 
 import           Services.ParseCommandLine
 import           Lib
+import           App.Types.Config
 --import           App.Handlers.LogCommandLine
 
 main :: IO ()
@@ -47,7 +48,7 @@ main = do
          let systemPath = fst $ makeSystemPath systemPathStart
          let operSystem = snd $ makeSystemPath systemPathStart
 --         putStrLn ("systemPathStart - " ++ show systemPathStart)
---         putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
+         putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
 --       Control and read config files
          let sysPathConfig = systemPath ++ "/config/configBot"
          let sysPathTelegramm = systemPath ++ "/config/configTelegramm"
