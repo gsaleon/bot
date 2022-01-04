@@ -5,15 +5,13 @@ module App.Types.Config where
 import           Control.Monad        (mzero)
 import           Data.Aeson
 
---Define Types wich uses in Config modules
 data Os = Linux | Windows
-  deriving Show
+  deriving (Show)
 
 data Service = Telegramm | Vcontakte
-  deriving Show
+  deriving (Show)
 
---data LogLevel = Debug | Info | Warning | Error
---  deriving (Eq, Ord, Show)
+-- type SysPath :: String
 
 data SetupTelegramm = SetupTelegramm
                     { urlTelegramm            :: String

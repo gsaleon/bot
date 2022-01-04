@@ -9,21 +9,21 @@ import           App.Types.Config
 printPrettyVcontakte :: SetupVcontakte -> String
 printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
      userNameVcontakte tokenVcontakte descriptionVcontakte
-     aboutVcontakte commandVcontakte) =
-  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
+     aboutVcontakte commandVcontakte) = ""
+{-  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "userNameVcontakte -    " ++ userNameVcontakte    ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "descriptionVcontakte - " ++ descriptionVcontakte ++ "\n" ++
   "aboutVcontakte -       " ++ aboutVcontakte       ++ "\n" ++
   "commandVcontakte -     " ++ commandVcontakte     ++ "\n" ++
-  "----------------------end printPrettyVcontakte------------"
+  "----------------------end printPrettyVcontakte------------"-}
 
 printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
      userNameTelegramm tokenTelegramm descriptionTelegramm
-     aboutTelegramm commandTelegramm questionTelegrammRepeat) =
-  "urlTelegramm -         " ++ urlTelegramm         ++ "\n" ++
+     aboutTelegramm commandTelegramm questionTelegrammRepeat) = ""
+{-  "urlTelegramm -         " ++ urlTelegramm         ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
   "userNameTelegramm -    " ++ userNameTelegramm    ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
@@ -31,7 +31,7 @@ printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
   "aboutTelegramm -       " ++ aboutTelegramm       ++ "\n" ++
   "commandTelegramm -     " ++ commandTelegramm     ++ "\n" ++
   "questionTelegrammRepeat" ++ "\n" ++
-  "----------------------end printPrettyTelegramm------------"
+  "----------------------end printPrettyTelegramm------------"-}
 
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral

@@ -1,13 +1,13 @@
 /home/gsaleon/MyProject/bot/src/Services/LogM.hs:
-  hash: ed14afe618263909360920fb88a1d40f0db1416e403a583f9525f11c06f98a6e
+  hash: 00fae4e53224e38d5a6cefe8c691b800a82812e35794b5f994600f1e3c604204
 /home/gsaleon/MyProject/bot/README.md:
   hash: f534815946dc7e4923c71545865b2a58ed84d5d7eb4c0f7463bf4a239e8579e7
 /home/gsaleon/MyProject/bot/src/Services/ParseCommandLine.hs:
-  hash: d628313cb875f4bc1dfa1d2e78e75cffad5f209f4c4afca8abce0c563ce7bdd8
+  hash: 31ea7230e33ffa651c161e118784489f1f9d821330c3692f803dd1c8bf39b220
 /home/gsaleon/MyProject/bot/ChangeLog.md:
   hash: 3bf0975fc1a216be669b46c73ae4fc6a98baa74faff3347a4a2e43677faa1487
 /home/gsaleon/MyProject/bot/bot-main.cabal:
-  hash: c3979cec049566dc1f6a895c42b77ee64926ab3a1f272fc989647e6f18ff100f
+  hash: 67ad7df6c5dac5c8b8e3fba77235a5f01681c86124bfd2f4138baf3b03d52edd
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleTelegramm.hs:
   hash: 0e4b6bd248663c2d0f41c3285e4ff1a974fafa60714f86ed4bdecf14966eb03a
 /home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/cabal_macros.h:
@@ -19,18 +19,18 @@
 /home/gsaleon/MyProject/bot/src/Services/Vcontakte.hs:
   hash: 2aa82f043748019a8b9d7bfab1488b8c18024ae4d10f52727d785e51624c269f
 /home/gsaleon/MyProject/bot/src/Lib.hs:
-  hash: 118035297407b5029356115596fc321731cc19b52aa0ede6e1523383fad9c2c6
+  hash: 439fd5547e0de52db87f6bb1ad2fea73ba592b2b313d8f9d9e7584a3bae050c3
 /home/gsaleon/MyProject/bot/src/App/Types/Config.hs:
-  hash: 88760ea2d71ea25fb6b7eeec3980407c9ae487ddd3c01eb8485b0aaac1a784f2
+  hash: 7ad2e6941ec716ba53815dd40e6bdeae548a999b32d29c24a8d7d2ec8a21aeef
 /home/gsaleon/MyProject/bot/src/Services/Telegramm.hs:
   hash: 5686885eb71eb7dde43311021fe4175d636ce362f80a9adfc768a2da74b5c74a
 /home/gsaleon/MyProject/bot/package.yaml:
   hash: 5a7b1c84fcfa0b1f1d7814b6641183248efaee3f897e81db3d008c9eafb1d168
 /home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/Paths_bot_main.hs:
   hash: 636722ea481a6db246d353cdcd13c12f829f1522b9b343015e9ac6a08dfdc6e3
+/home/gsaleon/MyProject/bot/src/App/Types/Log.hs:
+  hash: e650bf5bdffe3fdab149fedcd03bc4b183a2a341e29add0cbbcc78fbd43f06ce
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleVcontakte.hs:
   hash: 51e98f1080d14390fee783350ca002ded6ced472f444d611c0dfa2ed7ebb37cf
-/home/gsaleon/MyProject/bot/src/App/Types/HandleLog.hs:
-  hash: d5e993f88f51e31200f16800c5a9cc85a10849030fd7bfe824bd7fb53823ffe0
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleLog.hs:
-  hash: 8cbe44bc14a42b10663635dc7d5723fad2aafed3cb7655c0707c8ca442d3a3c6
+  hash: fac1c801fa1fbc1581e401aa8f12e4b819ccbecd3597e1cd20476f49cd66fbc7

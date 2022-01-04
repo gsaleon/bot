@@ -29,7 +29,7 @@ library
       App.Handlers.HandleTelegramm
       App.Handlers.HandleVcontakte
       App.Types.Config
-      App.Types.HandleLog
+      App.Types.Log
       Lib
       Services.LogM
       Services.ParseCommandLine
