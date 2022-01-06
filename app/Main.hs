@@ -1,34 +1,41 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main ( main,  LogLevel (..), Os (..), Service (..)
             ) where
 
 --import qualified Data.Text as T
-import qualified Data.ByteString as B   (readFile)
-import           Control.Exception      (catch)
-import           System.IO              (openFile, IOMode(ReadWriteMode), hClose)
-import           System.IO.Error        ( isAlreadyExistsError, isDoesNotExistError
-                                        , isEOFError, isPermissionError
-                                        , isAlreadyExistsError, isAlreadyExistsError
-                                        , isAlreadyExistsError, isAlreadyInUseError
-                                        )
-import           Data.Aeson             (decodeStrict)
-import           System.Environment     (getArgs, getExecutablePath, getProgName)
-import           Debug.Trace()                     -- для отладки, по готовности проги - удалить!!
-import           System.Exit            (die)
-import           Data.Maybe             (fromJust)
+import           Network.HTTP.Conduit
+-- import qualified Data.ByteString.Lazy.Char8 as L8
+-- import qualified Data.ByteString.Lazy       as L
+import           GHC.Generics
+import qualified Data.ByteString            as B  (readFile)
+import           Control.Exception                (catch)
+import           System.IO                        (openFile, IOMode(ReadWriteMode), hClose)
+import           System.IO.Error                  ( isAlreadyExistsError, isDoesNotExistError
+                                                  , isEOFError, isPermissionError
+                                                  , isAlreadyExistsError, isAlreadyExistsError
+                                                  , isAlreadyExistsError, isAlreadyInUseError
+                                                  )
+import           Data.Aeson                       (decode, decodeStrict, Value, Object)
+import           System.Environment               (getArgs, getExecutablePath, getProgName)
+import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
+import           System.Exit                      (die)
+import           Data.Maybe                       (fromJust)
+import           Data.Text
+import           Prelude                  hiding  (id)
 
 import           Services.ParseCommandLine
 import           Lib
 import           App.Types.Config
 import           App.Types.Log
-import           Services.LogM          (parseLogLevel, makeLogMessage, logM)
-import           App.Handlers.HandleLog (handleLog, handleLogN)
+import           Services.LogM                    (parseLogLevel, makeLogMessage, logM)
+import           App.Handlers.HandleLog           (handleLog)
 
 main :: IO ()
 main = do
-  putStrLn ("------------------Start--------------------")
+  putStrLn "------------------Start--------------------"
   -- Read command line arguments
   commandLine <- getArgs
   let commandLineParse = parseLine commandLine
@@ -37,7 +44,7 @@ main = do
   -- putStrLn ("commandLineParse - " ++ show commandLineParse)
   -- putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
   -- putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
-  putStrLn ("")
+  putStrLn ""
   -- Initialising, make system path
   systemPathStart <- getExecutablePath
   let systemPath = fst $ makeSystemPath systemPathStart :: FilePath
@@ -49,7 +56,7 @@ main = do
   let sysPathTelegramm = systemPath ++ "/config/configTelegramm" :: FilePath
   let sysPathVcontakte = systemPath ++ "/config/configVcontakte" :: FilePath
   let sysPathHelp      = systemPath ++ "/config/configHelp" :: FilePath
-  putStrLn ("")
+  putStrLn ""
   mapM_ (\(x, y) ->
     catch (readFile x >>= (\a -> putStr ""))
       (\e ->  case e of
@@ -70,13 +77,13 @@ main = do
           ,(sysPathTelegramm, "configTelegramm")
           ,(sysPathHelp,      "configHelp")
           ]
-  -- Control and log files
+  -- Control log files
   let sysPathDebugLog   = systemPath ++ "logs/Debug.log" :: FilePath
   let sysPathErrorLog   = systemPath ++ "logs/Error.log" :: FilePath
   let sysPathInfoLog    = systemPath ++ "logs/Info.log" :: FilePath
   let sysPathWarningLog = systemPath ++ "logs/Warning.log" :: FilePath
   mapM_ (\(x, y) ->
-    catch (openFile x ReadWriteMode >>= (\a -> hClose a))
+    catch (openFile x ReadWriteMode >>= hClose)
       (\e ->  case e of
         _  | isAlreadyExistsError e -> error 
                ("Error: File " ++ y ++ " alredy exists")
@@ -98,7 +105,7 @@ main = do
           ,(sysPathInfoLog,    "Info.log")
           ,(sysPathWarningLog, "Warning.log")
           ]
-
+  -- Control config files
   rawJSONConfig <- B.readFile sysPathConfig
   let setupGeneral = decodeStrict rawJSONConfig 
   putStrLn $ case setupGeneral of
@@ -114,12 +121,11 @@ main = do
   putStrLn $ case setupVcontakte of
     Nothing             -> "Invalid configVcontakte JSON!"
     Just setupVcontakte -> printPrettyVcontakte setupVcontakte
-
-  -- Write help, initialising with command line arguments
+  -- Print help, initialising with (or not) command line arguments
   case commandLineParseErr of
     "help"          -> do
         helpBig <- readFile sysPathHelp
-        putStrLn (helpBig)
+        putStrLn helpBig
         die "Stop running"
     "parsingError"  -> do
         die "Usage stack run -- -[Args] or stack run -- -h (--help) \
@@ -128,8 +134,8 @@ main = do
         die "Multiple Value arguments. Usage stack run -- -[Args] or \
         \ stack run -- -h (--help) for help"
     _               -> putStr ""
-  let workGeneral = fst $ fromOut commandLineParseErr setupGeneral commandLineParseValue
-  let mess = snd $ fromOut commandLineParseErr setupGeneral commandLineParseValue
+  let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
+  let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
   putStrLn mess
   putStrLn (printPrettySetup workGeneral)
   -- Write in log about start programm
@@ -142,13 +148,22 @@ main = do
   putStrLn ("logLevel - " ++ show (fst logLevel) ++ " sysPath - " ++ show (snd logLevel))
   message <- makeLogMessage logLevel progName mess
   logM handleLog logLevel message
-{-  message <- makeLogMessageN logLevel progName mess
-  logM handleLogN logLevel message-}
- 
-  putStrLn ("--------------------Stop---------------------")
+  -- Basic function bot
+  let requestGetMe = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm) ++ "/getMe"
+  -- putStrLn requestGetMe
+  -- simpleHttp request >>= L.putStrLn
+  responseGetMeTelegram <- simpleHttp requestGetMe
+  -- print (decode $ responseGetMeTelegram :: Maybe ResponseGetMe)
+  let respGetMeTelegram = decode $ responseGetMeTelegram :: Maybe ResponseGetMe
+  putStrLn $ case respGetMeTelegram of
+    Nothing           -> "Error response Telegramm"
+    Just respGetMeTelegram -> printResponseGetMe respGetMeTelegram
 
-fromOut :: String -> Maybe SetupGeneral -> [(String, String)] -> (SetupGeneral, [Char])
-fromOut cPE setupGeneral commandLineParseValue =
+
+  putStrLn "--------------------Stop---------------------"
+
+fromOutCommandLine :: String -> Maybe SetupGeneral -> [(String, String)] -> (SetupGeneral, [Char])
+fromOutCommandLine cPE setupGeneral commandLineParseValue =
   if cPE == "value"
     then
       ( fromCommandLine (fromJust setupGeneral) commandLineParseValue

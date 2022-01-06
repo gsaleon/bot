@@ -6,5 +6,3 @@ data LogLevel = Debug | Info | Warning | Error
 data HandleLog = HandleLog
     { writeLog :: (LogLevel, FilePath) -> String -> IO () }
 
-data HandleLogN = HandleLogN
-    { writeLogN :: (LogLevel, FilePath) -> String -> IO () }

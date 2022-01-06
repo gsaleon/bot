@@ -2,14 +2,15 @@ module Lib where
 
 import           Data.Maybe           (fromJust, isJust)
 import           Data.List            (find)
+import           Prelude       hiding (id)
 
 import           Services.ParseCommandLine (Parse(Err, Value))
 import           App.Types.Config
 
 printPrettyVcontakte :: SetupVcontakte -> String
 printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
-     userNameVcontakte tokenVcontakte descriptionVcontakte
-     aboutVcontakte commandVcontakte) = ""
+      userNameVcontakte tokenVcontakte descriptionVcontakte
+      aboutVcontakte commandVcontakte) = ""
 {-  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "userNameVcontakte -    " ++ userNameVcontakte    ++ "\n" ++
@@ -21,26 +22,61 @@ printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
 
 printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
-     userNameTelegramm tokenTelegramm descriptionTelegramm
-     aboutTelegramm commandTelegramm questionTelegrammRepeat) = ""
-{-  "urlTelegramm -         " ++ urlTelegramm         ++ "\n" ++
-  "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
-  "userNameTelegramm -    " ++ userNameTelegramm    ++ "\n" ++
-  "tokenTelegramm -       " ++ tokenTelegramm       ++ "\n" ++
-  "descriptionTelegramm - " ++ descriptionTelegramm ++ "\n" ++
-  "aboutTelegramm -       " ++ aboutTelegramm       ++ "\n" ++
-  "commandTelegramm -     " ++ commandTelegramm     ++ "\n" ++
-  "questionTelegrammRepeat" ++ "\n" ++
+      userNameTelegramm tokenTelegramm descriptionTelegramm
+      aboutTelegramm commandTelegramm questionTelegrammRepeat) = ""
+{-  "urlTelegramm -         " ++ urlTelegramm            ++ "\n" ++
+  "tokenTelegramm -       " ++ tokenTelegramm          ++ "\n" ++
+  "userNameTelegramm -    " ++ userNameTelegramm       ++ "\n" ++
+  "tokenTelegramm -       " ++ tokenTelegramm          ++ "\n" ++
+  "descriptionTelegramm - " ++ descriptionTelegramm    ++ "\n" ++
+  "aboutTelegramm -       " ++ aboutTelegramm          ++ "\n" ++
+  "commandTelegramm -     " ++ commandTelegramm        ++ "\n" ++
+  "questionTelegrammRepeat" ++ questionTelegrammRepeat ++"\n" ++
   "----------------------end printPrettyTelegramm------------"-}
 
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
-     logLevelGeneral serviceGeneral) =
+      logLevelGeneral serviceGeneral) =
   "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
   "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
   "logLevelGeneral -      " ++ show logLevelGeneral ++ "\n" ++
   "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++
   "----------------------end printPrettySetup----------------"
+
+{-printResponseGetMe :: ResponseGetMe -> String
+printResponseGetMe (ResponseGetMe ok result) = 
+  "ok                      - "     ++ show ok                          ++ "\n" ++
+  "----------------------end printResultGetMe---------------"-}
+
+printResponseGetMe :: ResponseGetMe -> String
+printResponseGetMe (ResponseGetMe ok id is_bot first_name
+      username can_join_groups can_read_all_group_messages
+      supports_inline_queries) = 
+  "ok                          - " ++ show ok                          ++ "\n" ++
+  "id -                          " ++ show id                          ++ "\n" ++
+  "is_bot -                      " ++ show is_bot                      ++ "\n" ++
+  "first_name -                  " ++ show first_name                  ++ "\n" ++
+  "username -                    " ++ show username                    ++ "\n" ++
+  "can_join_groups -             " ++ show can_join_groups             ++ "\n" ++
+  "can_read_all_group_messages - " ++ show can_read_all_group_messages ++ "\n" ++
+  "supports_inline_queries - "     ++ show supports_inline_queries     ++ "\n" ++  
+  "----------------------end printResultGetMe---------------"
+
+
+{-printResultGetMe :: ResultGetMe -> String
+printResultGetMe (ResultGetMe id is_bot first_name
+      username can_join_groups can_read_all_group_messages
+      supports_inline_queries) =
+  "id -                          " ++ show id                          ++ "\n" ++
+  "is_bot -                      " ++ show is_bot                      ++ "\n" ++
+  "first_name -                  " ++ show first_name                  ++ "\n" ++
+  "username -                    " ++ show username                    ++ "\n" ++
+  "can_join_groups -             " ++ show can_join_groups             ++ "\n" ++
+  "can_read_all_group_messages - " ++ show can_read_all_group_messages ++ "\n" ++
+  "supports_inline_queries - "     ++ show supports_inline_queries     ++ "\n" ++
+  "----------------------end printResultGetMe---------------"-}
+
+
 
 fromCommandLine :: SetupGeneral ->[(String, String)] -> SetupGeneral
 fromCommandLine s cL = SetupGeneral { pollingGeneral  = a

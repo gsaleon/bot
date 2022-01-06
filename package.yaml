@@ -25,6 +25,8 @@ dependencies:
 - aeson
 - filepath
 - time
+- http-conduit
+- text
 
 library:
   source-dirs:           src
