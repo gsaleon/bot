@@ -6,6 +6,8 @@ import           Prelude       hiding (id)
 
 import           Services.ParseCommandLine (Parse(Err, Value))
 import           App.Types.Config
+import           App.Types.ConfigTelegram
+import           App.Types.ConfigVcontakte
 
 printPrettyVcontakte :: SetupVcontakte -> String
 printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
@@ -43,39 +45,19 @@ printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
   "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++
   "----------------------end printPrettySetup----------------"
 
-{-printResponseGetMe :: ResponseGetMe -> String
-printResponseGetMe (ResponseGetMe ok result) = 
-  "ok                      - "     ++ show ok                          ++ "\n" ++
-  "----------------------end printResultGetMe---------------"-}
-
 printResponseGetMe :: ResponseGetMe -> String
 printResponseGetMe (ResponseGetMe ok id is_bot first_name
       username can_join_groups can_read_all_group_messages
       supports_inline_queries) = 
   "ok                          - " ++ show ok                          ++ "\n" ++
-  "id -                          " ++ show id                          ++ "\n" ++
-  "is_bot -                      " ++ show is_bot                      ++ "\n" ++
-  "first_name -                  " ++ show first_name                  ++ "\n" ++
-  "username -                    " ++ show username                    ++ "\n" ++
-  "can_join_groups -             " ++ show can_join_groups             ++ "\n" ++
+  "id                          - " ++ show id                          ++ "\n" ++
+  "is_bot                      - " ++ show is_bot                      ++ "\n" ++
+  "first_name                  - " ++ show first_name                  ++ "\n" ++
+  "username                    - " ++ show username                    ++ "\n" ++
+  "can_join_groups             - " ++ show can_join_groups             ++ "\n" ++
   "can_read_all_group_messages - " ++ show can_read_all_group_messages ++ "\n" ++
-  "supports_inline_queries - "     ++ show supports_inline_queries     ++ "\n" ++  
+  "supports_inline_queries     - " ++ show supports_inline_queries     ++ "\n" ++  
   "----------------------end printResultGetMe---------------"
-
-
-{-printResultGetMe :: ResultGetMe -> String
-printResultGetMe (ResultGetMe id is_bot first_name
-      username can_join_groups can_read_all_group_messages
-      supports_inline_queries) =
-  "id -                          " ++ show id                          ++ "\n" ++
-  "is_bot -                      " ++ show is_bot                      ++ "\n" ++
-  "first_name -                  " ++ show first_name                  ++ "\n" ++
-  "username -                    " ++ show username                    ++ "\n" ++
-  "can_join_groups -             " ++ show can_join_groups             ++ "\n" ++
-  "can_read_all_group_messages - " ++ show can_read_all_group_messages ++ "\n" ++
-  "supports_inline_queries - "     ++ show supports_inline_queries     ++ "\n" ++
-  "----------------------end printResultGetMe---------------"-}
-
 
 
 fromCommandLine :: SetupGeneral ->[(String, String)] -> SetupGeneral

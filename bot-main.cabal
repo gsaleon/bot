@@ -29,6 +29,8 @@ library
       App.Handlers.HandleTelegramm
       App.Handlers.HandleVcontakte
       App.Types.Config
+      App.Types.ConfigTelegram
+      App.Types.ConfigVcontakte
       App.Types.Log
       Lib
       Services.LogM
@@ -44,7 +46,10 @@ library
     , base >=4.7 && <5
     , bytestring
     , filepath
+    , http-client
+    , http-client-tls
     , http-conduit
+    , http-types
     , text
     , time
   default-language: Haskell2010
@@ -62,7 +67,10 @@ executable bot-main-exe
     , bot-main
     , bytestring
     , filepath
+    , http-client
+    , http-client-tls
     , http-conduit
+    , http-types
     , text
     , time
   default-language: Haskell2010
@@ -85,7 +93,10 @@ test-suite bot-main-test
     , bot-main
     , bytestring
     , filepath
+    , http-client
+    , http-client-tls
     , http-conduit
+    , http-types
     , text
     , time
   default-language: Haskell2010

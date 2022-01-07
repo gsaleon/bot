@@ -6,10 +6,15 @@ module Main ( main,  LogLevel (..), Os (..), Service (..)
             ) where
 
 --import qualified Data.Text as T
-import           Network.HTTP.Conduit
--- import qualified Data.ByteString.Lazy.Char8 as L8
+import           Network.HTTP.Conduit     -- as Con
+import           Network.HTTP.Client       as Cli
+-- import           Network.HTTP.Client.TLS
+import           Network.HTTP.Types.Status        (statusCode)
+-- import           Data.Text                        (Text)
+
+import qualified Data.ByteString.Lazy.Char8 as L8
 -- import qualified Data.ByteString.Lazy       as L
-import           GHC.Generics
+-- import           GHC.Generics
 import qualified Data.ByteString            as B  (readFile)
 import           Control.Exception                (catch)
 import           System.IO                        (openFile, IOMode(ReadWriteMode), hClose)
@@ -18,17 +23,18 @@ import           System.IO.Error                  ( isAlreadyExistsError, isDoes
                                                   , isAlreadyExistsError, isAlreadyExistsError
                                                   , isAlreadyExistsError, isAlreadyInUseError
                                                   )
-import           Data.Aeson                       (decode, decodeStrict, Value, Object)
+import           Data.Aeson                       (Object, decode, decodeStrict, (.=), object, encode)
 import           System.Environment               (getArgs, getExecutablePath, getProgName)
 import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
 import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
-import           Data.Text
+-- import           Data.Text
 import           Prelude                  hiding  (id)
 
 import           Services.ParseCommandLine
 import           Lib
 import           App.Types.Config
+import           App.Types.ConfigTelegram
 import           App.Types.Log
 import           Services.LogM                    (parseLogLevel, makeLogMessage, logM)
 import           App.Handlers.HandleLog           (handleLog)
@@ -138,7 +144,8 @@ main = do
   let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
   putStrLn mess
   putStrLn (printPrettySetup workGeneral)
-  -- Write in log about start programm
+
+  -- Make note in log about start programm
   progName <- getProgName
   let logLevel = case parseLogLevel $ logLevelGeneral workGeneral of
             Debug   -> (Debug, sysPathDebugLog)
@@ -147,17 +154,36 @@ main = do
             Error   -> (Error, sysPathErrorLog)
   putStrLn ("logLevel - " ++ show (fst logLevel) ++ " sysPath - " ++ show (snd logLevel))
   message <- makeLogMessage logLevel progName mess
-  logM handleLog logLevel message
+  logM handleLog logLevel message  -- Write note in log about start programm
+
   -- Basic function bot
-  let requestGetMe = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm) ++ "/getMe"
+  let urlTel = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm)
+  let requestGetMe = urlTel ++ "/getMe"
   -- putStrLn requestGetMe
-  -- simpleHttp request >>= L.putStrLn
   responseGetMeTelegram <- simpleHttp requestGetMe
   -- print (decode $ responseGetMeTelegram :: Maybe ResponseGetMe)
   let respGetMeTelegram = decode $ responseGetMeTelegram :: Maybe ResponseGetMe
   putStrLn $ case respGetMeTelegram of
     Nothing           -> "Error response Telegramm"
     Just respGetMeTelegram -> printResponseGetMe respGetMeTelegram
+  let requestGetUpdates = urlTel ++ "/getUpdates"
+  responseGetUpdatesTelegram <- simpleHttp requestGetUpdates
+  print (decode $ responseGetUpdatesTelegram :: Maybe Object)
+  --First request
+  manager <- newManager tlsManagerSettings
+  putStrLn "-------------------------------"
+  let requestObject = object ["offset" .= (565934639 :: Int)]
+  let requestGetUpdatesJson = urlTel ++ "/getUpdates"
+  initialRequest <- parseRequest requestGetUpdatesJson
+  let request = initialRequest 
+              { method = "GET"
+              , requestBody = RequestBodyLBS $ encode requestObject
+              , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
+               }
+
+  response <- Cli.httpLbs request manager
+  putStrLn $ "The status code was: " ++ (show $ statusCode $ responseStatus response)
+  L8.putStrLn $ responseBody response
 
 
   putStrLn "--------------------Stop---------------------"
@@ -171,5 +197,5 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
       )
     else
       ( fromJust setupGeneral
-      , "Start with with default value paramets"
+      , "Start with default value paramets"
       )

@@ -55,6 +55,28 @@
   (major1) == 1 && (major2) == 4 && (minor) <= 2)
 #endif /* MIN_VERSION_filepath */
 
+/* package http-client-0.6.4.1 */
+#ifndef VERSION_http_client
+#define VERSION_http_client "0.6.4.1"
+#endif /* VERSION_http_client */
+#ifndef MIN_VERSION_http_client
+#define MIN_VERSION_http_client(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  6 || \
+  (major1) == 0 && (major2) == 6 && (minor) <= 4)
+#endif /* MIN_VERSION_http_client */
+
+/* package http-client-tls-0.3.5.3 */
+#ifndef VERSION_http_client_tls
+#define VERSION_http_client_tls "0.3.5.3"
+#endif /* VERSION_http_client_tls */
+#ifndef MIN_VERSION_http_client_tls
+#define MIN_VERSION_http_client_tls(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 5)
+#endif /* MIN_VERSION_http_client_tls */
+
 /* package http-conduit-2.3.8 */
 #ifndef VERSION_http_conduit
 #define VERSION_http_conduit "2.3.8"
@@ -65,6 +87,17 @@
   (major1) == 2 && (major2) <  3 || \
   (major1) == 2 && (major2) == 3 && (minor) <= 8)
 #endif /* MIN_VERSION_http_conduit */
+
+/* package http-types-0.12.3 */
+#ifndef VERSION_http_types
+#define VERSION_http_types "0.12.3"
+#endif /* VERSION_http_types */
+#ifndef MIN_VERSION_http_types
+#define MIN_VERSION_http_types(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  12 || \
+  (major1) == 0 && (major2) == 12 && (minor) <= 3)
+#endif /* MIN_VERSION_http_types */
 
 /* package text-1.2.4.1 */
 #ifndef VERSION_text
@@ -254,10 +287,10 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_PACKAGE_KEY
-#define CURRENT_PACKAGE_KEY "bot-main-0.1.0.0-9KA7hkJaxis11kjvOQfpys"
+#define CURRENT_PACKAGE_KEY "bot-main-0.1.0.0-96onawrJbGOLST24epgVYf"
 #endif /* CURRENT_PACKAGE_KEY */
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-9KA7hkJaxis11kjvOQfpys"
+#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-96onawrJbGOLST24epgVYf"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"

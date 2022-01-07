@@ -26,6 +26,9 @@ dependencies:
 - filepath
 - time
 - http-conduit
+- http-client
+- http-client-tls
+- http-types
 - text
 
 library:
