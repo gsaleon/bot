@@ -14,16 +14,19 @@ import           Network.HTTP.Types.Status        (statusCode)
 
 import qualified Data.ByteString.Lazy.Char8 as L8
 -- import qualified Data.ByteString.Lazy       as L
--- import           GHC.Generics
 import qualified Data.ByteString            as B  (readFile)
 import           Control.Exception                (catch)
+import           Data.Conduit                     (($$))
+import           Network.HTTP.Client.Conduit      (bodyReaderSource)
+import           Data.Aeson.Parser                (json)
+import           Data.Conduit.Attoparsec          (sinkParser)
 import           System.IO                        (openFile, IOMode(ReadWriteMode), hClose)
 import           System.IO.Error                  ( isAlreadyExistsError, isDoesNotExistError
                                                   , isEOFError, isPermissionError
                                                   , isAlreadyExistsError, isAlreadyExistsError
                                                   , isAlreadyExistsError, isAlreadyInUseError
                                                   )
-import           Data.Aeson                       (Object, decode, decodeStrict, (.=), object, encode)
+import           Data.Aeson                       (Object, decode, decodeStrict, (.=), object, encode, Value)
 import           System.Environment               (getArgs, getExecutablePath, getProgName)
 import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
 import           System.Exit                      (die)
@@ -58,10 +61,10 @@ main = do
   -- putStrLn ("systemPathStart - " ++ show systemPathStart)
   putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
   -- Control and read config files
-  let sysPathConfig    = systemPath ++ "/config/configBot" :: FilePath
+  let sysPathConfig    = systemPath ++ "/config/configBot"       :: FilePath
   let sysPathTelegramm = systemPath ++ "/config/configTelegramm" :: FilePath
   let sysPathVcontakte = systemPath ++ "/config/configVcontakte" :: FilePath
-  let sysPathHelp      = systemPath ++ "/config/configHelp" :: FilePath
+  let sysPathHelp      = systemPath ++ "/config/configHelp"      :: FilePath
   putStrLn ""
   mapM_ (\(x, y) ->
     catch (readFile x >>= (\a -> putStr ""))
@@ -84,9 +87,9 @@ main = do
           ,(sysPathHelp,      "configHelp")
           ]
   -- Control log files
-  let sysPathDebugLog   = systemPath ++ "logs/Debug.log" :: FilePath
-  let sysPathErrorLog   = systemPath ++ "logs/Error.log" :: FilePath
-  let sysPathInfoLog    = systemPath ++ "logs/Info.log" :: FilePath
+  let sysPathDebugLog   = systemPath ++ "logs/Debug.log"   :: FilePath
+  let sysPathErrorLog   = systemPath ++ "logs/Error.log"   :: FilePath
+  let sysPathInfoLog    = systemPath ++ "logs/Info.log"    :: FilePath
   let sysPathWarningLog = systemPath ++ "logs/Warning.log" :: FilePath
   mapM_ (\(x, y) ->
     catch (openFile x ReadWriteMode >>= hClose)
@@ -152,38 +155,76 @@ main = do
             Info    -> (Info, sysPathInfoLog)
             Warning -> (Warning, sysPathWarningLog)
             Error   -> (Error, sysPathErrorLog)
-  putStrLn ("logLevel - " ++ show (fst logLevel) ++ " sysPath - " ++ show (snd logLevel))
+  -- putStrLn ("logLevel - " ++ show (fst logLevel) ++ " sysPath - " ++ show (snd logLevel))
   message <- makeLogMessage logLevel progName mess
   logM handleLog logLevel message  -- Write note in log about start programm
 
   -- Basic function bot
   let urlTel = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm)
-  let requestGetMe = urlTel ++ "/getMe"
+{-  let requestGetMe = urlTel ++ "/getMe"
   -- putStrLn requestGetMe
   responseGetMeTelegram <- simpleHttp requestGetMe
-  -- print (decode $ responseGetMeTelegram :: Maybe ResponseGetMe)
-  let respGetMeTelegram = decode $ responseGetMeTelegram :: Maybe ResponseGetMe
+  print (decode $ responseGetMeTelegram :: Maybe Value)-}
+ {- let respGetMeTelegram = decode $ responseGetMeTelegram :: Maybe ResponseGetMe
   putStrLn $ case respGetMeTelegram of
     Nothing           -> "Error response Telegramm"
     Just respGetMeTelegram -> printResponseGetMe respGetMeTelegram
   let requestGetUpdates = urlTel ++ "/getUpdates"
   responseGetUpdatesTelegram <- simpleHttp requestGetUpdates
-  print (decode $ responseGetUpdatesTelegram :: Maybe Object)
+  let responseGetUpdates = decode $ responseGetUpdatesTelegram
+  putStrLn $ case responseGetUpdates of
+    Nothing           -> "Error response getUpdates Telegramm"
+    Just responseGetUpdates -> printUpdate responseGetUpdates
+  -- print (decode $ responseGetUpdatesTelegram :: Maybe Object)-}
+ 
   --First request
   manager <- newManager tlsManagerSettings
   putStrLn "-------------------------------"
-  let requestObject = object ["offset" .= (565934639 :: Int)]
-  let requestGetUpdatesJson = urlTel ++ "/getUpdates"
-  initialRequest <- parseRequest requestGetUpdatesJson
+--  let requestObject = object ["offset" .= (565934639 :: Int)]
+  let requestObject = object []
+  let requestGetMe = urlTel ++ "/getMe"
+  initialRequest <- parseRequest requestGetMe
   let request = initialRequest 
               { method = "GET"
               , requestBody = RequestBodyLBS $ encode requestObject
               , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
                }
-
   response <- Cli.httpLbs request manager
-  putStrLn $ "The status code was: " ++ (show $ statusCode $ responseStatus response)
-  L8.putStrLn $ responseBody response
+  let statusCodeResponse = statusCode $ responseStatus response
+  putStrLn $ "The status code was: " ++ show statusCodeResponse
+
+  -- putStrLn $ "The status code was: " ++ (show $ statusCode $ responseStatus response)
+  -- L8.putStrLn $ responseBody response
+
+{-  withResponse request manager $ \response -> do
+    value <- bodyReaderSource (responseBody response) $$ sinkParser json
+    print value-}
+
+  let responseGet = decode $ responseBody response
+  putStrLn $ case responseGet of
+      Nothing           -> "Error response getMe"
+      Just responseGet -> printResponseGetMe responseGet
+
+  let requestObject = object []
+  let requestGetUpdatesJson = urlTel ++ "/getUpdates"
+  initialRequest <- parseRequest requestGetUpdatesJson
+  let request' = initialRequest 
+              { method = "GET"
+              , requestBody = RequestBodyLBS $ encode requestObject
+              , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
+               }
+  response' <- Cli.httpLbs request' manager
+  let statusCodeResponse' = statusCode $ responseStatus response'
+  putStrLn $ "The status code was: " ++ show statusCodeResponse'
+  withResponse request' manager $ \response -> do
+    value <- bodyReaderSource (responseBody response) $$ sinkParser json
+    print value
+
+{-  let responseGet = decode $ responseBody response
+  putStrLn $ case responseGet of
+      Nothing           -> "Error response getUpdates"
+      Just responseGet -> printResponseGetMe responseGet-}
+
 
 
   putStrLn "--------------------Stop---------------------"

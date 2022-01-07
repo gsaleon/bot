@@ -55,6 +55,28 @@
   (major1) == 0 && (major2) == 10 && (minor) <= 12)
 #endif /* MIN_VERSION_bytestring */
 
+/* package conduit-1.3.4.2 */
+#ifndef VERSION_conduit
+#define VERSION_conduit "1.3.4.2"
+#endif /* VERSION_conduit */
+#ifndef MIN_VERSION_conduit
+#define MIN_VERSION_conduit(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 4)
+#endif /* MIN_VERSION_conduit */
+
+/* package conduit-extra-1.3.5 */
+#ifndef VERSION_conduit_extra
+#define VERSION_conduit_extra "1.3.5"
+#endif /* VERSION_conduit_extra */
+#ifndef MIN_VERSION_conduit_extra
+#define MIN_VERSION_conduit_extra(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 5)
+#endif /* MIN_VERSION_conduit_extra */
+
 /* package filepath-1.4.2.1 */
 #ifndef VERSION_filepath
 #define VERSION_filepath "1.4.2.1"
@@ -298,7 +320,7 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-6tvRcYM8UNj1uIGtg7XkUT-bot-main-exe"
+#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-Kvw4avbROvVKdL5ZNRDadq-bot-main-exe"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"

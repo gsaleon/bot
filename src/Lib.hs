@@ -38,27 +38,40 @@ printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
 
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
-      logLevelGeneral serviceGeneral) =
-  "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
+      logLevelGeneral serviceGeneral) = ""
+{-  "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
   "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
   "logLevelGeneral -      " ++ show logLevelGeneral ++ "\n" ++
   "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++
-  "----------------------end printPrettySetup----------------"
+  "----------------------end printPrettySetup----------------"-}
 
 printResponseGetMe :: ResponseGetMe -> String
-printResponseGetMe (ResponseGetMe ok id is_bot first_name
+printResponseGetMe (ResponseGetMe okResponseGetMe idResponseGetMe is_botResponseGetMe first_nameResponseGetMe
       username can_join_groups can_read_all_group_messages
       supports_inline_queries) = 
-  "ok                          - " ++ show ok                          ++ "\n" ++
-  "id                          - " ++ show id                          ++ "\n" ++
-  "is_bot                      - " ++ show is_bot                      ++ "\n" ++
-  "first_name                  - " ++ show first_name                  ++ "\n" ++
+  "okResponseGetMe             - " ++ show okResponseGetMe             ++ "\n" ++
+  "idResponseGetMe             - " ++ show idResponseGetMe             ++ "\n" ++
+  "is_botResponseGetMe         - " ++ show is_botResponseGetMe         ++ "\n" ++
+  "first_nameResponseGetMe     - " ++ show first_nameResponseGetMe     ++ "\n" ++
   "username                    - " ++ show username                    ++ "\n" ++
   "can_join_groups             - " ++ show can_join_groups             ++ "\n" ++
   "can_read_all_group_messages - " ++ show can_read_all_group_messages ++ "\n" ++
   "supports_inline_queries     - " ++ show supports_inline_queries     ++ "\n" ++  
   "----------------------end printResultGetMe---------------"
 
+printUpdate :: Update -> String
+printUpdate (Update  update_id message_id idUpdate is_botUpdate
+    first_nameUpdate last_name language_code date text) =
+  "update_id        - " ++ show update_id        ++ "\n" ++
+  "message_id       - " ++ show message_id       ++ "\n" ++
+  "idUpdate         - " ++ show idUpdate         ++ "\n" ++
+  "is_botUpdate     - " ++ show is_botUpdate     ++ "\n" ++
+  "first_nameUpdate - " ++ show first_nameUpdate ++ "\n" ++
+  "last_name        - " ++ show last_name        ++ "\n" ++
+  "language_code    - " ++ show language_code    ++ "\n" ++
+  "date             - " ++ show date             ++ "\n" ++
+  "text             - " ++ show text             ++ "\n" ++  
+  "----------------------end Update-------------------------"
 
 fromCommandLine :: SetupGeneral ->[(String, String)] -> SetupGeneral
 fromCommandLine s cL = SetupGeneral { pollingGeneral  = a

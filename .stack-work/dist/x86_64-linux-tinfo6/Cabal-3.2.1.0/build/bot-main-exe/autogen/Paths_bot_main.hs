@@ -30,7 +30,7 @@ version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
 bindir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/bin"
-libdir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/lib/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0-6tvRcYM8UNj1uIGtg7XkUT-bot-main-exe"
+libdir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/lib/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0-Kvw4avbROvVKdL5ZNRDadq-bot-main-exe"
 dynlibdir  = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/lib/x86_64-linux-ghc-8.10.7"
 datadir    = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/share/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0"
 libexecdir = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/libexec/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0"

@@ -30,6 +30,8 @@ dependencies:
 - http-client-tls
 - http-types
 - text
+- conduit
+- conduit-extra
 
 library:
   source-dirs:           src
