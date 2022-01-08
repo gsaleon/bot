@@ -13,7 +13,8 @@ printPrettyVcontakte :: SetupVcontakte -> String
 printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
       userNameVcontakte tokenVcontakte descriptionVcontakte
       aboutVcontakte commandVcontakte) = ""
-{-  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
+{-  "\n" ++
+  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
   "userNameVcontakte -    " ++ userNameVcontakte    ++ "\n" ++
   "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
@@ -26,7 +27,8 @@ printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
       userNameTelegramm tokenTelegramm descriptionTelegramm
       aboutTelegramm commandTelegramm questionTelegrammRepeat) = ""
-{-  "urlTelegramm -         " ++ urlTelegramm            ++ "\n" ++
+{-  "\n" ++
+  "urlTelegramm -         " ++ urlTelegramm            ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm          ++ "\n" ++
   "userNameTelegramm -    " ++ userNameTelegramm       ++ "\n" ++
   "tokenTelegramm -       " ++ tokenTelegramm          ++ "\n" ++
@@ -39,7 +41,8 @@ printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
       logLevelGeneral serviceGeneral) = ""
-{-  "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
+{-  "\n" ++
+  "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
   "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
   "logLevelGeneral -      " ++ show logLevelGeneral ++ "\n" ++
   "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++

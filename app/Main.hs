@@ -39,8 +39,8 @@ import           Lib
 import           App.Types.Config
 import           App.Types.ConfigTelegram
 import           App.Types.Log
-import           Services.LogM                    (parseLogLevel, makeLogMessage, logM)
-import           App.Handlers.HandleLog           (handleLog)
+import           Services.LogM                    
+import           App.Handlers.HandleLog           (handleLogError, handleLogWarning, handleLogInfo, handleLogDebug)
 
 main :: IO ()
 main = do
@@ -117,17 +117,17 @@ main = do
   -- Control config files
   rawJSONConfig <- B.readFile sysPathConfig
   let setupGeneral = decodeStrict rawJSONConfig 
-  putStrLn $ case setupGeneral of
+  putStr $ case setupGeneral of
     Nothing           -> "Invalid configGeneral JSON!"
     Just setupGeneral -> printPrettySetup setupGeneral
   rawJSONTelegramm <- B.readFile sysPathTelegramm
   let setupTelegramm = decodeStrict rawJSONTelegramm
-  putStrLn $ case setupTelegramm of
+  putStr $ case setupTelegramm of
     Nothing             -> "Invalid configTelegramm JSON!"
     Just setupTelegramm -> printPrettyTelegramm setupTelegramm
   rawJSONVcontakte <- B.readFile sysPathVcontakte
   let setupVcontakte = decodeStrict rawJSONVcontakte
-  putStrLn $ case setupVcontakte of
+  putStr $ case setupVcontakte of
     Nothing             -> "Invalid configVcontakte JSON!"
     Just setupVcontakte -> printPrettyVcontakte setupVcontakte
   -- Print help, initialising with (or not) command line arguments
@@ -150,14 +150,12 @@ main = do
 
   -- Make note in log about start programm
   progName <- getProgName
-  let logLevel = case parseLogLevel $ logLevelGeneral workGeneral of
-            Debug   -> (Debug, sysPathDebugLog)
-            Info    -> (Info, sysPathInfoLog)
-            Warning -> (Warning, sysPathWarningLog)
-            Error   -> (Error, sysPathErrorLog)
-  -- putStrLn ("logLevel - " ++ show (fst logLevel) ++ " sysPath - " ++ show (snd logLevel))
-  message <- makeLogMessage logLevel progName mess
-  logM handleLog logLevel message  -- Write note in log about start programm
+  let logLevel = logLevelGeneral workGeneral
+  let logLevelInfo = [ ("Debug", sysPathDebugLog), ("Info", sysPathInfoLog)
+                     , ("Warning", sysPathWarningLog), ("Error", sysPathErrorLog)
+                     ] :: [(String, FilePath)]         
+  message <- makeLogMessage progName mess
+  logInfo handleLogInfo logLevel logLevelInfo message  -- Write note in log about start programm
 
   -- Basic function bot
   let urlTel = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm)
@@ -205,7 +203,7 @@ main = do
       Nothing           -> "Error response getMe"
       Just responseGet -> printResponseGetMe responseGet
 
-  let requestObject = object []
+  let requestObject = object ["offset" .= (565934643 :: Int)]
   let requestGetUpdatesJson = urlTel ++ "/getUpdates"
   initialRequest <- parseRequest requestGetUpdatesJson
   let request' = initialRequest 
@@ -238,5 +236,5 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
       )
     else
       ( fromJust setupGeneral
-      , "Start with default value paramets"
+      , "Start with default value parametrs"
       )

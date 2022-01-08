@@ -4,5 +4,5 @@ data LogLevel = Debug | Info | Warning | Error
   deriving (Eq, Ord, Show)
 
 data HandleLog = HandleLog
-    { writeLog :: (LogLevel, FilePath) -> String -> IO () }
+    { writeLog :: String -> [(String, FilePath)] -> String -> IO () }
 
