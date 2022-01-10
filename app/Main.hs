@@ -7,26 +7,27 @@ module Main ( main,  LogLevel (..), Os (..), Service (..)
 
 --import qualified Data.Text as T
 import           Network.HTTP.Conduit     -- as Con
-import           Network.HTTP.Client       as Cli
+import           Network.HTTP.Client        as Cli
+import           Network.HTTP.Simple
 -- import           Network.HTTP.Client.TLS
 import           Network.HTTP.Types.Status        (statusCode)
 -- import           Data.Text                        (Text)
 
-import qualified Data.ByteString.Lazy.Char8 as L8
+-- import qualified Data.ByteString.Lazy.Char8 as L8
 -- import qualified Data.ByteString.Lazy       as L
 import qualified Data.ByteString            as B  (readFile)
 import           Control.Exception                (catch)
-import           Data.Conduit                     (($$))
-import           Network.HTTP.Client.Conduit      (bodyReaderSource)
-import           Data.Aeson.Parser                (json)
-import           Data.Conduit.Attoparsec          (sinkParser)
+-- import           Data.Conduit                     (($$))
+-- import           Network.HTTP.Client.Conduit      (bodyReaderSource)
+-- import           Data.Aeson.Parser                (json)
+-- import           Data.Conduit.Attoparsec          (sinkParser)
 import           System.IO                        (openFile, IOMode(ReadWriteMode), hClose)
 import           System.IO.Error                  ( isAlreadyExistsError, isDoesNotExistError
                                                   , isEOFError, isPermissionError
                                                   , isAlreadyExistsError, isAlreadyExistsError
                                                   , isAlreadyExistsError, isAlreadyInUseError
                                                   )
-import           Data.Aeson                       (Object, decode, decodeStrict, (.=), object, encode, Value)
+import           Data.Aeson                       (decode, decodeStrict, (.=), object, encode)
 import           System.Environment               (getArgs, getExecutablePath, getProgName)
 import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
 import           System.Exit                      (die)
@@ -159,26 +160,11 @@ main = do
 
   -- Basic function bot
   let urlTel = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm)
-{-  let requestGetMe = urlTel ++ "/getMe"
-  -- putStrLn requestGetMe
-  responseGetMeTelegram <- simpleHttp requestGetMe
-  print (decode $ responseGetMeTelegram :: Maybe Value)-}
- {- let respGetMeTelegram = decode $ responseGetMeTelegram :: Maybe ResponseGetMe
-  putStrLn $ case respGetMeTelegram of
-    Nothing           -> "Error response Telegramm"
-    Just respGetMeTelegram -> printResponseGetMe respGetMeTelegram
-  let requestGetUpdates = urlTel ++ "/getUpdates"
-  responseGetUpdatesTelegram <- simpleHttp requestGetUpdates
-  let responseGetUpdates = decode $ responseGetUpdatesTelegram
-  putStrLn $ case responseGetUpdates of
-    Nothing           -> "Error response getUpdates Telegramm"
-    Just responseGetUpdates -> printUpdate responseGetUpdates
-  -- print (decode $ responseGetUpdatesTelegram :: Maybe Object)-}
  
   --First request
-  manager <- newManager tlsManagerSettings
   putStrLn "-------------------------------"
---  let requestObject = object ["offset" .= (565934639 :: Int)]
+  message <- makeLogMessage progName ""
+  manager <- newManager tlsManagerSettings
   let requestObject = object []
   let requestGetMe = urlTel ++ "/getMe"
   initialRequest <- parseRequest requestGetMe
@@ -187,41 +173,48 @@ main = do
               , requestBody = RequestBodyLBS $ encode requestObject
               , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
                }
+  logInfo handleLogInfo logLevel logLevelInfo
+      $ message ++ "Send GET request getMe"
   response <- Cli.httpLbs request manager
+  print (getResponseBody response)  -- ----------------------------
   let statusCodeResponse = statusCode $ responseStatus response
-  putStrLn $ "The status code was: " ++ show statusCodeResponse
-
-  -- putStrLn $ "The status code was: " ++ (show $ statusCode $ responseStatus response)
-  -- L8.putStrLn $ responseBody response
-
-{-  withResponse request manager $ \response -> do
-    value <- bodyReaderSource (responseBody response) $$ sinkParser json
-    print value-}
-
+  if statusCodeResponse == 200
+    then putStrLn $ "The status code getMe was: " ++ show statusCodeResponse
+    else putStrLn $ "The status code getMe was: " ++ show statusCodeResponse ++ " error response"
   let responseGet = decode $ responseBody response
   putStrLn $ case responseGet of
-      Nothing           -> "Error response getMe"
+      Nothing           -> "Error response getMe, check tokenTelegramm in /config/tmp/configTelegramm"
       Just responseGet -> printResponseGetMe responseGet
+  if first_nameResponseGetMe (fromJust responseGet) /= nameTelegramm (fromJust setupTelegramm)
+             || username (fromJust responseGet) /= userNameTelegramm (fromJust setupTelegramm)
+    then logWarning handleLogWarning logLevel logLevelInfo
+           $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
+    else logInfo handleLogInfo logLevel logLevelInfo
+           $ message ++ "Ok check control default setupTelegramm"
 
-  let requestObject = object ["offset" .= (565934643 :: Int)]
-  let requestGetUpdatesJson = urlTel ++ "/getUpdates"
-  initialRequest <- parseRequest requestGetUpdatesJson
-  let request' = initialRequest 
+  let longPolling = pollingGeneral workGeneral
+  let requestObject = object ["timeout" .= (longPolling :: Int)]
+  let requestGetMe = urlTel ++ "/getUpdates"
+  initialRequest <- parseRequest requestGetMe
+  let request = initialRequest 
               { method = "GET"
               , requestBody = RequestBodyLBS $ encode requestObject
               , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
                }
-  response' <- Cli.httpLbs request' manager
-  let statusCodeResponse' = statusCode $ responseStatus response'
-  putStrLn $ "The status code was: " ++ show statusCodeResponse'
-  withResponse request' manager $ \response -> do
-    value <- bodyReaderSource (responseBody response) $$ sinkParser json
-    print value
-
-{-  let responseGet = decode $ responseBody response
+  logInfo handleLogInfo logLevel logLevelInfo
+      $ message ++ "Send GET request getUpdates " ++ "timeout " ++ show longPolling
+  response <- Cli.httpLbs request manager
+  print (getResponseBody response)  -- ----------------------------
+  let statusCodeResponse = statusCode $ responseStatus response
+  if statusCodeResponse == 200
+    then putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponse
+    else putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponse ++ " error response"
+  let responseGet = decode $ responseBody response
+  -- let responseGet = decode $ getResponseBody response
   putStrLn $ case responseGet of
-      Nothing           -> "Error response getUpdates"
-      Just responseGet -> printResponseGetMe responseGet-}
+    Nothing          -> "Error decode response getUpdate"
+    Just responseGet -> printUpdate responseGet
+
 
 
 

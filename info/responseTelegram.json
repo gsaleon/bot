@@ -1,60 +1,47 @@
-{"ok":true,"result":
-  [
-    {"update_id":565934639,
-     "message":{
-                "message_id":27,"from":{
-                                        "id":2023781845,"is_bot":false,"first_name":"Garin","last_name":"Sergej","language_code":"ru"
-                                        }
-               ,"chat":{
-                        "id":2023781845,"first_name":"Garin","last_name":"Sergej","type":"private"
-                        },"date":1641543868,"text":"123"
-                }
-     }
-      
-      "update_id":565934640,
-      "message":{
-                 "message_id":28,"from":{
-                                         "id":2023781845,"is_bot":false,"first_name":"Garin","last_name":"Sergej","language_code":"ru"
-                                         }
-                 ,"chat":{
-                          "id":2023781845,"first_name":"Garin","last_name":"Sergej","type":"private"
-                          }
-                  ,"date":1641543870,"text":"234"
-                  }
-      },{
-         "update_id":565934641,
-         "message":{
-                    "message_id":29,"from":{
-                                            "id":2023781845,"is_bot":false,"first_name":"Garin","last_name":"Sergej","language_code":"ru"
-                                            }
-                    ,"chat":{
-                             "id":2023781845,"first_name":"Garin","last_name":"Sergej","type":"private"
+"{\"ok\":true
+ ,\"result\":[
+             {\"update_id\":565934645
+             ,\n\"message\":{\"message_id\":33
+                            ,\"from\":{\"id\":2023781845
+                                      ,\"is_bot\":false
+                                      ,\"first_name\":\"Garin\"
+                                      ,\"last_name\":\"Sergej\"
+                                      ,\"language_code\":\"ru\"
+                                       }
+                            ,\"chat\":{\"id\":2023781845
+                                      ,\"first_name\":\"Garin\"
+                                      ,\"last_name\":\"Sergej\"
+                                      ,\"type\":\"private\"
+                                       }
+                            ,\"date\":1641837925
+                            ,\"text\":\"123\"
                              }
-                    ,"date":1641548600,"text":"/start","entities":[{"offset":0,"length":6,"type":"bot_command"}]
-                     }
-         },{
-            "update_id":565934642,
-            "message":{
-                       "message_id":30,"from":{
-                                               "id":2023781845,"is_bot":false,"first_name":"Garin","last_name":"Sergej","language_code":"ru"
-                                               }
-                       ,"chat":{
-                                "id":2023781845,"first_name":"Garin","last_name":"Sergej","type":"private"
-                                }
-                       ,"date":1641548607,"text":"/stop","entities":[{"offset":0,"length":5,"type":"bot_command"}]
-                       }
-            },{"update_id":565934643,
-               "message":{
-                          "message_id":31,"from":{
-                                                  "id":2023781845,"is_bot":false,"first_name":"Garin","last_name":"Sergej","language_code":"ru"
-                                                  }
-                          ,"chat":{
-                                   "id":2023781845,"first_name":"Garin","last_name":"Sergej","type":"private"}
-                          ,"date":1641548611,"text":"/help","entities":[{"offset":0,"length":5,"type":"bot_command"}]
-               }
-    }
-  ]
- }
+              }
+              ]
+  }"
+
+data Host = Host { ip   :: String
+                 , port :: Int
+                 }
+instance FromJSON Host where
+    parseJSON (Object host) = Host <$> host .: "ip"
+                                   <*> host .: "port"
+    parseJSON _             = mzero
+
+let result = decodeStrict rawJSON
+putStrLn $ case result of
+    Nothing   -> "Invalid JSON!"
+    Just host -> printPretty host
+
+rawJSON <- B.readFile "/Users/dshevchenko/our.json"
+let result = decodeStrict rawJSON :: Maybe [Host]
+putStrLn $ case result of
+    Nothing    -> "Invalid JSON!"
+    Just hosts -> show $ printPretty <$> hosts
+
+
+
+
 
 
 

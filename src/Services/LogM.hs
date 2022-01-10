@@ -13,7 +13,7 @@ makeLogMessage progName mess = do
   timezone <- getCurrentTimeZone
   let timeNow = filter (/='"') $ show $ formatTime defaultTimeLocale  "%Y-%m-%d %H:%M:%S" $ utcToLocalTime timezone time
   -- let timeNow = take 19 $ show $ utcToLocalTime timezone time
-  return (timeNow ++ " " ++ progName ++ " " ++ mess ++ "\n")
+  return ("\n" ++ timeNow ++ " " ++ progName ++ " " ++ mess)
 
 {-
 logM :: HandleLog -> (LogLevel, FilePath) -> String -> IO ()

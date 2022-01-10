@@ -1,5 +1,6 @@
-module Services.ParseCommandLine (parseLine, findStr, 
-                                  Parse(Err, Value)) where
+module Services.ParseCommandLine ( parseLine, findStr
+                                 , Parse(Err, Value)
+                                 ) where
 
 data Parse a b = Err String | Value [(String, String)]
   deriving (Show)

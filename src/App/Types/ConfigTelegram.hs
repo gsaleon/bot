@@ -1,6 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module App.Types.ConfigTelegram where
 
@@ -10,6 +9,7 @@ import           Prelude       hiding  (id)
 import           Data.Time.LocalTime   (getCurrentTimeZone, utcToLocalTime)
 import           Data.Time             (formatTime, defaultTimeLocale)
 import           Data.Time.Clock.POSIX (posixSecondsToUTCTime)
+-- import           GHC.Generics
 -- import           Data.Time.Format     (makeLocalTime)
 
 data SetupTelegramm = SetupTelegramm
@@ -59,70 +59,125 @@ instance FromJSON ResponseGetMe where
     supports_inline_queries     <- result .: "supports_inline_queries"
     return ResponseGetMe{..}
 
-{-data ResponseUpdates = ResponseUpdates
-                     { okResponseUpdates    :: Bool
-                     , result               :: Array 
-                      }
-
-data ResponseUpdatesPost = ResponseUpdatesPost
-                         { update_idPost :: Int
-                         , messagePost   :: Array
-                          }
-
-data MessageUpdatesPost = MessageUpdatesPost
-                        { message_id :: Int
-                        , from       :: Array
-                        , chat       :: Array
-                        , date       :: String
-                        , text       :: String
-                         }
-
-data FromUpdatesPost = FromUpdatesPost
-                     { idFromUpdates         :: Int
-                     , is_botFromUpdates     :: Bool
-                     , first_nameFromUpdates :: String
-                     , last_nameFromUpdates  :: String
-                     , language_code         :: String
-                      }
-
-data ChatUpdatesPost = ChatUpdatesPost
-                     { idChatUpdates     :: Int
-                     , first_nameUpdates :: String
-                     , last_nameUpdates  :: String
-                     , typeUpdates       :: String
-                      }
-
--}
-
-data Update = Update
-            { update_id :: Int
-            , message_id :: Int
-            , idUpdate :: Int
-            , is_botUpdate :: Bool
-            , first_nameUpdate :: String
-            , last_name :: String
-            , language_code :: String
-            , date :: String
-            , text :: String
-             }
-
-instance FromJSON Update where
-  parseJSON = withObject "Update" $ \o -> do
-    update_id        <- o .: "update_id"
-    message          <- o .: "message"
-    message_id       <- message .: "message_id"
-    idUpdate         <- message .: "id"
-    is_botUpdate     <- message .: "is_bot"
-    first_nameUpdate <- message .: "first_name"
-    last_name        <- message .: "last_name"
-    language_code    <- message .: "language_code"
-    date             <- message .: "data"
-    text             <- message .: "text"
-    return Update{..}
-
 -- makeLocalTime :: String -> String
 makeLocalTime timeEpoch = do
   timezone  <- getCurrentTimeZone
   let timeNow = show $ formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S"
            $ utcToLocalTime timezone $ posixSecondsToUTCTime timeEpoch
   return timeNow
+
+data Update = Update
+            { ok     :: Bool
+            , result :: Result' [ValueReq]
+             }
+
+instance FromJSON Update where
+  parseJSON (Object update) = Update
+    <$> update .: "ok"
+    <*> update .: "result"
+  parseJSON _               = mzero
+
+data Result' lst = Result' [ValueReq]
+
+instance FromJSON (Result' lst) where
+  parseJSON (Object result) = do
+    anArray <- result .: "result"
+    return $ Result' anArray
+
+data ValueReq = ValueReq
+              { update_id :: Int
+              -- , message   :: Message
+               } deriving (Show)
+
+instance FromJSON ValueReq where
+  parseJSON (Object valueReq) = ValueReq
+    <$> valueReq .: "update_id"
+    -- <*> valueReq .: "message"
+  parseJSON _                 = mzero
+
+{-
+data Message = Message
+            { message_id  :: Int
+            -- , fromMessage :: FromMessage
+            -- , chatMessage :: ChatMessage
+            , dateMessage :: String
+            , textMessage :: String
+            -- , entities    :: [Entities]
+             } deriving (Show)
+
+instance FromJSON Message where
+  parseJSON (Object message) = Message
+    <$> message .: "message_id"
+    <*> message .: "date"
+    <*> message .: "text"
+  parseJSON _                 = mzero
+-}
+{-
+instance FromJSON Message where
+  parseJSON = withObject "message" $ \m -> do
+    message_id    <- m .: "message_id"
+    fromMessage   <- parseJSON (Object m)
+    chatMessage   <- parseJSON (Object m)
+    dateMessage   <- m .: "date"
+    textMessage   <- m .: "text"
+    entities      <- parseJSON (Object m)
+    return Message{..}
+-}
+{-
+data FromMessage = FromMessage
+            { idFrom         :: Int
+            , is_botFrom     :: Bool
+            , first_nameFrom :: String
+            , last_nameFrom  :: String
+            , language_code  :: String
+             } deriving (Show, Generic)
+
+instance FromJSON FromMessage where
+  parseJSON = withObject "fromMessage" $ \f -> do
+    idFrom         <- f .: "id"
+    is_botFrom     <- f .: "is_bot"
+    first_nameFrom <- f .: "first_name"
+    last_nameFrom  <- f .: "last_name"
+    language_code  <- f .: "language_code"
+    return FromMessage{..}
+
+
+data ChatMessage = ChatMessage
+             { idChat         :: Int
+             , first_nameChat :: String
+             , last_nameChat  :: String
+             , typeChat       :: String
+              } deriving (Show, Generic)
+
+instance FromJSON ChatMessage where
+  parseJSON = withObject "chatMessage" $ \c -> do
+    idChat         <- c .: "chat"
+    first_nameChat <- c .: "chat"
+    last_nameChat  <- c .: "chat"
+    typeChat       <- c .: "chat"
+    return ChatMessage{..}
+
+data Entities = Entities
+              { offset  :: Int
+              , lengthE :: Int
+              , typeE   :: String
+               } deriving (Show, Generic)
+
+instance FromJSON Entities where
+  parseJSON = withObject "entities" $ \e -> do
+    offset  <- e .: "offset"
+    lengthE <- e .: "length"
+    typeE   <- e .: "type"
+    return Entities{..}
+-}
+{-Update okUpdate resultUpdate
+                ResultUpdate update_id message
+                                       Message message_id from chate dateMessage textMessage
+                                                          From idFrom is_botFrom first_nameFrom last_nameFrom language_code
+                                                               Chat idChat first_nameChat last_nameChat typeChat
+Update okUpdate ResultUpdate update_id
+  Message message_id dateMessage textMessage
+    From idFrom is_botFrom first_nameFrom last_nameFrom language_code
+      Chat idChat first_nameChat last_nameChat typeChat
+-}
+-- data Update = Update Bool ResultUpdate Int Message Int String String FromMessage Int Bool String String ChatMessage Int String String String
