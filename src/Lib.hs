@@ -62,18 +62,18 @@ printResponseGetMe (ResponseGetMe okResponseGetMe idResponseGetMe is_botResponse
   "supports_inline_queries     - " ++ show supports_inline_queries     ++ "\n" ++  
   "----------------------end printResultGetMe---------------"
 
--- printUpdate :: Update -> String
-printUpdate (Update ok result) =
-  "ok         - " ++ show ok               ++ "\n" ++  
-  "update_id  - " ++ show (map (update_id) (getResult result)) ++ "\n" ++
+-- printResultReques :: Update -> String
+printResultRequest (ResultRequest lst) =
+  "result         - " ++ show lst               ++ "\n" ++  
+  -- "update_id  - " ++ show (map (update_id) (getResult result)) ++ "\n" ++
 {-  "first_name - " ++ show first_nameChat ++ "\n" ++
   "last_name  - " ++ show last_nameChat  ++ "\n" ++
   "date       - " ++ show dateMessage    ++ "\n" ++
   "text       - " ++ show textMessage    ++ "\n" ++  -}
   "----------------------end Update-------------------------"
 
-getResult :: (Result' a) -> [ValueReq]
-getResult (Result' a) = a
+getResult :: (ResultRequest) -> [ValueReq]
+getResult (ResultRequest a) = a
 
 fromCommandLine :: SetupGeneral ->[(String, String)] -> SetupGeneral
 fromCommandLine s cL = SetupGeneral { pollingGeneral  = a

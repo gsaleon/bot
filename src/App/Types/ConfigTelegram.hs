@@ -66,50 +66,64 @@ makeLocalTime timeEpoch = do
            $ utcToLocalTime timezone $ posixSecondsToUTCTime timeEpoch
   return timeNow
 
-data Update = Update
-            { ok     :: Bool
-            , result :: Result' [ValueReq]
-             }
+newtype ResultRequest = ResultRequest
+                      { result :: [ValueReq]
+                       }
 
-instance FromJSON Update where
-  parseJSON (Object update) = Update
-    <$> update .: "ok"
-    <*> update .: "result"
-  parseJSON _               = mzero
-
-data Result' lst = Result' [ValueReq]
-
-instance FromJSON (Result' lst) where
-  parseJSON (Object result) = do
-    anArray <- result .: "result"
-    return $ Result' anArray
+instance FromJSON ResultRequest where
+  parseJSON (Object r) = ResultRequest
+    <$> r .: "result"
+  parseJSON _          = mzero
 
 data ValueReq = ValueReq
-              { update_id :: Int
-              -- , message   :: Message
+              { update_id      :: Int
+              , message_id     :: Int              
+              , idChat         :: Int
+              , first_nameChat :: String
+              , last_nameChat  :: String
+              , typeChat       :: String
+              -- , date           :: Int
+              , text           :: String
                } deriving (Show)
 
 instance FromJSON ValueReq where
+  parseJSON = withObject "ValueReq" $ \o -> do
+    update_id      <- o       .: "update_id"
+    message        <- o       .: "message"
+    message_id     <- message .: "message_id"
+    chat           <- message .: "chat"
+    idChat         <- chat    .: "id"
+    first_nameChat <- chat    .: "first_name"
+    last_nameChat  <- chat    .: "last_name"
+    typeChat       <- chat    .: "type"
+    -- date           <- message .: "data"
+    text           <- message .: "text"
+    return ValueReq{..}
+
+
+{-instance FromJSON ValueReq where
   parseJSON (Object valueReq) = ValueReq
     <$> valueReq .: "update_id"
     -- <*> valueReq .: "message"
+    <$> message .: "message_id"
   parseJSON _                 = mzero
+-}
 
 {-
 data Message = Message
             { message_id  :: Int
             -- , fromMessage :: FromMessage
             -- , chatMessage :: ChatMessage
-            , dateMessage :: String
-            , textMessage :: String
+            -- , dateMessage :: String
+            -- , textMessage :: String
             -- , entities    :: [Entities]
              } deriving (Show)
 
 instance FromJSON Message where
   parseJSON (Object message) = Message
     <$> message .: "message_id"
-    <*> message .: "date"
-    <*> message .: "text"
+    -- <*> message .: "date"
+    -- <*> message .: "text"
   parseJSON _                 = mzero
 -}
 {-

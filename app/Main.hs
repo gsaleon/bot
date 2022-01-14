@@ -1,6 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 module Main ( main,  LogLevel (..), Os (..), Service (..)
             ) where
@@ -209,11 +210,10 @@ main = do
   if statusCodeResponse == 200
     then putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponse
     else putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponse ++ " error response"
-  let responseGet = decode $ responseBody response
-  -- let responseGet = decode $ getResponseBody response
+  let responseGet = decode $ getResponseBody response
   putStrLn $ case responseGet of
     Nothing          -> "Error decode response getUpdate"
-    Just responseGet -> printUpdate responseGet
+    Just responseGet -> printResultRequest responseGet
 
 
 
