@@ -39,6 +39,7 @@ library:
 executables:
   bot-main-exe:
     main:                Main.hs
+    other-modules:       []
     source-dirs:         app
     ghc-options:
     - -threaded
@@ -50,6 +51,7 @@ executables:
 tests:
   bot-main-test:
     main:                Spec.hs
+    other-modules:       []
     source-dirs:         test
     ghc-options:
     - -threaded

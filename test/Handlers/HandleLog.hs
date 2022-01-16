@@ -1,7 +1,6 @@
 module App.Handlers.HandleLog where
 
 import           System.IO              (openFile, IOMode(ReadWriteMode))
-
 import           App.Types.Log          ( HandleLog(..), LogLevel(..))
 
 

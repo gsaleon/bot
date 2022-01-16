@@ -9,6 +9,7 @@ import           Prelude       hiding  (id)
 import           Data.Time.LocalTime   (getCurrentTimeZone, utcToLocalTime)
 import           Data.Time             (formatTime, defaultTimeLocale)
 import           Data.Time.Clock.POSIX (posixSecondsToUTCTime)
+import           Network.HTTP.Client   (Request, Manager)
 -- import           GHC.Generics
 -- import           Data.Time.Format     (makeLocalTime)
 
@@ -82,7 +83,6 @@ data ValueReq = ValueReq
               , first_nameChat :: String
               , last_nameChat  :: String
               , typeChat       :: String
-              -- , date           :: Int
               , text           :: String
                } deriving (Show)
 
@@ -96,102 +96,8 @@ instance FromJSON ValueReq where
     first_nameChat <- chat    .: "first_name"
     last_nameChat  <- chat    .: "last_name"
     typeChat       <- chat    .: "type"
-    -- date           <- message .: "data"
     text           <- message .: "text"
     return ValueReq{..}
 
-
-{-instance FromJSON ValueReq where
-  parseJSON (Object valueReq) = ValueReq
-    <$> valueReq .: "update_id"
-    -- <*> valueReq .: "message"
-    <$> message .: "message_id"
-  parseJSON _                 = mzero
--}
-
-{-
-data Message = Message
-            { message_id  :: Int
-            -- , fromMessage :: FromMessage
-            -- , chatMessage :: ChatMessage
-            -- , dateMessage :: String
-            -- , textMessage :: String
-            -- , entities    :: [Entities]
-             } deriving (Show)
-
-instance FromJSON Message where
-  parseJSON (Object message) = Message
-    <$> message .: "message_id"
-    -- <*> message .: "date"
-    -- <*> message .: "text"
-  parseJSON _                 = mzero
--}
-{-
-instance FromJSON Message where
-  parseJSON = withObject "message" $ \m -> do
-    message_id    <- m .: "message_id"
-    fromMessage   <- parseJSON (Object m)
-    chatMessage   <- parseJSON (Object m)
-    dateMessage   <- m .: "date"
-    textMessage   <- m .: "text"
-    entities      <- parseJSON (Object m)
-    return Message{..}
--}
-{-
-data FromMessage = FromMessage
-            { idFrom         :: Int
-            , is_botFrom     :: Bool
-            , first_nameFrom :: String
-            , last_nameFrom  :: String
-            , language_code  :: String
-             } deriving (Show, Generic)
-
-instance FromJSON FromMessage where
-  parseJSON = withObject "fromMessage" $ \f -> do
-    idFrom         <- f .: "id"
-    is_botFrom     <- f .: "is_bot"
-    first_nameFrom <- f .: "first_name"
-    last_nameFrom  <- f .: "last_name"
-    language_code  <- f .: "language_code"
-    return FromMessage{..}
-
-
-data ChatMessage = ChatMessage
-             { idChat         :: Int
-             , first_nameChat :: String
-             , last_nameChat  :: String
-             , typeChat       :: String
-              } deriving (Show, Generic)
-
-instance FromJSON ChatMessage where
-  parseJSON = withObject "chatMessage" $ \c -> do
-    idChat         <- c .: "chat"
-    first_nameChat <- c .: "chat"
-    last_nameChat  <- c .: "chat"
-    typeChat       <- c .: "chat"
-    return ChatMessage{..}
-
-data Entities = Entities
-              { offset  :: Int
-              , lengthE :: Int
-              , typeE   :: String
-               } deriving (Show, Generic)
-
-instance FromJSON Entities where
-  parseJSON = withObject "entities" $ \e -> do
-    offset  <- e .: "offset"
-    lengthE <- e .: "length"
-    typeE   <- e .: "type"
-    return Entities{..}
--}
-{-Update okUpdate resultUpdate
-                ResultUpdate update_id message
-                                       Message message_id from chate dateMessage textMessage
-                                                          From idFrom is_botFrom first_nameFrom last_nameFrom language_code
-                                                               Chat idChat first_nameChat last_nameChat typeChat
-Update okUpdate ResultUpdate update_id
-  Message message_id dateMessage textMessage
-    From idFrom is_botFrom first_nameFrom last_nameFrom language_code
-      Chat idChat first_nameChat last_nameChat typeChat
--}
--- data Update = Update Bool ResultUpdate Int Message Int String String FromMessage Int Bool String String ChatMessage Int String String String
+data HandleTelegram = HandleTelegram
+    { requestTelegram :: Request -> Manager -> IO () }

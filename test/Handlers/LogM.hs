@@ -15,6 +15,6 @@ makeLogMessage logLevel progName mess = do
       then (show . fst) logLevel ++ take (7 - length (show $ fst logLevel)) "    "
       else show $ fst logLevel
   return (timeNow ++ " " ++ progName ++ " " ++ logLevelPrint ++ " " ++ mess ++ "\n")
-
+{-
 logM :: HandleLog -> (LogLevel, FilePath) -> String -> IO ()
-logM handleLog logLevel message = writeLog handleLog logLevel message
+logM handleLog logLevel message = writeLog handleLog logLevel message-}

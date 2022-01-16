@@ -29,12 +29,12 @@ version :: Version
 version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
-bindir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/9009a0b1f7cdc4d6230bd7a379a64e17e4cfb60297be8f3a6d3ee09cb94addab/8.10.7/bin"
-libdir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/9009a0b1f7cdc4d6230bd7a379a64e17e4cfb60297be8f3a6d3ee09cb94addab/8.10.7/lib/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0-LpMRIqbFAJG9g7u25giz5j-bot-main-test"
-dynlibdir  = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/9009a0b1f7cdc4d6230bd7a379a64e17e4cfb60297be8f3a6d3ee09cb94addab/8.10.7/lib/x86_64-linux-ghc-8.10.7"
-datadir    = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/9009a0b1f7cdc4d6230bd7a379a64e17e4cfb60297be8f3a6d3ee09cb94addab/8.10.7/share/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0"
-libexecdir = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/9009a0b1f7cdc4d6230bd7a379a64e17e4cfb60297be8f3a6d3ee09cb94addab/8.10.7/libexec/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0"
-sysconfdir = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/9009a0b1f7cdc4d6230bd7a379a64e17e4cfb60297be8f3a6d3ee09cb94addab/8.10.7/etc"
+bindir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/bin"
+libdir     = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/lib/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0-AJBCN5qf3tY3Hpwb7tomc0-bot-main-test"
+dynlibdir  = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/lib/x86_64-linux-ghc-8.10.7"
+datadir    = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/share/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0"
+libexecdir = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/libexec/x86_64-linux-ghc-8.10.7/bot-main-0.1.0.0"
+sysconfdir = "/home/gsaleon/MyProject/bot/.stack-work/install/x86_64-linux-tinfo6/56460643c5b176e056c45bb0acfc55069e720ccde50cb3aa3515a0861cf1e077/8.10.7/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
 getBinDir = catchIO (getEnv "bot_main_bindir") (\_ -> return bindir)

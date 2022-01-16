@@ -55,6 +55,28 @@
   (major1) == 0 && (major2) == 10 && (minor) <= 12)
 #endif /* MIN_VERSION_bytestring */
 
+/* package conduit-1.3.4.2 */
+#ifndef VERSION_conduit
+#define VERSION_conduit "1.3.4.2"
+#endif /* VERSION_conduit */
+#ifndef MIN_VERSION_conduit
+#define MIN_VERSION_conduit(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 4)
+#endif /* MIN_VERSION_conduit */
+
+/* package conduit-extra-1.3.5 */
+#ifndef VERSION_conduit_extra
+#define VERSION_conduit_extra "1.3.5"
+#endif /* VERSION_conduit_extra */
+#ifndef MIN_VERSION_conduit_extra
+#define MIN_VERSION_conduit_extra(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 5)
+#endif /* MIN_VERSION_conduit_extra */
+
 /* package filepath-1.4.2.1 */
 #ifndef VERSION_filepath
 #define VERSION_filepath "1.4.2.1"
@@ -65,6 +87,72 @@
   (major1) == 1 && (major2) <  4 || \
   (major1) == 1 && (major2) == 4 && (minor) <= 2)
 #endif /* MIN_VERSION_filepath */
+
+/* package http-client-0.6.4.1 */
+#ifndef VERSION_http_client
+#define VERSION_http_client "0.6.4.1"
+#endif /* VERSION_http_client */
+#ifndef MIN_VERSION_http_client
+#define MIN_VERSION_http_client(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  6 || \
+  (major1) == 0 && (major2) == 6 && (minor) <= 4)
+#endif /* MIN_VERSION_http_client */
+
+/* package http-client-tls-0.3.5.3 */
+#ifndef VERSION_http_client_tls
+#define VERSION_http_client_tls "0.3.5.3"
+#endif /* VERSION_http_client_tls */
+#ifndef MIN_VERSION_http_client_tls
+#define MIN_VERSION_http_client_tls(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 5)
+#endif /* MIN_VERSION_http_client_tls */
+
+/* package http-conduit-2.3.8 */
+#ifndef VERSION_http_conduit
+#define VERSION_http_conduit "2.3.8"
+#endif /* VERSION_http_conduit */
+#ifndef MIN_VERSION_http_conduit
+#define MIN_VERSION_http_conduit(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  3 || \
+  (major1) == 2 && (major2) == 3 && (minor) <= 8)
+#endif /* MIN_VERSION_http_conduit */
+
+/* package http-types-0.12.3 */
+#ifndef VERSION_http_types
+#define VERSION_http_types "0.12.3"
+#endif /* VERSION_http_types */
+#ifndef MIN_VERSION_http_types
+#define MIN_VERSION_http_types(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  12 || \
+  (major1) == 0 && (major2) == 12 && (minor) <= 3)
+#endif /* MIN_VERSION_http_types */
+
+/* package text-1.2.4.1 */
+#ifndef VERSION_text
+#define VERSION_text "1.2.4.1"
+#endif /* VERSION_text */
+#ifndef MIN_VERSION_text
+#define MIN_VERSION_text(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  2 || \
+  (major1) == 1 && (major2) == 2 && (minor) <= 4)
+#endif /* MIN_VERSION_text */
+
+/* package time-1.9.3 */
+#ifndef VERSION_time
+#define VERSION_time "1.9.3"
+#endif /* VERSION_time */
+#ifndef MIN_VERSION_time
+#define MIN_VERSION_time(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  9 || \
+  (major1) == 1 && (major2) == 9 && (minor) <= 3)
+#endif /* MIN_VERSION_time */
 
 /* tool alex-3.2.4 */
 #ifndef TOOL_VERSION_alex
@@ -88,15 +176,15 @@
   (major1) == 0 && (major2) == 28 && (minor) <= 5)
 #endif /* MIN_TOOL_VERSION_c2hs */
 
-/* tool cpphs-1.20.8 */
+/* tool cpphs-1.20.9 */
 #ifndef TOOL_VERSION_cpphs
-#define TOOL_VERSION_cpphs "1.20.8"
+#define TOOL_VERSION_cpphs "1.20.9"
 #endif /* TOOL_VERSION_cpphs */
 #ifndef MIN_TOOL_VERSION_cpphs
 #define MIN_TOOL_VERSION_cpphs(major1,major2,minor) (\
   (major1) <  1 || \
   (major1) == 1 && (major2) <  20 || \
-  (major1) == 1 && (major2) == 20 && (minor) <= 8)
+  (major1) == 1 && (major2) == 20 && (minor) <= 9)
 #endif /* MIN_TOOL_VERSION_cpphs */
 
 /* tool doctest-0.16.0 */
@@ -232,7 +320,7 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-LpMRIqbFAJG9g7u25giz5j-bot-main-test"
+#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-AJBCN5qf3tY3Hpwb7tomc0-bot-main-test"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"

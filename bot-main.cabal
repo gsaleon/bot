@@ -58,8 +58,6 @@ library
 
 executable bot-main-exe
   main-is: Main.hs
-  other-modules:
-      Paths_bot_main
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -82,12 +80,6 @@ executable bot-main-exe
 test-suite bot-main-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
-  other-modules:
-      Handlers.HandleLog
-      Handlers.HandleTelegramm
-      Handlers.HandleVkontakte
-      Handlers.LogM
-      Paths_bot_main
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N

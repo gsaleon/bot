@@ -1,203 +1,46 @@
 
-2022-01-08 23:46:43 bot-main-exe Start with value define in command line
-2022-01-08 23:47:35 bot-main-exe Start with value define in command line
-2022-01-09 01:32:12 bot-main-exe Start with value define in command line
-2022-01-09 01:32:12 bot-main-exe Send GET request getMe
-2022-01-09 01:32:12 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 01:34:51 bot-main-exe Start with value define in command line
-2022-01-09 01:34:51 bot-main-exe Send GET request getMe
-2022-01-09 01:34:51 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 01:36:32 bot-main-exe Start with value define in command line
-2022-01-09 01:36:32 bot-main-exe Send GET request getMe
-2022-01-09 01:36:32 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 01:41:44 bot-main-exe Start with value define in command line
-2022-01-09 01:41:44 bot-main-exe Send GET request getMe
-2022-01-09 01:41:44 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 02:35:54 bot-main-exe Start with value define in command line
-2022-01-09 02:35:54 bot-main-exe Send GET request getMe
-2022-01-09 02:35:54 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 03:00:44 bot-main-exe Start with value define in command line
-2022-01-09 03:00:45 bot-main-exe Send GET request getMe
-2022-01-09 03:00:45 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 11:19:22 bot-main-exe Start with value define in command line
-2022-01-09 11:19:22 bot-main-exe Send GET request getMe
-2022-01-09 11:19:22 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 11:27:44 bot-main-exe Start with value define in command line
-2022-01-09 11:27:44 bot-main-exe Send GET request getMe
-2022-01-09 11:27:44 bot-main-exe Send GET request getUpdatestimeout60
-2022-01-09 11:31:02 bot-main-exe Start with value define in command line
-2022-01-09 11:31:02 bot-main-exe Send GET request getMe
-2022-01-09 11:31:02 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 11:31:02 bot-main-exe Send GET request getUpdatestimeout 30
-2022-01-09 11:38:53 bot-main-exe Start with value define in command line
-2022-01-09 11:38:53 bot-main-exe Send GET request getMe
-2022-01-09 11:38:53 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 11:38:53 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 11:40:06 bot-main-exe Start with value define in command line
-2022-01-09 11:40:06 bot-main-exe Send GET request getMe
-2022-01-09 11:40:06 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 11:40:06 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 12:45:27 bot-main-exe Start with value define in command line
-2022-01-09 12:45:27 bot-main-exe Send GET request getMe
-2022-01-09 12:45:27 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 12:45:27 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 12:50:05 bot-main-exe Start with value define in command line
-2022-01-09 12:50:05 bot-main-exe Send GET request getMe
-2022-01-09 12:50:05 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 12:50:05 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 12:57:30 bot-main-exe Start with value define in command line
-2022-01-09 12:57:30 bot-main-exe Send GET request getMe
-2022-01-09 12:57:30 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 12:57:30 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 13:02:38 bot-main-exe Start with value define in command line
-2022-01-09 13:02:38 bot-main-exe Send GET request getMe
-2022-01-09 13:02:38 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 13:02:38 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 13:11:03 bot-main-exe Start with value define in command line
-2022-01-09 13:11:03 bot-main-exe Send GET request getMe
-2022-01-09 13:11:03 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 13:11:03 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 13:15:24 bot-main-exe Start with value define in command line
-2022-01-09 13:15:24 bot-main-exe Send GET request getMe
-2022-01-09 13:15:24 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 13:15:24 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 16:58:19 bot-main-exe Start with value define in command line
-2022-01-09 16:58:19 bot-main-exe Send GET request getMe
-2022-01-09 16:58:19 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 16:58:19 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 21:44:04 bot-main-exe Start with value define in command line
-2022-01-09 21:44:04 bot-main-exe Send GET request getMe
-2022-01-09 21:44:04 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 21:44:04 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-09 21:54:12 bot-main-exe Start with value define in command line
-2022-01-09 21:54:12 bot-main-exe Send GET request getMe
-2022-01-09 21:54:12 bot-main-exe Ok check control default setupTelegramm
-2022-01-09 21:54:12 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-10 01:20:51 bot-main-exe Start with value define in command line
-2022-01-10 01:20:51 bot-main-exe Send GET request getMe
-2022-01-10 01:20:51 bot-main-exe Ok check control default setupTelegramm
-2022-01-10 01:20:51 bot-main-exe Send GET request getUpdates timeout 30
-2022-01-10 03:35:13 bot-main-exe Start with default value parametrs
-2022-01-10 03:35:13 bot-main-exe Send GET request getMe
-2022-01-10 03:35:13 bot-main-exe Ok check control default setupTelegramm
-2022-01-10 03:35:13 bot-main-exe Send GET request getUpdates timeout 60
-2022-01-10 03:36:11 bot-main-exe Start with value define in command line
-2022-01-10 03:36:11 bot-main-exe Send GET request getMe
-2022-01-10 03:36:11 bot-main-exe Ok check control default setupTelegramm
-2022-01-10 03:36:11 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 01:02:19 bot-main-exe Start with default value parametrs
-2022-01-11 01:02:19 bot-main-exe Send GET request getMe
-2022-01-11 01:02:19 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 01:02:19 bot-main-exe Send GET request getUpdates timeout 60
-2022-01-11 01:03:35 bot-main-exe Start with value define in command line
-2022-01-11 01:03:35 bot-main-exe Send GET request getMe
-2022-01-11 01:03:35 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 01:03:35 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 01:05:32 bot-main-exe Start with value define in command line
-2022-01-11 01:05:32 bot-main-exe Send GET request getMe
-2022-01-11 01:05:32 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 01:05:32 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 01:28:04 bot-main-exe Start with value define in command line
-2022-01-11 01:28:04 bot-main-exe Send GET request getMe
-2022-01-11 01:28:04 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 01:28:04 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 01:43:02 bot-main-exe Start with value define in command line
-2022-01-11 01:43:02 bot-main-exe Send GET request getMe
-2022-01-11 01:43:02 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 01:43:02 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 01:48:16 bot-main-exe Start with value define in command line
-2022-01-11 01:48:16 bot-main-exe Send GET request getMe
-2022-01-11 01:48:16 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 01:48:16 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 02:38:44 bot-main-exe Start with value define in command line
-2022-01-11 02:38:44 bot-main-exe Send GET request getMe
-2022-01-11 02:38:44 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 02:38:44 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-11 03:07:35 bot-main-exe Start with value define in command line
-2022-01-11 03:07:35 bot-main-exe Send GET request getMe
-2022-01-11 03:07:35 bot-main-exe Ok check control default setupTelegramm
-2022-01-11 03:07:35 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-13 22:32:24 bot-main-exe Start with value define in command line
-2022-01-13 22:32:24 bot-main-exe Send GET request getMe
-2022-01-13 22:32:24 bot-main-exe Ok check control default setupTelegramm
-2022-01-13 22:32:24 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 00:16:20 bot-main-exe Start with default value parametrs
-2022-01-15 00:16:20 bot-main-exe Send GET request getMe
-2022-01-15 00:16:20 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 00:16:20 bot-main-exe Send GET request getUpdates timeout 60
-2022-01-15 00:17:20 bot-main-exe Start with value define in command line
-2022-01-15 00:17:20 bot-main-exe Send GET request getMe
-2022-01-15 00:17:20 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 00:17:20 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 03:26:29 bot-main-exe Start with value define in command line
-2022-01-15 03:26:29 bot-main-exe Send GET request getMe
-2022-01-15 03:26:29 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 03:26:29 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 03:27:48 bot-main-exe Start with value define in command line
-2022-01-15 03:27:48 bot-main-exe Send GET request getMe
-2022-01-15 03:27:48 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 03:27:48 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 03:34:30 bot-main-exe Start with value define in command line
-2022-01-15 03:34:30 bot-main-exe Send GET request getMe
-2022-01-15 03:34:30 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 03:34:30 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 03:37:46 bot-main-exe Start with value define in command line
-2022-01-15 03:37:46 bot-main-exe Send GET request getMe
-2022-01-15 03:37:46 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 03:37:46 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 03:40:28 bot-main-exe Start with value define in command line
-2022-01-15 03:40:28 bot-main-exe Send GET request getMe
-2022-01-15 03:40:28 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 03:40:28 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:00:29 bot-main-exe Start with value define in command line
-2022-01-15 04:00:30 bot-main-exe Send GET request getMe
-2022-01-15 04:00:30 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:00:30 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:09:58 bot-main-exe Start with value define in command line
-2022-01-15 04:09:58 bot-main-exe Send GET request getMe
-2022-01-15 04:09:58 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:09:58 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:12:06 bot-main-exe Start with value define in command line
-2022-01-15 04:12:06 bot-main-exe Send GET request getMe
-2022-01-15 04:12:06 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:12:06 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:17:29 bot-main-exe Start with value define in command line
-2022-01-15 04:17:29 bot-main-exe Send GET request getMe
-2022-01-15 04:17:29 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:17:29 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:19:48 bot-main-exe Start with value define in command line
-2022-01-15 04:19:48 bot-main-exe Send GET request getMe
-2022-01-15 04:19:48 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:19:48 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:22:00 bot-main-exe Start with value define in command line
-2022-01-15 04:22:00 bot-main-exe Send GET request getMe
-2022-01-15 04:22:00 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:22:00 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:24:30 bot-main-exe Start with value define in command line
-2022-01-15 04:24:30 bot-main-exe Send GET request getMe
-2022-01-15 04:24:30 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:24:30 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:26:57 bot-main-exe Start with value define in command line
-2022-01-15 04:26:57 bot-main-exe Send GET request getMe
-2022-01-15 04:26:57 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:26:57 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:29:19 bot-main-exe Start with value define in command line
-2022-01-15 04:29:19 bot-main-exe Send GET request getMe
-2022-01-15 04:29:19 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:29:19 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:34:08 bot-main-exe Start with value define in command line
-2022-01-15 04:34:08 bot-main-exe Send GET request getMe
-2022-01-15 04:34:08 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:34:08 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:35:39 bot-main-exe Start with value define in command line
-2022-01-15 04:35:40 bot-main-exe Send GET request getMe
-2022-01-15 04:35:40 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:35:40 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:37:15 bot-main-exe Start with value define in command line
-2022-01-15 04:37:15 bot-main-exe Send GET request getMe
-2022-01-15 04:37:15 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:37:15 bot-main-exe Send GET request getUpdates timeout 0
-2022-01-15 04:39:23 bot-main-exe Start with value define in command line
-2022-01-15 04:39:23 bot-main-exe Send GET request getMe
-2022-01-15 04:39:23 bot-main-exe Ok check control default setupTelegramm
-2022-01-15 04:39:23 bot-main-exe Send GET request getUpdates timeout 0
+2022-01-15 23:09:06 bot-main-exe Start with value define in command line
+2022-01-15 23:09:06 bot-main-exe Send GET request getMe
+2022-01-15 23:09:06 bot-main-exe The status code getMe was: 200
+2022-01-15 23:09:06 bot-main-exe Ok check control default setupTelegramm
+2022-01-15 23:09:06 bot-main-exe Send GET request getUpdates timeout 0
+2022-01-15 23:09:06 bot-main-exe The status code getUpdate was: 200
+2022-01-15 23:10:53 bot-main-exe Start with value define in command line
+2022-01-15 23:10:53 bot-main-exe Send GET request getMe
+2022-01-15 23:10:53 bot-main-exe The status code getMe was: 200
+2022-01-15 23:10:53 bot-main-exe Ok check control default setupTelegramm
+2022-01-15 23:10:53 bot-main-exe Send GET request getUpdates timeout 60
+2022-01-15 23:10:53 bot-main-exe The status code getUpdate was: 200
+2022-01-15 23:47:18 bot-main-exe Start with value define in command line
+2022-01-15 23:47:18 bot-main-exe Send GET request getMe
+2022-01-15 23:47:18 bot-main-exe The status code getMe was: 200
+2022-01-15 23:47:18 bot-main-exe Ok check control default setupTelegramm
+2022-01-15 23:47:18 bot-main-exe Send GET request getUpdates timeout 0
+2022-01-15 23:47:18 bot-main-exe The status code getUpdate was: 200
+2022-01-16 11:14:52 bot-main-exe Start with value define in command line
+2022-01-16 11:14:52 bot-main-exe Send GET request getMe
+2022-01-16 11:14:52 bot-main-exe The status code getMe was: 200
+2022-01-16 11:14:52 bot-main-exe Ok check control default setupTelegramm
+2022-01-16 11:14:52 bot-main-exe Send GET request getUpdates timeout 0
+2022-01-16 11:14:52 bot-main-exe The status code getUpdate was: 200
+2022-01-16 20:34:43 bot-main-exe Start with value define in command line
+2022-01-16 20:34:43 bot-main-exe Send GET request getMe
+2022-01-16 20:34:43 bot-main-exe The status code getMewas: 200
+2022-01-16 20:34:43 bot-main-exe Ok decode body response Get getMe
+2022-01-16 20:34:43 bot-main-exe Ok check control default setupTelegramm
+2022-01-16 20:34:43 bot-main-exe Send GET request getUpdates timeout 0
+2022-01-16 20:34:43 bot-main-exe The status code getUpdate was: 200
+2022-01-16 20:39:12 bot-main-exe Start with value define in command line
+2022-01-16 20:39:12 bot-main-exe Send GET request getMe
+2022-01-16 20:39:12 bot-main-exe The status code getMe was: 200
+2022-01-16 20:39:12 bot-main-exe Ok decode body response Get getMe
+2022-01-16 20:39:12 bot-main-exe Send GET request getUpdates timeout 0
+2022-01-16 20:39:12 bot-main-exe The status code getUpdate was: 200
+2022-01-16 20:49:05 bot-main-exe Start with value define in command line
+2022-01-16 20:49:06 bot-main-exe Send GET request getMe
+2022-01-16 20:49:06 bot-main-exe The status code getMe was: 200
+2022-01-16 20:49:06 bot-main-exe Ok decode body response Get getMe
+2022-01-16 20:49:06 bot-main-exe Ok check control default setupTelegramm
+2022-01-16 20:49:06 bot-main-exe Send GET request getUpdates
+2022-01-16 20:49:06 bot-main-exe The status code getUpdates was: 200
+2022-01-16 20:49:06 bot-main-exe Ok decode body response Get getUpdates

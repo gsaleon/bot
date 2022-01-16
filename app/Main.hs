@@ -42,7 +42,9 @@ import           App.Types.Config
 import           App.Types.ConfigTelegram
 import           App.Types.Log
 import           Services.LogM                    
+import           Services.Telegramm               (makeRequest)
 import           App.Handlers.HandleLog           (handleLogError, handleLogWarning, handleLogInfo, handleLogDebug)
+-- import           App.Handlers.HandleTelegramm     (handleTelegram)
 
 main :: IO ()
 main = do
@@ -148,7 +150,7 @@ main = do
   let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
   let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
   putStrLn mess
-  putStrLn (printPrettySetup workGeneral)
+  -- putStrLn (printPrettySetup workGeneral)
 
   -- Make note in log about start programm
   progName <- getProgName
@@ -158,67 +160,65 @@ main = do
                      ] :: [(String, FilePath)]         
   message <- makeLogMessage progName mess
   logInfo handleLogInfo logLevel logLevelInfo message  -- Write note in log about start programm
-
+  logDebug handleLogDebug logLevel logLevelInfo message
   -- Basic function bot
   let urlTel = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm)
  
   --First request
   putStrLn "-------------------------------"
+  -- Change to out function start
   message <- makeLogMessage progName ""
-  manager <- newManager tlsManagerSettings
-  let requestObject = object []
-  let requestGetMe = urlTel ++ "/getMe"
-  initialRequest <- parseRequest requestGetMe
-  let request = initialRequest 
-              { method = "GET"
-              , requestBody = RequestBodyLBS $ encode requestObject
-              , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
-               }
-  logInfo handleLogInfo logLevel logLevelInfo
-      $ message ++ "Send GET request getMe"
-  response <- Cli.httpLbs request manager
-  print (getResponseBody response)  -- ----------------------------
-  let statusCodeResponse = statusCode $ responseStatus response
-  if statusCodeResponse == 200
-    then putStrLn $ "The status code getMe was: " ++ show statusCodeResponse
-    else putStrLn $ "The status code getMe was: " ++ show statusCodeResponse ++ " error response"
-  let responseGet = decode $ responseBody response
-  putStrLn $ case responseGet of
-      Nothing           -> "Error response getMe, check tokenTelegramm in /config/tmp/configTelegramm"
-      Just responseGet -> printResponseGetMe responseGet
-  if first_nameResponseGetMe (fromJust responseGet) /= nameTelegramm (fromJust setupTelegramm)
-             || username (fromJust responseGet) /= userNameTelegramm (fromJust setupTelegramm)
+  let requestObjectGetMe = object []
+  -- manager <- newManager tlsManagerSettings
+  let requestGetMe = "getMe"
+  let token = tokenTelegramm (fromJust setupTelegramm)
+  responseGetMe <- makeRequest token requestGetMe requestObjectGetMe logLevel logLevelInfo message
+  putStrLn $ case responseGetMe of
+      Nothing          -> "Error response getMe, check tokenTelegramm in /config/tmp/configTelegramm"
+      Just responseGetMe -> printResponseGetMe responseGetMe
+  if first_nameResponseGetMe (fromJust responseGetMe) /= nameTelegramm (fromJust setupTelegramm)
+             || username (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
     then logWarning handleLogWarning logLevel logLevelInfo
            $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
     else logInfo handleLogInfo logLevel logLevelInfo
            $ message ++ "Ok check control default setupTelegramm"
-
+  -- Basic cycle
   let longPolling = pollingGeneral workGeneral
-  let requestObject = object ["timeout" .= (longPolling :: Int)]
-  let requestGetMe = urlTel ++ "/getUpdates"
-  initialRequest <- parseRequest requestGetMe
-  let request = initialRequest 
+  let limitGetUpdate = 1
+  let offsetGetUpdate = 1
+  let requestGetUpdateObject = object [ "timeout" .= (longPolling     :: Int)
+                                      , "limit"   .= (limitGetUpdate  :: Int)
+                                      , "offset"  .= (offsetGetUpdate :: Int)
+                                      ]
+  let requestGetUpdate = "getUpdates"
+  responseGetUpdate <- makeRequest token requestGetUpdate requestGetUpdateObject logLevel logLevelInfo message
+  {-
+  getUpdateRequest <- parseRequest requestGetUpdate
+  let requestGetUpdate = getUpdateRequest 
               { method = "GET"
-              , requestBody = RequestBodyLBS $ encode requestObject
+              , requestBody = RequestBodyLBS $ encode requestGetUpdateObject
               , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
                }
   logInfo handleLogInfo logLevel logLevelInfo
       $ message ++ "Send GET request getUpdates " ++ "timeout " ++ show longPolling
-  response <- Cli.httpLbs request manager
-  print (getResponseBody response)  -- ----------------------------
-  let statusCodeResponse = statusCode $ responseStatus response
-  if statusCodeResponse == 200
-    then putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponse
-    else putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponse ++ " error response"
-  let responseGet = decode $ getResponseBody response
-  putStrLn $ case responseGet of
-    Nothing          -> "Error decode response getUpdate"
-    Just responseGet -> printResultRequest responseGet
-
-
-
-
+  responseGetUpdate <- Cli.httpLbs requestGetUpdate manager
+  -- print (getResponseBody responseGetUpdate)
+  let statusCodeResponseGetUpdate = statusCode $ responseStatus responseGetUpdate
+  if statusCodeResponseGetUpdate == 200
+    then logInfo handleLogInfo logLevel logLevelInfo
+             $ message ++ "The status code getUpdate was: " ++ show statusCodeResponseGetUpdate
+        -- putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponseGetUpdate
+    else logError handleLogError logLevel logLevelInfo
+             $ message ++ "The status code getUpdates was: " ++ show statusCodeResponseGetUpdate ++ " error response"
+        -- putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponseGetUpdate ++ " error response"
+  let responseGet = decode $ getResponseBody responseGetUpdate
+  -}
+  putStrLn $ case responseGetUpdate of
+    Nothing                -> "Error decode response getUpdate"
+    Just responseGetUpdate -> printResponseGetUpdate responseGetUpdate
+                                                                                                                                      
   putStrLn "--------------------Stop---------------------"
+
 
 fromOutCommandLine :: String -> Maybe SetupGeneral -> [(String, String)] -> (SetupGeneral, [Char])
 fromOutCommandLine cPE setupGeneral commandLineParseValue =
