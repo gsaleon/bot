@@ -69,11 +69,20 @@ makeLocalTime timeEpoch = do
 
 newtype ResultRequest = ResultRequest
                       { result :: [ValueReq]
-                       }
+                       } deriving (Show)
 
 instance FromJSON ResultRequest where
   parseJSON (Object r) = ResultRequest
     <$> r .: "result"
+  parseJSON _          = mzero
+
+newtype SendMessage = SendMessage
+                      { result' :: ValueReq
+                       } deriving (Show)
+
+instance FromJSON SendMessage where
+  parseJSON (Object s) = SendMessage
+    <$> s .: "result"
   parseJSON _          = mzero
 
 data ValueReq = ValueReq

@@ -4,21 +4,21 @@ module Services.Telegramm where
 
 import           Network.HTTP.Client
 import           Network.HTTP.Client.TLS
-import           Data.Aeson                       (decode, encode)
+import           Data.Aeson                       (decode, encode, ToJSON, FromJSON)
 import           Network.HTTP.Types.Status        (statusCode)
 
 import           Services.LogM
 import           App.Handlers.HandleLog
 
--- makeRequest :: String -> String -> Object -> String -> [String, FilePath] -> String -> ...]
+makeRequest :: (ToJSON a1, FromJSON a2) => String -> String -> a1 -> String ->
+               [(String, FilePath)] -> String -> IO (Maybe a2)
 makeRequest token url object logLevel logLevelInfo message = do
   manager <- newManager tlsManagerSettings
-  let requestObject = object
   let requestUrl = "https://api.telegram.org/" ++ "bot" ++ token ++ "/" ++ url
   request' <- parseRequest requestUrl
   let request = request'
               { method = "GET"
-              , requestBody = RequestBodyLBS $ encode requestObject
+              , requestBody = RequestBodyLBS $ encode object
               , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
                }
   logInfo handleLogInfo logLevel logLevelInfo $ message ++ "Send GET request " ++ url

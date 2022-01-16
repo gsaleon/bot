@@ -7,11 +7,11 @@ module Main ( main,  LogLevel (..), Os (..), Service (..)
             ) where
 
 --import qualified Data.Text as T
-import           Network.HTTP.Conduit     -- as Con
-import           Network.HTTP.Client        as Cli
-import           Network.HTTP.Simple
+-- import           Network.HTTP.Conduit     -- as Con
+-- import           Network.HTTP.Client        as Cli
+-- import           Network.HTTP.Simple
 -- import           Network.HTTP.Client.TLS
-import           Network.HTTP.Types.Status        (statusCode)
+-- import           Network.HTTP.Types.Status        (statusCode)
 -- import           Data.Text                        (Text)
 
 -- import qualified Data.ByteString.Lazy.Char8 as L8
@@ -35,6 +35,7 @@ import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
 -- import           Data.Text
 import           Prelude                  hiding  (id)
+import           Data.Text                        (Text)
 
 import           Services.ParseCommandLine
 import           Lib
@@ -161,21 +162,18 @@ main = do
   message <- makeLogMessage progName mess
   logInfo handleLogInfo logLevel logLevelInfo message  -- Write note in log about start programm
   logDebug handleLogDebug logLevel logLevelInfo message
+  
   -- Basic function bot
-  let urlTel = urlTelegramm (fromJust setupTelegramm) ++ "bot" ++ tokenTelegramm (fromJust setupTelegramm)
- 
-  --First request
   putStrLn "-------------------------------"
-  -- Change to out function start
   message <- makeLogMessage progName ""
+  let token = tokenTelegramm (fromJust setupTelegramm)  
+  --First request 
   let requestObjectGetMe = object []
-  -- manager <- newManager tlsManagerSettings
   let requestGetMe = "getMe"
-  let token = tokenTelegramm (fromJust setupTelegramm)
   responseGetMe <- makeRequest token requestGetMe requestObjectGetMe logLevel logLevelInfo message
-  putStrLn $ case responseGetMe of
-      Nothing          -> "Error response getMe, check tokenTelegramm in /config/tmp/configTelegramm"
-      Just responseGetMe -> printResponseGetMe responseGetMe
+  case responseGetMe of
+    Nothing            -> die "Error response getMe, check tokenTelegramm in /config/tmp/configTelegramm"
+    Just responseGetMe -> putStrLn $ printResponseGetMe responseGetMe
   if first_nameResponseGetMe (fromJust responseGetMe) /= nameTelegramm (fromJust setupTelegramm)
              || username (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
     then logWarning handleLogWarning logLevel logLevelInfo
@@ -192,31 +190,56 @@ main = do
                                       ]
   let requestGetUpdate = "getUpdates"
   responseGetUpdate <- makeRequest token requestGetUpdate requestGetUpdateObject logLevel logLevelInfo message
-  {-
-  getUpdateRequest <- parseRequest requestGetUpdate
-  let requestGetUpdate = getUpdateRequest 
-              { method = "GET"
-              , requestBody = RequestBodyLBS $ encode requestGetUpdateObject
-              , requestHeaders = [ ("Content-Type", "application/json; charset=utf-8")]
-               }
-  logInfo handleLogInfo logLevel logLevelInfo
-      $ message ++ "Send GET request getUpdates " ++ "timeout " ++ show longPolling
-  responseGetUpdate <- Cli.httpLbs requestGetUpdate manager
-  -- print (getResponseBody responseGetUpdate)
-  let statusCodeResponseGetUpdate = statusCode $ responseStatus responseGetUpdate
-  if statusCodeResponseGetUpdate == 200
-    then logInfo handleLogInfo logLevel logLevelInfo
-             $ message ++ "The status code getUpdate was: " ++ show statusCodeResponseGetUpdate
-        -- putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponseGetUpdate
-    else logError handleLogError logLevel logLevelInfo
-             $ message ++ "The status code getUpdates was: " ++ show statusCodeResponseGetUpdate ++ " error response"
-        -- putStrLn $ "The status code getUpdates was: " ++ show statusCodeResponseGetUpdate ++ " error response"
-  let responseGet = decode $ getResponseBody responseGetUpdate
-  -}
   putStrLn $ case responseGetUpdate of
     Nothing                -> "Error decode response getUpdate"
     Just responseGetUpdate -> printResponseGetUpdate responseGetUpdate
-                                                                                                                                      
+  if (head $ text $ head $ result $ fromJust responseGetUpdate) == '/'
+    then case head $ words $ text $ head $ result $ fromJust responseGetUpdate of
+      "/start"    -> do
+          let textPost            = "Это просто эхо бот"
+          let chat_id             = idChat $ head $ result $ fromJust responseGetUpdate
+          let reply_to_message_id = message_id $ head $ result $ fromJust responseGetUpdate
+          let requestSendMessageObject = object [ "text"                .= (textPost            :: String)
+                                                , "chat_id"             .= (chat_id             :: Int)
+                                                , "reply_to_message_id" .= (reply_to_message_id :: Int)
+                                                ]
+          let requestSendMessage = "sendMessage"
+          responseSendMessage <- makeRequest token requestSendMessage requestSendMessageObject
+                                   logLevel logLevelInfo message :: IO (Maybe SendMessage)
+          putStrLn $ case responseSendMessage of
+            Nothing                  -> "Error decode response sendMessage"
+            Just responseSendMessage -> show responseSendMessage
+      "/help"     -> do
+          let textPost            = text $ head $ result $ fromJust responseGetUpdate
+          let chat_id             = idChat $ head $ result $ fromJust responseGetUpdate
+          let reply_to_message_id = message_id $ head $ result $ fromJust responseGetUpdate
+          let requestSendMessageObject = object [ "text"                .= (textPost            :: String)
+                                                , "chat_id"             .= (chat_id             :: Int)
+                                                , "reply_to_message_id" .= (reply_to_message_id :: Int)
+                                                ]
+          let requestSendMessage = "sendMessage"
+          responseSendMessage <- makeRequest token requestSendMessage requestSendMessageObject
+                                   logLevel logLevelInfo message :: IO (Maybe SendMessage)
+          putStrLn $ case responseSendMessage of
+            Nothing                  -> "Error decode response sendMessage"
+            Just responseSendMessage -> show responseSendMessage
+      -- /settings -> _ (keyboard)
+      "/quit"     -> die "Senks very mach, bye..."
+    else do
+      let textAnswer          = text $ head $ result $ fromJust responseGetUpdate
+      let chat_id             = idChat $ head $ result $ fromJust responseGetUpdate
+      let reply_to_message_id = message_id $ head $ result $ fromJust responseGetUpdate
+      let requestSendMessageObject = object [ "text"                .= (textAnswer          :: String)
+                                            , "chat_id"             .= (chat_id             :: Int)
+                                            , "reply_to_message_id" .= (reply_to_message_id :: Int)
+                                            ]
+      let requestSendMessage = "sendMessage"
+      responseSendMessage <- makeRequest token requestSendMessage requestSendMessageObject
+                               logLevel logLevelInfo message :: IO (Maybe SendMessage)
+{-      putStrLn $ case responseSendMessage of
+        Nothing                  -> "Error decode response sendMessage"
+        Just responseSendMessage -> show responseSendMessage-}
+
   putStrLn "--------------------Stop---------------------"
 
 
