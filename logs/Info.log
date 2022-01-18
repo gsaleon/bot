@@ -280,3 +280,497 @@
 2022-01-18 08:52:54 bot-main-exe Send GET request getUpdates
 2022-01-18 08:52:54 bot-main-exe The status code getUpdates was: 200
 2022-01-18 08:52:54 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 02:37:42 bot-main-exe Start with value define in command line
+2022-01-19 02:37:42 bot-main-exe Send GET request getMe
+2022-01-19 02:37:42 bot-main-exe The status code getMe was: 200
+2022-01-19 02:37:42 bot-main-exe Ok decode body response Get getMe
+2022-01-19 02:37:42 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 02:37:42 bot-main-exe Send GET request getUpdates
+2022-01-19 02:42:48 bot-main-exe Start with value define in command line
+2022-01-19 02:42:48 bot-main-exe Send GET request getMe
+2022-01-19 02:42:48 bot-main-exe The status code getMe was: 200
+2022-01-19 02:42:48 bot-main-exe Ok decode body response Get getMe
+2022-01-19 02:42:48 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 02:54:18 bot-main-exe Start with value define in command line
+2022-01-19 02:54:18 bot-main-exe Send GET request getMe
+2022-01-19 02:54:18 bot-main-exe The status code getMe was: 200
+2022-01-19 02:54:18 bot-main-exe Ok decode body response Get getMe
+2022-01-19 02:54:18 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:16:58 bot-main-exe Start with value define in command line
+2022-01-19 03:16:58 bot-main-exe Send GET request getMe
+2022-01-19 03:16:58 bot-main-exe The status code getMe was: 200
+2022-01-19 03:16:58 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:16:58 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:16:58 bot-main-exe Send GET request getUpdates
+2022-01-19 03:16:58 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:16:58 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:16:58 bot-main-exe Send GET request getUpdates
+2022-01-19 03:16:58 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:16:58 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:18:05 bot-main-exe Start with value define in command line
+2022-01-19 03:18:05 bot-main-exe Send GET request getMe
+2022-01-19 03:18:05 bot-main-exe The status code getMe was: 200
+2022-01-19 03:18:05 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:18:05 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:18:05 bot-main-exe Send GET request getUpdates
+2022-01-19 03:18:05 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:18:05 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:18:05 bot-main-exe Send GET request getUpdates
+2022-01-19 03:18:27 bot-main-exe Start with value define in command line
+2022-01-19 03:18:27 bot-main-exe Send GET request getMe
+2022-01-19 03:18:27 bot-main-exe The status code getMe was: 200
+2022-01-19 03:18:27 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:18:27 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:18:27 bot-main-exe Send GET request getUpdates
+2022-01-19 03:18:27 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:18:27 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:18:27 bot-main-exe Send GET request getUpdates
+2022-01-19 03:18:27 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:18:27 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:18:27 bot-main-exe Send GET request sendMessage
+2022-01-19 03:18:27 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:18:27 bot-main-exe Send GET request sendMessage
+2022-01-19 03:18:27 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:18:27 bot-main-exe Send GET request sendMessage
+2022-01-19 03:18:27 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:18:27 bot-main-exe Send GET request getUpdates
+2022-01-19 03:18:27 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:18:27 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:20:51 bot-main-exe Start with value define in command line
+2022-01-19 03:20:51 bot-main-exe Send GET request getMe
+2022-01-19 03:20:51 bot-main-exe The status code getMe was: 200
+2022-01-19 03:20:51 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:20:51 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:20:51 bot-main-exe Send GET request getUpdates
+2022-01-19 03:20:51 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:20:51 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:20:51 bot-main-exe Send GET request getUpdates
+2022-01-19 03:20:51 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:20:51 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:20:51 bot-main-exe Send GET request sendMessage
+2022-01-19 03:20:51 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:20:51 bot-main-exe Send GET request sendMessage
+2022-01-19 03:20:51 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:20:51 bot-main-exe Send GET request sendMessage
+2022-01-19 03:20:51 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:20:51 bot-main-exe Send GET request getUpdates
+2022-01-19 03:20:51 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:20:51 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:20:51 bot-main-exe Send GET request sendMessage
+2022-01-19 03:20:51 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:20:51 bot-main-exe Send GET request sendMessage
+2022-01-19 03:20:51 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:20:51 bot-main-exe Send GET request sendMessage
+2022-01-19 03:20:51 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:20:51 bot-main-exe Send GET request getUpdates
+2022-01-19 03:20:51 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:20:51 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:21:33 bot-main-exe Start with value define in command line
+2022-01-19 03:21:33 bot-main-exe Send GET request getMe
+2022-01-19 03:21:33 bot-main-exe The status code getMe was: 200
+2022-01-19 03:21:33 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:21:33 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:21:33 bot-main-exe Send GET request getUpdates
+2022-01-19 03:21:33 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:21:33 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:21:33 bot-main-exe Send GET request getUpdates
+2022-01-19 03:21:33 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:21:33 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:21:33 bot-main-exe Send GET request sendMessage
+2022-01-19 03:21:33 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:21:33 bot-main-exe Send GET request sendMessage
+2022-01-19 03:21:33 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:21:33 bot-main-exe Send GET request sendMessage
+2022-01-19 03:21:33 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:21:33 bot-main-exe Send GET request getUpdates
+2022-01-19 03:21:33 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:21:33 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:22:06 bot-main-exe Start with value define in command line
+2022-01-19 03:22:06 bot-main-exe Send GET request getMe
+2022-01-19 03:22:06 bot-main-exe The status code getMe was: 200
+2022-01-19 03:22:06 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:22:06 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:22:06 bot-main-exe Send GET request getUpdates
+2022-01-19 03:22:06 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:22:06 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:22:06 bot-main-exe Send GET request getUpdates
+2022-01-19 03:22:06 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:22:06 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:22:06 bot-main-exe Send GET request sendMessage
+2022-01-19 03:22:06 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:22:06 bot-main-exe Send GET request getUpdates
+2022-01-19 03:22:06 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:22:06 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:22:49 bot-main-exe Start with value define in command line
+2022-01-19 03:22:49 bot-main-exe Send GET request getMe
+2022-01-19 03:22:49 bot-main-exe The status code getMe was: 200
+2022-01-19 03:22:49 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:22:49 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:22:49 bot-main-exe Send GET request getUpdates
+2022-01-19 03:22:49 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:22:49 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:22:49 bot-main-exe Send GET request getUpdates
+2022-01-19 03:22:49 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:22:49 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:22:49 bot-main-exe Send GET request sendMessage
+2022-01-19 03:22:49 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:22:49 bot-main-exe Send GET request getUpdates
+2022-01-19 03:22:49 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:22:49 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:23:10 bot-main-exe Start with value define in command line
+2022-01-19 03:23:10 bot-main-exe Send GET request getMe
+2022-01-19 03:23:10 bot-main-exe The status code getMe was: 200
+2022-01-19 03:23:10 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:23:10 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:23:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:23:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:23:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:23:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:23:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:23:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:25:15 bot-main-exe Start with value define in command line
+2022-01-19 03:25:15 bot-main-exe Send GET request getMe
+2022-01-19 03:25:15 bot-main-exe The status code getMe was: 200
+2022-01-19 03:25:15 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:25:15 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:25:15 bot-main-exe Send GET request getUpdates
+2022-01-19 03:25:15 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:25:15 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:25:15 bot-main-exe Send GET request getUpdates
+2022-01-19 03:25:15 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:25:15 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:25:49 bot-main-exe Start with value define in command line
+2022-01-19 03:25:49 bot-main-exe Send GET request getMe
+2022-01-19 03:25:49 bot-main-exe The status code getMe was: 200
+2022-01-19 03:25:49 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:25:49 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:25:49 bot-main-exe Send GET request getUpdates
+2022-01-19 03:25:49 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:25:49 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:25:49 bot-main-exe Send GET request getUpdates
+2022-01-19 03:25:49 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:25:49 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:27:45 bot-main-exe Start with value define in command line
+2022-01-19 03:27:45 bot-main-exe Send GET request getMe
+2022-01-19 03:27:45 bot-main-exe The status code getMe was: 200
+2022-01-19 03:27:45 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:27:45 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:27:45 bot-main-exe Send GET request getUpdates
+2022-01-19 03:27:45 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:27:45 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:27:45 bot-main-exe Send GET request getUpdates
+2022-01-19 03:27:45 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:27:45 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:30:09 bot-main-exe Start with value define in command line
+2022-01-19 03:30:09 bot-main-exe Send GET request getMe
+2022-01-19 03:30:09 bot-main-exe The status code getMe was: 200
+2022-01-19 03:30:09 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:30:09 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:30:09 bot-main-exe Send GET request getUpdates
+2022-01-19 03:30:09 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:30:09 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:30:09 bot-main-exe Send GET request getUpdates
+2022-01-19 03:30:09 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:30:09 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:31:08 bot-main-exe Start with value define in command line
+2022-01-19 03:31:08 bot-main-exe Send GET request getMe
+2022-01-19 03:31:08 bot-main-exe The status code getMe was: 200
+2022-01-19 03:31:08 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:31:08 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:31:08 bot-main-exe Send GET request getUpdates
+2022-01-19 03:31:08 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:31:08 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:31:08 bot-main-exe Send GET request getUpdates
+2022-01-19 03:31:08 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:31:08 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:31:08 bot-main-exe Send GET request sendMessage
+2022-01-19 03:31:08 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:31:08 bot-main-exe Send GET request sendMessage
+2022-01-19 03:31:08 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:31:08 bot-main-exe Send GET request sendMessage
+2022-01-19 03:31:08 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:31:08 bot-main-exe Send GET request sendMessage
+2022-01-19 03:31:08 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:31:08 bot-main-exe Send GET request sendMessage
+2022-01-19 03:31:08 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:31:08 bot-main-exe Send GET request sendMessage
+2022-01-19 03:31:08 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:31:08 bot-main-exe Send GET request getUpdates
+2022-01-19 03:31:08 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:31:08 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:31:53 bot-main-exe Start with value define in command line
+2022-01-19 03:31:53 bot-main-exe Send GET request getMe
+2022-01-19 03:31:53 bot-main-exe The status code getMe was: 200
+2022-01-19 03:31:53 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:31:53 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:31:53 bot-main-exe Send GET request getUpdates
+2022-01-19 03:31:53 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:31:53 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:31:53 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe Start with value define in command line
+2022-01-19 03:47:10 bot-main-exe Send GET request getMe
+2022-01-19 03:47:10 bot-main-exe The status code getMe was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:47:10 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request sendMessage
+2022-01-19 03:47:10 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:47:10 bot-main-exe Send GET request getUpdates
+2022-01-19 03:47:10 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:47:10 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Start with value define in command line
+2022-01-19 03:49:30 bot-main-exe Send GET request getMe
+2022-01-19 03:49:30 bot-main-exe The status code getMe was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getMe
+2022-01-19 03:49:30 bot-main-exe Ok check control default setupTelegramm
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates
+2022-01-19 03:49:30 bot-main-exe The status code getUpdates was: 200
+2022-01-19 03:49:30 bot-main-exe Ok decode body response Get getUpdates
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request sendMessage
+2022-01-19 03:49:30 bot-main-exe The status code sendMessage was: 200
+2022-01-19 03:49:30 bot-main-exe Send GET request getUpdates

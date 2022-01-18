@@ -1,5 +1,5 @@
 /home/gsaleon/MyProject/bot/src/App/Types/ConfigTelegram.hs:
-  hash: a8a2ea9d90d9e4d5ff150764f72ac64cb5c9a7562ba56924f4b4bc0a373a34bb
+  hash: c3fcde8fe05a28ae69dd19074182c5f74e73bfe532f8635c95b4af218fdf051b
 /home/gsaleon/MyProject/bot/src/Services/LogM.hs:
   hash: 2b6373a13d731fadac0135e4c4533f7aa498b905385646e83da573a48d32d2bd
 /home/gsaleon/MyProject/bot/README.md:
@@ -9,7 +9,7 @@
 /home/gsaleon/MyProject/bot/ChangeLog.md:
   hash: 3bf0975fc1a216be669b46c73ae4fc6a98baa74faff3347a4a2e43677faa1487
 /home/gsaleon/MyProject/bot/bot-main.cabal:
-  hash: 5bdc7df2b3305b6dbac43d7bfdd2389ed1b06a5dd2fafce691f81f0866ca6ec8
+  hash: 8a96c72a1db6b697c069f5a4e12afc638839a0656c6a78a66ba994cd584751b5
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleTelegramm.hs:
   hash: 411f74d8d2d954b8c840ee2337d962e92d5c7fcb8c7dbb03246092fb1b3104c8
 /home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/cabal_macros.h:
@@ -38,3 +38,5 @@
   hash: 33a459b788332bf712eeb9fcb5df2a8c6519bb7f4743df57abc50b6d0ff76ea1
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleLog.hs:
   hash: 3b39453e51f28c9b7058ecd68cc4a3332cb5f0b2a18ab43dec2e468294d99e3e
+/home/gsaleon/MyProject/bot/src/Services/Server.hs:
+  hash: 04e53298658715144557b62a187d74d5d73d7e8d167ac2752bf2248c9109f98f

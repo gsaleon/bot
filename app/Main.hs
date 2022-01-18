@@ -28,14 +28,12 @@ import           System.IO.Error                  ( isAlreadyExistsError, isDoes
                                                   , isAlreadyExistsError, isAlreadyExistsError
                                                   , isAlreadyExistsError, isAlreadyInUseError
                                                   )
-import           Data.Aeson                       (decode, decodeStrict, (.=), object, encode)
+import           Data.Aeson                       (decodeStrict, (.=), object)
 import           System.Environment               (getArgs, getExecutablePath, getProgName)
 import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
 import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
--- import           Data.Text
 import           Prelude                  hiding  (id)
-import           Data.Text                        (Text)
 
 import           Services.ParseCommandLine
 import           Lib
@@ -43,14 +41,16 @@ import           App.Types.Config
 import           App.Types.ConfigTelegram
 import           App.Types.Log
 import           Services.LogM                    
+import           Services.Server                  (server)
 import           Services.Telegramm               (makeRequest)
-import           App.Handlers.HandleLog           (handleLogError, handleLogWarning, handleLogInfo, handleLogDebug)
+import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegramm     (handleTelegram)
 
 main :: IO ()
 main = do
   putStrLn "------------------Start--------------------"
-  -- Read command line arguments
+  
+  -- Initialising, read command line arguments
   commandLine <- getArgs
   let commandLineParse = parseLine commandLine
   let commandLineParseErr = fromLeft "value" commandLineParse
@@ -59,18 +59,19 @@ main = do
   -- putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
   -- putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
   putStrLn ""
+  
   -- Initialising, make system path
   systemPathStart <- getExecutablePath
   let systemPath = fst $ makeSystemPath systemPathStart :: FilePath
   let operSystem = snd $ makeSystemPath systemPathStart :: Os
   -- putStrLn ("systemPathStart - " ++ show systemPathStart)
   putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
-  -- Control and read config files
-  let sysPathConfig    = systemPath ++ "/config/configBot"       :: FilePath
+  
+  -- Initialising, control and read config files
+  let sysPathConfig    =  systemPath ++ "/config/configBot"      :: FilePath
   let sysPathTelegramm = systemPath ++ "/config/configTelegramm" :: FilePath
   let sysPathVcontakte = systemPath ++ "/config/configVcontakte" :: FilePath
   let sysPathHelp      = systemPath ++ "/config/configHelp"      :: FilePath
-  putStrLn ""
   mapM_ (\(x, y) ->
     catch (readFile x >>= (\a -> putStr ""))
       (\e ->  case e of
@@ -91,11 +92,12 @@ main = do
           ,(sysPathTelegramm, "configTelegramm")
           ,(sysPathHelp,      "configHelp")
           ]
-  -- Control log files
-  let sysPathDebugLog   = systemPath ++ "logs/Debug.log"   :: FilePath
-  let sysPathErrorLog   = systemPath ++ "logs/Error.log"   :: FilePath
-  let sysPathInfoLog    = systemPath ++ "logs/Info.log"    :: FilePath
-  let sysPathWarningLog = systemPath ++ "logs/Warning.log" :: FilePath
+
+  -- Initialising, control log files
+  let sysPathDebugLog   = systemPath ++ "/logs/Debug.log"   :: FilePath
+  let sysPathErrorLog   = systemPath ++ "/logs/Error.log"   :: FilePath
+  let sysPathInfoLog    = systemPath ++ "/logs/Info.log"    :: FilePath
+  let sysPathWarningLog = systemPath ++ "/logs/Warning.log" :: FilePath
   mapM_ (\(x, y) ->
     catch (openFile x ReadWriteMode >>= hClose)
       (\e ->  case e of
@@ -119,22 +121,23 @@ main = do
           ,(sysPathInfoLog,    "Info.log")
           ,(sysPathWarningLog, "Warning.log")
           ]
-  -- Control config files
+
+  -- Initialising, control config files
   rawJSONConfig <- B.readFile sysPathConfig
   let setupGeneral = decodeStrict rawJSONConfig 
-  putStr $ case setupGeneral of
-    Nothing           -> "Invalid configGeneral JSON!"
-    Just setupGeneral -> printPrettySetup setupGeneral
+  case setupGeneral of
+    Nothing           -> die "Invalid configGeneral JSON!"
+    Just setupGeneral -> putStr $ printPrettySetup setupGeneral
   rawJSONTelegramm <- B.readFile sysPathTelegramm
   let setupTelegramm = decodeStrict rawJSONTelegramm
-  putStr $ case setupTelegramm of
-    Nothing             -> "Invalid configTelegramm JSON!"
-    Just setupTelegramm -> printPrettyTelegramm setupTelegramm
+  case setupTelegramm of
+    Nothing             -> die "Invalid configTelegramm JSON!"
+    Just setupTelegramm -> putStr $ printPrettyTelegramm setupTelegramm
   rawJSONVcontakte <- B.readFile sysPathVcontakte
   let setupVcontakte = decodeStrict rawJSONVcontakte
-  putStr $ case setupVcontakte of
-    Nothing             -> "Invalid configVcontakte JSON!"
-    Just setupVcontakte -> printPrettyVcontakte setupVcontakte
+  case setupVcontakte of
+    Nothing             -> die "Invalid configVcontakte JSON!"
+    Just setupVcontakte -> putStr $ printPrettyVcontakte setupVcontakte
   -- Print help, initialising with (or not) command line arguments
   case commandLineParseErr of
     "help"          -> do
@@ -142,106 +145,70 @@ main = do
         putStrLn helpBig
         die "Stop running"
     "parsingError"  -> do
-        die "Usage stack run -- -[Args] or stack run -- -h (--help) \
-        \ for help"
+        die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
     "multipleValue" -> do
-        die "Multiple Value arguments. Usage stack run -- -[Args] or \
-        \ stack run -- -h (--help) for help"
+        die "Multiple value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
     _               -> putStr ""
   let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
   let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
   putStrLn mess
   -- putStrLn (printPrettySetup workGeneral)
 
-  -- Make note in log about start programm
+  -- Initialising, make note in log about start programm
   progName <- getProgName
   let logLevel = logLevelGeneral workGeneral
   let logLevelInfo = [ ("Debug", sysPathDebugLog), ("Info", sysPathInfoLog)
                      , ("Warning", sysPathWarningLog), ("Error", sysPathErrorLog)
                      ] :: [(String, FilePath)]         
-  message <- makeLogMessage progName mess
-  logInfo handleLogInfo logLevel logLevelInfo message  -- Write note in log about start programm
-  logDebug handleLogDebug logLevel logLevelInfo message
+  message' <- makeLogMessage progName mess
+  logInfo handleLogInfo logLevel logLevelInfo message'
+  logDebug handleLogDebug logLevel logLevelInfo message'
   
-  -- Basic function bot
+  -- Initialising, control work bot
   putStrLn "-------------------------------"
   message <- makeLogMessage progName ""
   let token = tokenTelegramm (fromJust setupTelegramm)  
-  --First request 
   let requestObjectGetMe = object []
   let requestGetMe = "getMe"
   responseGetMe <- makeRequest token requestGetMe requestObjectGetMe logLevel logLevelInfo message
   case responseGetMe of
-    Nothing            -> die "Error response getMe, check tokenTelegramm in /config/tmp/configTelegramm"
+    Nothing            -> die "Error response getMe, check bot and tokenTelegramm in /config/tmp/configTelegramm"
     Just responseGetMe -> putStrLn $ printResponseGetMe responseGetMe
   if first_nameResponseGetMe (fromJust responseGetMe) /= nameTelegramm (fromJust setupTelegramm)
              || username (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
-    then logWarning handleLogWarning logLevel logLevelInfo
-           $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
-    else logInfo handleLogInfo logLevel logLevelInfo
-           $ message ++ "Ok check control default setupTelegramm"
-  -- Basic cycle
+    then do
+            logWarning handleLogWarning logLevel logLevelInfo
+              $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
+            logDebug handleLogDebug logLevel logLevelInfo
+              $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
+            return ()
+    else do
+            logInfo handleLogInfo logLevel logLevelInfo
+              $ message ++ "Ok check control default setupTelegramm"
+            logDebug handleLogDebug logLevel logLevelInfo
+              $ message ++ "Ok check control default setupTelegramm"
+            return ()
   let longPolling = pollingGeneral workGeneral
-  let limitGetUpdate = 1
-  let offsetGetUpdate = 1
-  let requestGetUpdateObject = object [ "timeout" .= (longPolling     :: Int)
-                                      , "limit"   .= (limitGetUpdate  :: Int)
-                                      , "offset"  .= (offsetGetUpdate :: Int)
+  let repeatN = repeatGeneral workGeneral
+  let requestGetUpdateObject = object [ "timeout" .= (longPolling :: Int)
+                                      , "limit"   .= (100         :: Int)
+                                      , "offset"  .= (1           :: Int)
                                       ]
   let requestGetUpdate = "getUpdates"
-  responseGetUpdate <- makeRequest token requestGetUpdate requestGetUpdateObject logLevel logLevelInfo message
+  responseGetUpdate <- makeRequest token requestGetUpdate requestGetUpdateObject
+                         logLevel logLevelInfo message  :: IO (Maybe ResultRequest)
   putStrLn $ case responseGetUpdate of
-    Nothing                -> "Error decode response getUpdate"
-    Just responseGetUpdate -> printResponseGetUpdate responseGetUpdate
-  if (head $ text $ head $ result $ fromJust responseGetUpdate) == '/'
-    then case head $ words $ text $ head $ result $ fromJust responseGetUpdate of
-      "/start"    -> do
-          let textPost            = "Это просто эхо бот"
-          let chat_id             = idChat $ head $ result $ fromJust responseGetUpdate
-          let reply_to_message_id = message_id $ head $ result $ fromJust responseGetUpdate
-          let requestSendMessageObject = object [ "text"                .= (textPost            :: String)
-                                                , "chat_id"             .= (chat_id             :: Int)
-                                                , "reply_to_message_id" .= (reply_to_message_id :: Int)
-                                                ]
-          let requestSendMessage = "sendMessage"
-          responseSendMessage <- makeRequest token requestSendMessage requestSendMessageObject
-                                   logLevel logLevelInfo message :: IO (Maybe SendMessage)
-          putStrLn $ case responseSendMessage of
-            Nothing                  -> "Error decode response sendMessage"
-            Just responseSendMessage -> show responseSendMessage
-      "/help"     -> do
-          let textPost            = text $ head $ result $ fromJust responseGetUpdate
-          let chat_id             = idChat $ head $ result $ fromJust responseGetUpdate
-          let reply_to_message_id = message_id $ head $ result $ fromJust responseGetUpdate
-          let requestSendMessageObject = object [ "text"                .= (textPost            :: String)
-                                                , "chat_id"             .= (chat_id             :: Int)
-                                                , "reply_to_message_id" .= (reply_to_message_id :: Int)
-                                                ]
-          let requestSendMessage = "sendMessage"
-          responseSendMessage <- makeRequest token requestSendMessage requestSendMessageObject
-                                   logLevel logLevelInfo message :: IO (Maybe SendMessage)
-          putStrLn $ case responseSendMessage of
-            Nothing                  -> "Error decode response sendMessage"
-            Just responseSendMessage -> show responseSendMessage
-      -- /settings -> _ (keyboard)
-      "/quit"     -> die "Senks very mach, bye..."
-    else do
-      let textAnswer          = text $ head $ result $ fromJust responseGetUpdate
-      let chat_id             = idChat $ head $ result $ fromJust responseGetUpdate
-      let reply_to_message_id = message_id $ head $ result $ fromJust responseGetUpdate
-      let requestSendMessageObject = object [ "text"                .= (textAnswer          :: String)
-                                            , "chat_id"             .= (chat_id             :: Int)
-                                            , "reply_to_message_id" .= (reply_to_message_id :: Int)
-                                            ]
-      let requestSendMessage = "sendMessage"
-      responseSendMessage <- makeRequest token requestSendMessage requestSendMessageObject
-                               logLevel logLevelInfo message :: IO (Maybe SendMessage)
-{-      putStrLn $ case responseSendMessage of
-        Nothing                  -> "Error decode response sendMessage"
-        Just responseSendMessage -> show responseSendMessage-}
+        Nothing                -> "Error decode response getUpdate"
+        Just responseGetUpdate -> show responseGetUpdate  
+  let offsetGetUpdate = 
+        if (result $ fromJust responseGetUpdate) == []
+          then 1
+          else (update_id $ last $ result $ fromJust responseGetUpdate) + 1
+  let userList = [("", repeatN)] :: [(String, Int)]
+  server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+
 
   putStrLn "--------------------Stop---------------------"
-
 
 fromOutCommandLine :: String -> Maybe SetupGeneral -> [(String, String)] -> (SetupGeneral, [Char])
 fromOutCommandLine cPE setupGeneral commandLineParseValue =

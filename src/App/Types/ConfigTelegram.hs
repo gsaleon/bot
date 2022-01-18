@@ -93,7 +93,7 @@ data ValueReq = ValueReq
               , last_nameChat  :: String
               , typeChat       :: String
               , text           :: String
-               } deriving (Show)
+               } deriving (Show, Eq)
 
 instance FromJSON ValueReq where
   parseJSON = withObject "ValueReq" $ \o -> do

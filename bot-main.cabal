@@ -35,6 +35,7 @@ library
       Lib
       Services.LogM
       Services.ParseCommandLine
+      Services.Server
       Services.Telegramm
       Services.Vcontakte
   other-modules:
