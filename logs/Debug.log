@@ -1,0 +1,7 @@
+
+2022-01-18 08:52:54 bot-main-exe Start with value define in command line
+2022-01-18 08:52:54 bot-main-exe Send GET request getMe
+2022-01-18 08:52:54 bot-main-exe The status code getMe was: 200
+2022-01-18 08:52:54 bot-main-exe Ok check control default setupTelegramm
+2022-01-18 08:52:54 bot-main-exe Send GET request getUpdates
+2022-01-18 08:52:54 bot-main-exe The status code getUpdates was: 200
