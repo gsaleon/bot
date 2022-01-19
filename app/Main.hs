@@ -192,14 +192,12 @@ main = do
   let repeatN = repeatGeneral workGeneral
   let requestGetUpdateObject = object [ "timeout" .= (longPolling :: Int)
                                       , "limit"   .= (100         :: Int)
-                                      , "offset"  .= (1           :: Int)
+                                      , "offset"  .= (1         :: Int)
                                       ]
   let requestGetUpdate = "getUpdates"
   responseGetUpdate <- makeRequest token requestGetUpdate requestGetUpdateObject
                          logLevel logLevelInfo message  :: IO (Maybe ResultRequest)
-  putStrLn $ case responseGetUpdate of
-        Nothing                -> "Error decode response getUpdate"
-        Just responseGetUpdate -> show responseGetUpdate  
+  putStrLn (show responseGetUpdate)
   let offsetGetUpdate = 
         if (result $ fromJust responseGetUpdate) == []
           then 1
