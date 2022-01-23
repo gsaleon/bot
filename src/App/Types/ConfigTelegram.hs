@@ -3,9 +3,10 @@
 
 module App.Types.ConfigTelegram where
 
+
 import           Data.Aeson
 import           Control.Monad         (mzero)
-import           Prelude       hiding  (id)
+import           Prelude       hiding  (id, Enum)
 import           Data.Time.LocalTime   (getCurrentTimeZone, utcToLocalTime)
 import           Data.Time             (formatTime, defaultTimeLocale)
 import           Data.Time.Clock.POSIX (posixSecondsToUTCTime)
@@ -41,11 +42,11 @@ data ResponseGetMe  = ResponseGetMe
                     , idResponseGetMe             :: Int
                     , is_botResponseGetMe         :: Bool
                     , first_nameResponseGetMe     :: String
-                    , username                    :: String
+                    , usernameResponseGetMe       :: String
                     , can_join_groups             :: Bool
                     , can_read_all_group_messages :: Bool
                     , supports_inline_queries     :: Bool
-                     } deriving (Show)
+                    } deriving (Show)
 
 instance FromJSON ResponseGetMe where
   parseJSON = withObject "ResponseGetMe" $ \o -> do
@@ -54,7 +55,7 @@ instance FromJSON ResponseGetMe where
     idResponseGetMe             <- result .: "id"
     is_botResponseGetMe         <- result .: "is_bot"
     first_nameResponseGetMe     <- result .: "first_name"
-    username                    <- result .: "username"
+    usernameResponseGetMe       <- result .: "username"
     can_join_groups             <- result .: "can_join_groups"
     can_read_all_group_messages <- result .: "can_read_all_group_messages"
     supports_inline_queries     <- result .: "supports_inline_queries"
@@ -68,8 +69,8 @@ makeLocalTime timeEpoch = do
   return timeNow
 
 newtype ResultRequest = ResultRequest
-                      { result :: [ValueReq]
-                       } deriving (Show)
+                      { result :: [Update]    --ValueReq
+                      } deriving (Show)
 
 instance FromJSON ResultRequest where
   parseJSON (Object r) = ResultRequest
@@ -77,36 +78,194 @@ instance FromJSON ResultRequest where
   parseJSON _          = mzero
 
 newtype SendMessage = SendMessage
-                      { result' :: ValueReq
-                       } deriving (Show)
+                      { result' :: Update
+                      } deriving (Show)
 
 instance FromJSON SendMessage where
   parseJSON (Object s) = SendMessage
     <$> s .: "result"
   parseJSON _          = mzero
-
+{-
 data ValueReq = ValueReq
-              { update_id      :: Int
-              , message_id     :: Int              
-              , idChat         :: Int
-              , first_nameChat :: String
-              , last_nameChat  :: String
-              , typeChat       :: String
-              , text           :: String
-               } deriving (Show, Eq)
+              { update_idVal      :: Int
+              , message_id        :: Int              
+              , idChatVal         :: Int
+              , first_nameChatVal :: String
+              , last_nameChatVal  :: String
+              , typeChatVal       :: String
+              , text              :: String
+              } deriving (Show, Eq)
 
 instance FromJSON ValueReq where
   parseJSON = withObject "ValueReq" $ \o -> do
-    update_id      <- o       .: "update_id"
+    update_idVal   <- o       .: "update_id"
     message        <- o       .: "message"
     message_id     <- message .: "message_id"
     chat           <- message .: "chat"
-    idChat         <- chat    .: "id"
-    first_nameChat <- chat    .: "first_name"
-    last_nameChat  <- chat    .: "last_name"
-    typeChat       <- chat    .: "type"
+    idChatVal      <- chat    .: "id"
+    first_nameChatVal <- chat .: "first_name"
+    last_nameChatVal  <- chat .: "last_name"
+    typeChatVal    <- chat    .: "type"
     text           <- message .: "text"
     return ValueReq{..}
+-}
+data Update = Update
+            { update_idUpdate :: Int
+            , messageUpdate   :: Message
+            , callback_query  :: CallbackQuery
+            } deriving (Show, Eq)
+
+instance FromJSON Update where
+  parseJSON = withObject "Update" $ \u -> do
+    update_idUpdate <- u .: "update_id"
+    messageUpdate   <- u .:? "message"        .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
+    callback_query  <- u .:? "callback_query" .!= CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, dataCallbackQuery = "", messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, inline_message_id = ""}
+    return Update{..}
+
+data CallbackQuery = CallbackQuery
+                   { idCallbackQuery      :: String
+                   , fromCallbackQuery    :: User
+                   , messageCallbackQuery :: Message
+                   , inline_message_id    :: String
+                   , dataCallbackQuery    :: String
+                   } deriving (Show, Eq)
+
+instance FromJSON CallbackQuery where
+  parseJSON = withObject "CallbackQuery" $ \c -> do
+    idCallbackQuery      <- c .: "id"
+    fromCallbackQuery    <- c .: "from"
+    messageCallbackQuery <- c .:? "message"           .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
+    inline_message_id    <- c .:? "inline_message_id" .!= ""
+    dataCallbackQuery    <- c .: "data"
+    return CallbackQuery{..}
+
+data User = User
+          { idUser     :: Int
+          , first_name :: String
+          , last_name  :: String
+          , username   :: String
+          } deriving (Show, Eq)
+
+instance FromJSON User where
+  parseJSON = withObject "User" $ \u -> do
+    idUser     <- u .: "id"
+    first_name <- u .: "first_name"
+    last_name  <- u .:? "last_name" .!= ""
+    username   <- u .:? "username"  .!= ""
+    return User{..}
+
+data Message = Message
+             { message_idMessage :: Int
+             , from              :: User
+             , date              :: Int
+             , chat              :: Chat
+             , forward_from      :: User
+             , forward_date      :: Int
+             -- , reply_to_message  :: Message
+             , textMessage       :: String
+             } deriving (Show, Eq)
+
+instance FromJSON Message where
+  parseJSON = withObject "Message" $ \m -> do
+    message_idMessage <- m .: "message_id"
+    from              <- m .:? "from"             .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
+    date              <- m .: "date"
+    chat              <- m .: "chat"
+    forward_from      <- m .:? "forward_from"     .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
+    forward_date      <- m .:? "forward_date"     .!= 0
+    -- reply_to_message  <- m .:? "reply_to_message" .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
+    textMessage       <- m .:? "text"      .!= ""
+    return Message{..}
+
+data Chat = Chat
+          { idChat         :: Int
+          , typeChat       :: String   --Enum
+          , title          :: String
+          , usernameChat   :: String
+          , first_nameChat :: String
+          , last_nameChat  :: String
+          } deriving (Show, Eq)
+
+instance FromJSON Chat where
+  parseJSON = withObject "Chat" $ \c -> do
+    idChat                         <- c .: "id"
+    typeChat                       <- c .: "type"
+    title                          <- c .:? "title"      .!= ""
+    usernameChat                   <- c .:? "username"   .!= ""
+    first_nameChat                 <- c .:? "first_name" .!= ""
+    last_nameChat                  <- c .:? "last_name"  .!= ""
+    return Chat{..}
+
+{-data Enum = Private | Group | Supergroup | Channel
+
+instance FromJSON Enum where
+  parseJSON = withText "Enum" $ \text ->
+    case text of
+      "private"    -> return Private
+      "group"      -> return Group
+      "supergroup" -> return Supergroup
+      "channel"    -> return Channel-}
+
+data SendGetUpdate = SendGetUpdate
+                   { timeout :: Int
+                   , limit   :: Int
+                   , offset  :: Int
+                   } deriving (Show)
+
+instance ToJSON SendGetUpdate where
+  toJSON SendGetUpdate {..} = object [
+    "timeout" .= timeout,
+    "limit"   .= limit,
+    "offset"  .= offset              ]
+
+data SendMessageTo = SendMessageTo
+                 { textTo                :: String
+                 , chat_idTo             :: Int
+                 , reply_to_message_idTo :: Int
+                 }
+
+instance ToJSON SendMessageTo where
+  toJSON SendMessageTo {..} = object [
+    "text"                .= textTo,
+    "chat_id"             .= chat_idTo,
+    "reply_to_message_id" .= reply_to_message_idTo
+                                     ]
+
+data SendMessageWithKey = SendMessageWithKey
+                 { textWithKey                :: String
+                 , chat_idWithKey             :: Int
+                 , reply_to_message_idWithKey :: Int
+                 , reply_markup               :: InlineKeyboardMarkup
+                 }
+
+instance ToJSON SendMessageWithKey where
+  toJSON (SendMessageWithKey textWithKey chat_idWithKey reply_to_message_idWithKey reply_markup) =
+    object [
+      "text"                .= textWithKey,
+      "chat_id"             .= chat_idWithKey,
+      "reply_to_message_id" .= reply_to_message_idWithKey,
+      "reply_markup"        .= reply_markup
+           ]
+
+data InlineKeyboardMarkup = InlineKeyboardMarkup [[InlineKeyboardButton]]
+
+instance ToJSON InlineKeyboardMarkup where
+    toJSON (InlineKeyboardMarkup inline_keyboard) =
+      object  [ "inline_keyboard" .= inline_keyboard
+              ]
+
+data InlineKeyboardButton = InlineKeyboardButton
+                          { textKeyboardButton ::String
+                          , callback_data      ::String
+                          }
+
+instance ToJSON InlineKeyboardButton where
+    toJSON (InlineKeyboardButton textKeyboardButton callback_data) = object
+      [ "text"          .= textKeyboardButton
+      , "callback_data" .= callback_data
+      ]
 
 data HandleTelegram = HandleTelegram
     { requestTelegram :: Request -> Manager -> IO () }
+
+

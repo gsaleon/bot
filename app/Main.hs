@@ -28,7 +28,7 @@ import           System.IO.Error                  ( isAlreadyExistsError, isDoes
                                                   , isAlreadyExistsError, isAlreadyExistsError
                                                   , isAlreadyExistsError, isAlreadyInUseError
                                                   )
-import           Data.Aeson                       (decodeStrict, (.=), object)
+import           Data.Aeson                       (decodeStrict, object)
 import           System.Environment               (getArgs, getExecutablePath, getProgName)
 import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
 import           System.Exit                      (die)
@@ -175,7 +175,7 @@ main = do
     Nothing            -> die "Error response getMe, check bot and tokenTelegramm in /config/tmp/configTelegramm"
     Just responseGetMe -> putStrLn $ printResponseGetMe responseGetMe
   if first_nameResponseGetMe (fromJust responseGetMe) /= nameTelegramm (fromJust setupTelegramm)
-             || username (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
+             || usernameResponseGetMe (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
     then do
             logWarning handleLogWarning logLevel logLevelInfo
               $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
@@ -190,18 +190,14 @@ main = do
             return ()
   let longPolling = pollingGeneral workGeneral
   let repeatN = repeatGeneral workGeneral
-  let requestGetUpdateObject = object [ "timeout" .= (longPolling :: Int)
-                                      , "limit"   .= (100         :: Int)
-                                      , "offset"  .= (1         :: Int)
-                                      ]
-  let requestGetUpdate = "getUpdates"
-  responseGetUpdate <- makeRequest token requestGetUpdate requestGetUpdateObject
+  let requestGetUpdateObject = SendGetUpdate longPolling 100 1     --SendGetUpdate {timeout, limit, offset}
+  responseGetUpdate <- makeRequest token "getUpdates" requestGetUpdateObject
                          logLevel logLevelInfo message  :: IO (Maybe ResultRequest)
   putStrLn (show responseGetUpdate)
   let offsetGetUpdate = 
         if (result $ fromJust responseGetUpdate) == []
           then 1
-          else (update_id $ last $ result $ fromJust responseGetUpdate) + 1
+          else (update_idUpdate $ last $ result $ fromJust responseGetUpdate) + 1
   let userList = [("", repeatN)] :: [(String, Int)]
   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
 
