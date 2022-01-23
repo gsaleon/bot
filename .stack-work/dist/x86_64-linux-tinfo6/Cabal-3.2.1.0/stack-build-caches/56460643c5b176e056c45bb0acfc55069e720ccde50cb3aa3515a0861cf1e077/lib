@@ -1,5 +1,5 @@
 /home/gsaleon/MyProject/bot/src/App/Types/ConfigTelegram.hs:
-  hash: 3d9a2196bf499b58f28afd965f54e6d885fd1a4a267a432462f21a2aeba8e998
+  hash: 9776b1458f90381dfc8f66ea83cdea5651ec56cc671271dbb9e5ed6024e4ba80
 /home/gsaleon/MyProject/bot/src/Services/LogM.hs:
   hash: 2b6373a13d731fadac0135e4c4533f7aa498b905385646e83da573a48d32d2bd
 /home/gsaleon/MyProject/bot/README.md:
@@ -21,7 +21,7 @@
 /home/gsaleon/MyProject/bot/src/Services/Vcontakte.hs:
   hash: 2aa82f043748019a8b9d7bfab1488b8c18024ae4d10f52727d785e51624c269f
 /home/gsaleon/MyProject/bot/src/Lib.hs:
-  hash: b93648d4e5f8f861c1ac67818e88adc0313513b832ea348c8a0c6acadd2c273b
+  hash: a79b4f895467d5ecb70e585d164d7fbae24854dc87c130be407b4cd6687d8f6f
 /home/gsaleon/MyProject/bot/src/App/Types/Config.hs:
   hash: 9944eec8a25ea470fc60c6f8c965d9de4ef03cfd103666fff8802d279939d89a
 /home/gsaleon/MyProject/bot/src/Services/Telegramm.hs:
@@ -39,4 +39,4 @@
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleLog.hs:
   hash: 3b39453e51f28c9b7058ecd68cc4a3332cb5f0b2a18ab43dec2e468294d99e3e
 /home/gsaleon/MyProject/bot/src/Services/Server.hs:
-  hash: b04e2c4f5b4179f0b31cfc69af292940a638479330b195a0c42be39d93b854c0
+  hash: a14aad0f2b93c376f7bafcbe1b0d768b928293ca7605a9abeffeb9035f2e6f01

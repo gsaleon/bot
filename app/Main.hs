@@ -198,7 +198,7 @@ main = do
         if (result $ fromJust responseGetUpdate) == []
           then 1
           else (update_idUpdate $ last $ result $ fromJust responseGetUpdate) + 1
-  let userList = [("", repeatN)] :: [(String, Int)]
+  let userList = [(0, repeatN)] :: [(Int, Int)]
   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
 
 

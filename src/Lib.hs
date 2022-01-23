@@ -66,19 +66,6 @@ printResponseGetMe (ResponseGetMe okResponseGetMe idResponseGetMe is_botResponse
   "supports_inline_queries     - " ++ show supports_inline_queries     ++ "\n" ++  
   "----------------------end printResultGetMe---------------"
 
-{-printResponseGetUpdate :: ResultRequest -> String
-printResponseGetUpdate (ResultRequest lst) =
-  -- "message_id - " ++ show (map (message_id) lst)           ++ "\n" ++
-  "update_id  - " ++ show (map (update_idUpdate) lst)      ++ "\n" ++
-  "idChat     - " ++ show (map (idChat) lst)         ++ "\n" ++
-  "first_name - " ++ show (map (first_nameChat) lst) ++ "\n" ++
-  "last_name  - " ++ show (map (last_nameChat) lst)  ++ "\n" ++
-  -- "text       - " ++ show (map (text) lst)           ++ "\n" ++  
-  "----------------------end ResultResponseGetUpdate------------------"-}
-
-{-fromResultRequest :: ResultRequest -> [ValueReq]
-fromResultRequest (ResultRequest lst) = lst-}
-
 fromCommandLine :: SetupGeneral ->[(String, String)] -> SetupGeneral
 fromCommandLine s cL = SetupGeneral { pollingGeneral  = a
                                     , repeatGeneral   = b

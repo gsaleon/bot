@@ -196,16 +196,6 @@ instance FromJSON Chat where
     last_nameChat                  <- c .:? "last_name"  .!= ""
     return Chat{..}
 
-{-data Enum = Private | Group | Supergroup | Channel
-
-instance FromJSON Enum where
-  parseJSON = withText "Enum" $ \text ->
-    case text of
-      "private"    -> return Private
-      "group"      -> return Group
-      "supergroup" -> return Supergroup
-      "channel"    -> return Channel-}
-
 data SendGetUpdate = SendGetUpdate
                    { timeout :: Int
                    , limit   :: Int
@@ -264,6 +254,14 @@ instance ToJSON InlineKeyboardButton where
       [ "text"          .= textKeyboardButton
       , "callback_data" .= callback_data
       ]
+
+data  ReplyKeyboardHide =  ReplyKeyboardHide
+                        { hide_keyboard :: Bool
+                        } deriving (Show)
+
+instance ToJSON ReplyKeyboardHide where
+  toJSON ReplyKeyboardHide {..} = object [
+    "hide_keyboard" .= hide_keyboard     ]  
 
 data HandleTelegram = HandleTelegram
     { requestTelegram :: Request -> Manager -> IO () }
