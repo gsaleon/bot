@@ -25,23 +25,23 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
   if (result <$> responseGetUpdate) == Just []
     then server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
     else do
-      let value = messageUpdate <$> head <$> result <$> responseGetUpdate
-      let offsetGetUpdate = (fromJust $ update_idUpdate <$> head <$> result <$> responseGetUpdate) + 1
+      let value = messageUpdate . head . result <$> responseGetUpdate
+      let offsetGetUpdate = (fromJust $ update_idUpdate . head . result <$> responseGetUpdate) + 1
       putStrLn ("offsetGetUpdate - " ++ show offsetGetUpdate)
-      let callbackQueryIdUser = idUser <$> from <$> messageCallbackQuery <$> callback_query <$> head <$> result <$> responseGetUpdate
+      let callbackQueryIdUser = idUser . from . messageCallbackQuery . callback_query . head . result <$> responseGetUpdate
       if (callbackQueryIdUser) /= Just 0
         then do
-          let button = read (fromJust $ dataCallbackQuery <$> callback_query <$> head <$> result <$> responseGetUpdate) :: Int
+          let button = read (fromJust $ dataCallbackQuery . callback_query . head . result <$> responseGetUpdate) :: Int
           let userListNew = (fromJust callbackQueryIdUser, button) : userList :: [(Int, Int)]          
           let requestSendMessageObject = ReplyKeyboardHide True
           responseSendMessage <- makeRequest token "sendMessage" requestSendMessageObject
                                    logLevel logLevelInfo message :: IO (Maybe SendMessage)
-          let userList = userListNew
-          putStrLn ("For userId - " ++ show (fromJust callbackQueryIdUser) ++ ", set namber repeat - " ++ show button ++ ", userList: " ++ show userList)          
+          putStrLn ("For userId - " ++ show (fromJust callbackQueryIdUser) ++ ", set namber repeat - " ++ show button ++ ", userList: " ++ show userListNew)
+          server setupTelegramm logLevel logLevelInfo token message userListNew longPolling offsetGetUpdate
         else
-          if (head <$> textMessage <$> value) /= Just '/'
+          if (head . textMessage <$> value) /= Just '/'
             then do
-              let userID = fromJust $ idUser <$> from <$> value
+              let userID = fromJust $ idUser . from <$> value
               putStrLn $ show userID
               putStrLn $ show userList
               let repeatN = if (filter (\x -> fst x == userID) userList) /= []
@@ -93,13 +93,10 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
               "/quit"     -> do
                   let requestSendMessageObject = SendMessageTo  --SendMessageTo {textTo, chat_idTo, reply_to_message_idTo}
                                                   ("Senk you very much, bye...")
-                                                  (fromJust $ idChat <$> chat <$> value)
+                                                  (fromJust $ idChat . chat <$> value)
                                                   (fromJust $ message_idMessage <$> value)
                   responseSendMessage <- makeRequest token "sendMessage" requestSendMessageObject
                                            logLevel logLevelInfo message :: IO (Maybe SendMessage)
                   die "Senk you very much, bye..."
           -- putStrLn (show userList)
-          
-
-
       server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
