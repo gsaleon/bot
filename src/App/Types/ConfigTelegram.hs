@@ -120,7 +120,7 @@ instance FromJSON Update where
     update_idUpdate <- u .: "update_id"
     messageUpdate   <- u .:? "message"        .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
     callback_query  <- u .:? "callback_query" .!= CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, dataCallbackQuery = "", messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, inline_message_id = ""}
-    return Update{..}
+    return Update {..}
 
 data CallbackQuery = CallbackQuery
                    { idCallbackQuery      :: String
@@ -194,7 +194,7 @@ instance FromJSON Chat where
     usernameChat                   <- c .:? "username"   .!= ""
     first_nameChat                 <- c .:? "first_name" .!= ""
     last_nameChat                  <- c .:? "last_name"  .!= ""
-    return Chat{..}
+    return Chat {..}
 
 data SendGetUpdate = SendGetUpdate
                    { timeout :: Int
@@ -212,7 +212,7 @@ data SendMessageTo = SendMessageTo
                  { textTo                :: String
                  , chat_idTo             :: Int
                  , reply_to_message_idTo :: Int
-                 }
+                 } deriving (Show)
 
 instance ToJSON SendMessageTo where
   toJSON SendMessageTo {..} = object [
@@ -225,19 +225,32 @@ data SendMessageWithKey = SendMessageWithKey
                  { textWithKey                :: String
                  , chat_idWithKey             :: Int
                  , reply_to_message_idWithKey :: Int
-                 , reply_markup               :: InlineKeyboardMarkup
+                 , reply_markup               :: ReplyKeyboardMarkup            --InlineKeyboardMarkup
                  }
 
 instance ToJSON SendMessageWithKey where
-  toJSON (SendMessageWithKey textWithKey chat_idWithKey reply_to_message_idWithKey reply_markup) =
-    object [
+  toJSON SendMessageWithKey {..} = object [
       "text"                .= textWithKey,
       "chat_id"             .= chat_idWithKey,
       "reply_to_message_id" .= reply_to_message_idWithKey,
       "reply_markup"        .= reply_markup
+                                          ]
+
+data SendMessageHideKeyboard = SendMessageHideKeyboard
+                             { textHideKeyboard         :: String
+                             , chat_idHideKeyboard      :: Int
+                             , reply_markupHideKeyboard :: ReplyKeyboardHide
+                             } deriving (Show)
+
+instance ToJSON SendMessageHideKeyboard where
+  toJSON SendMessageHideKeyboard {..} = object [
+      "text"         .= textHideKeyboard,
+      "chat_id"      .= chat_idHideKeyboard,
+      "reply_markup" .= reply_markupHideKeyboard
            ]
 
-data InlineKeyboardMarkup = InlineKeyboardMarkup [[InlineKeyboardButton]]
+-- ----------------------------------------------------------------------
+{-data InlineKeyboardMarkup = InlineKeyboardMarkup [[InlineKeyboardButton]]
 
 instance ToJSON InlineKeyboardMarkup where
     toJSON (InlineKeyboardMarkup inline_keyboard) =
@@ -253,6 +266,37 @@ instance ToJSON InlineKeyboardButton where
     toJSON (InlineKeyboardButton textKeyboardButton callback_data) = object
       [ "text"          .= textKeyboardButton
       , "callback_data" .= callback_data
+      ]-}
+-- ------------------------------------------------------------------------
+
+data ReplyKeyboardMarkup = ReplyKeyboardMarkup
+                         { keyboard          :: [[KeyboardButton]]
+                         -- , resize_keyboard   :: Bool
+                         -- , one_time_keyboard :: Bool
+                         -- , selective         :: Bool
+                         }
+
+instance ToJSON ReplyKeyboardMarkup where
+  toJSON ReplyKeyboardMarkup {..} = object [
+    "keyboard"          .= keyboard
+    -- "resize_keyboard"   .= resize_keyboard,
+    -- "one_time_keyboard" .= one_time_keyboard
+    -- "selective"         .= selective
+                                           ]
+
+{-instance ToJSON ReplyKeyboardMarkup where
+  toJSON = withObject "ReplyKeyboardMarkup" $ \r -> do
+    keyboard          <- r .: "keyboard"
+    resize_keyboard   <- r .:? "resize_keyboard"   .!= False
+    one_time_keyboard <- r .:? "one_time_keyboard" .!= False
+    selective         <- r .:? "selective"         .!= False
+    return ReplyKeyboardMarkup {..}-}
+
+data  KeyboardButton = KeyboardButton {text :: String}
+
+instance ToJSON KeyboardButton where
+    toJSON (KeyboardButton textKeyboardButton) = object
+      [ "text" .= textKeyboardButton
       ]
 
 data  ReplyKeyboardHide =  ReplyKeyboardHide
@@ -260,7 +304,7 @@ data  ReplyKeyboardHide =  ReplyKeyboardHide
                         } deriving (Show)
 
 instance ToJSON ReplyKeyboardHide where
-  toJSON ReplyKeyboardHide {..} = object [
+  toJSON (ReplyKeyboardHide hide_keyboard) = object [
     "hide_keyboard" .= hide_keyboard     ]  
 
 data HandleTelegram = HandleTelegram
