@@ -41,7 +41,7 @@ import           App.Types.Config
 import           App.Types.ConfigTelegram
 import           App.Types.Log
 import           Services.LogM                    
-import           Services.Server                  (server)
+import           Services.Server                  (server, makeRequestTelegrammGetUpdates)
 import           Services.Telegramm               (makeRequest)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegramm     (handleTelegram)
@@ -70,7 +70,7 @@ main = do
   -- Initialising, control and read config files
   let sysPathConfig    =  systemPath ++ "/config/configBot"      :: FilePath
   let sysPathTelegramm = systemPath ++ "/config/configTelegramm" :: FilePath
-  let sysPathVcontakte = systemPath ++ "/config/configVcontakte" :: FilePath
+  let sysPathVkontakte = systemPath ++ "/config/configVkontakte" :: FilePath
   let sysPathHelp      = systemPath ++ "/config/configHelp"      :: FilePath
   mapM_ (\(x, y) ->
     catch (readFile x >>= (\a -> putStr ""))
@@ -88,7 +88,7 @@ main = do
                ("Uncaught exception " ++ y) >> ioError e
       )
         ) [(sysPathConfig,    "configBot")
-          ,(sysPathVcontakte, "configVcontakte")
+          ,(sysPathVkontakte, "configVkontakte")
           ,(sysPathTelegramm, "configTelegramm")
           ,(sysPathHelp,      "configHelp")
           ]
@@ -101,8 +101,8 @@ main = do
   mapM_ (\(x, y) ->
     catch (openFile x ReadWriteMode >>= hClose)
       (\e ->  case e of
-        _  | isAlreadyExistsError e -> error 
-               ("Error: File " ++ y ++ " alredy exists")
+{-        _  | isAlreadyExistsError e -> error 
+               ("Error: File " ++ y ++ " alredy exists")-}
         _  | isDoesNotExistError e  -> putStrLn
                ("File " ++ y ++ " not found, create file")
                -- writeFile x ""
@@ -133,11 +133,12 @@ main = do
   case setupTelegramm of
     Nothing             -> die "Invalid configTelegramm JSON!"
     Just setupTelegramm -> putStr $ printPrettyTelegramm setupTelegramm
-  rawJSONVcontakte <- B.readFile sysPathVcontakte
-  let setupVcontakte = decodeStrict rawJSONVcontakte
-  case setupVcontakte of
-    Nothing             -> die "Invalid configVcontakte JSON!"
-    Just setupVcontakte -> putStr $ printPrettyVcontakte setupVcontakte
+  rawJSONVkontakte <- B.readFile sysPathVkontakte
+  let setupVkontakte = decodeStrict rawJSONVkontakte
+  case setupVkontakte of
+    Nothing             -> die "Invalid configVkontakte JSON!"
+    Just setupVkontakte -> putStr $ printPrettyVkontakte setupVkontakte
+
   -- Print help, initialising with (or not) command line arguments
   case commandLineParseErr of
     "help"          -> do
@@ -149,17 +150,17 @@ main = do
     "multipleValue" -> do
         die "Multiple value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
     _               -> putStr ""
-  let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
-  let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
-  putStrLn mess
-  -- putStrLn (printPrettySetup workGeneral)
-
+  
   -- Initialising, make note in log about start programm
+  let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
+  -- putStrLn (printPrettySetup workGeneral)
   progName <- getProgName
   let logLevel = logLevelGeneral workGeneral
   let logLevelInfo = [ ("Debug", sysPathDebugLog), ("Info", sysPathInfoLog)
                      , ("Warning", sysPathWarningLog), ("Error", sysPathErrorLog)
                      ] :: [(String, FilePath)]         
+  let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
+  putStrLn mess
   message' <- makeLogMessage progName mess
   logInfo handleLogInfo logLevel logLevelInfo message'
   logDebug handleLogDebug logLevel logLevelInfo message'
@@ -169,11 +170,10 @@ main = do
   message <- makeLogMessage progName ""
   let token = tokenTelegramm (fromJust setupTelegramm)  
   let requestObjectGetMe = object []
-  let requestGetMe = "getMe"
-  responseGetMe <- makeRequest token requestGetMe requestObjectGetMe logLevel logLevelInfo message
-  case responseGetMe of
+  responseGetMe <- makeRequestTelegrammGetMe token requestObjectGetMe logLevel logLevelInfo message
+{-  case responseGetMe of
     Nothing            -> die "Error response getMe, check bot and tokenTelegramm in /config/tmp/configTelegramm"
-    Just responseGetMe -> putStrLn $ printResponseGetMe responseGetMe
+    Just responseGetMe -> putStrLn $ printResponseGetMe responseGetMe-}
   if first_nameResponseGetMe (fromJust responseGetMe) /= nameTelegramm (fromJust setupTelegramm)
              || usernameResponseGetMe (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
     then do
@@ -191,7 +191,7 @@ main = do
   let longPolling = pollingGeneral workGeneral
   let repeatN = repeatGeneral workGeneral
   let requestGetUpdateObject = SendGetUpdate longPolling 100 1     --SendGetUpdate {timeout, limit, offset}
-  responseGetUpdate <- makeRequest token "getUpdates" requestGetUpdateObject
+  responseGetUpdate <- makeRequestTelegrammGetUpdates token requestGetUpdateObject
                          logLevel logLevelInfo message  :: IO (Maybe ResultRequest)
   putStrLn (show responseGetUpdate)
   let offsetGetUpdate = 
@@ -200,7 +200,6 @@ main = do
           else (update_idUpdate $ last $ result $ fromJust responseGetUpdate) + 1
   let userList = [(0, repeatN)] :: [(Int, Int)]
   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
-
 
   putStrLn "--------------------Stop---------------------"
 
@@ -215,3 +214,8 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
       ( fromJust setupGeneral
       , "Start with default value parametrs"
       )
+
+-- makeRequestTelegramm ::
+makeRequestTelegrammGetMe token requestSendMessageObject logLevel logLevelInfo message = do
+  responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo message    :: IO (Maybe ResponseGetMe)
+  return (responseGetMe)

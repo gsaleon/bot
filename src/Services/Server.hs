@@ -2,12 +2,12 @@
 
 module Services.Server where
 
-import           Data.Aeson                       (encode)
+-- import           Data.Aeson                       (encode)
 import           Data.Char                        (digitToInt)
 import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
 import           Control.Monad                    (replicateM_)
-import qualified Data.ByteString.Lazy.Char8 as LC      -- только для контроля
+-- import qualified Data.ByteString.Lazy.Char8 as LC      -- только для контроля
 import           Prelude                  hiding  (id)
 
 import           App.Types.ConfigTelegram
@@ -17,9 +17,9 @@ server :: Maybe SetupTelegramm -> String -> [(String, FilePath)] ->
                           String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
 server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate = do
   putStrLn "Start server"
-  let requestGetUpdateObject = SendGetUpdate longPolling 1 offsetGetUpdate
-  responseGetUpdate <- makeRequest token "getUpdates" requestGetUpdateObject
-                         logLevel logLevelInfo message  :: IO (Maybe ResultRequest)
+  let requestSendMessageObject = SendGetUpdate longPolling 1 offsetGetUpdate  -- SendGetUpdate timeout limit offset
+  -- let typeResponse = "getUpdates"
+  responseGetUpdate <- makeRequestTelegrammGetUpdates token requestSendMessageObject logLevel logLevelInfo message
 {-  putStrLn $ case responseGetUpdate of
         Nothing                -> "Error decode response getUpdate"
         Just responseGetUpdate -> show responseGetUpdate-}
@@ -37,14 +37,13 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
           -- let userListNew = (fromJust callbackQueryIdUser, button) : userList :: [(Int, Int)]          
           let button = digitToInt (last $ fromJust $ textMessage <$> value)
           let userID = fromJust $ idUser . from <$> value
-          let userListNew = (userID, button) : userList :: [(Int, Int)]          
+          let userListNew = (userID, button) : userList :: [(Int, Int)]
           let requestSendMessageObject = SendMessageHideKeyboard           -- SendMessageHideKeyboard {textHideKeyboard, chat_idHideKeyboard, reply_markupHideKeyboard}
-                                          ("")
+                                          ("HideKeyboard")
                                           (fromJust $ idChat <$> chat <$> value)
-                                          (ReplyKeyboardHide True)
-          putStrLn $ show requestSendMessageObject
-          responseSendMessage <- makeRequestTelegramm token "sendMessage" requestSendMessageObject
-                                   logLevel logLevelInfo message :: IO (Maybe SendMessage)
+                                          (ReplyKeyboardHide {hide_keyboard = True})
+          -- putStrLn $ show requestSendMessageObject
+          responseGetUpdate <- makeRequestTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo message
           putStrLn ("For userId - " ++ show userID ++ ", set namber repeat - " ++ show button ++ ", userList: " ++ show userListNew)
           server setupTelegramm logLevel logLevelInfo token message userListNew longPolling offsetGetUpdate
         else
@@ -61,15 +60,15 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
                                               (fromJust $ idChat <$> chat <$> value)
                                               (fromJust $ message_idMessage <$> value)
               -- putStrLn $ show requestSendMessageObject
-              replicateM_ repeatN ((makeRequest token "sendMessage" requestSendMessageObject
-                logLevel logLevelInfo message :: IO (Maybe SendMessage)) >>= \responseSendMessage -> return ())
+              replicateM_ repeatN ((makeRequestTelegrammSendMessage token requestSendMessageObject logLevel
+                logLevelInfo message) >>= \responseSendMessage -> return ())
             else case head $ words $ fromJust $ textMessage <$> value of
               "/start"    -> do
                   let requestSendMessageObject = SendMessageTo  --SendMessageTo {textTo, chat_idTo, reply_to_message_idTo}
                                                   (fromJust $ aboutTelegramm <$> setupTelegramm)
                                                   (fromJust $ idChat <$> chat <$> value)
                                                   (fromJust $ message_idMessage <$> value)
-                  responseSendMessage <- makeRequestTelegramm token "sendMessage" requestSendMessageObject
+                  responseSendMessage <- makeRequestTelegrammSendMessage token requestSendMessageObject
                                            logLevel logLevelInfo message :: IO (Maybe SendMessage)
                   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
               "/help"     -> do
@@ -77,8 +76,7 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
                                                   (fromJust $ commandTelegramm <$> setupTelegramm)
                                                   (fromJust $ idChat <$> chat <$> value)
                                                   (fromJust $ message_idMessage <$> value)
-                  responseSendMessage <- makeRequestTelegramm token "sendMessage" requestSendMessageObject
-                                           logLevel logLevelInfo message :: IO (Maybe SendMessage)
+                  responseGetUpdate <- makeRequestTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo message
                   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
               "/settings" -> do
 {-                  putStrLn ("chat_id - " ++ show (idChat (fromJust value))
@@ -106,21 +104,24 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
                                                                        ]
                                                   )
                   -- LC.putStrLn $ encode requestSendMessageObject
-                  responseSendMessage <- makeRequest token "sendMessage" requestSendMessageObject
-                                           logLevel logLevelInfo message :: IO (Maybe SendMessage)
+                  responseGetUpdate <- makeRequestTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo message
                   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
               "/quit"     -> do
                   let requestSendMessageObject = SendMessageTo  --SendMessageTo {textTo, chat_idTo, reply_to_message_idTo}
                                                   ("Senk you very much, bye...")
                                                   (fromJust $ idChat . chat <$> value)
                                                   (fromJust $ message_idMessage <$> value)
-                  responseSendMessage <- makeRequestTelegramm token "sendMessage" requestSendMessageObject
-                                           logLevel logLevelInfo message :: IO (Maybe SendMessage)
+                  responseGetUpdate <- makeRequestTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo message
                   die "Senk you very much, bye..."
           -- putStrLn (show userList)
       server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
 
 -- makeRequestTelegramm ::
-makeRequestTelegramm token typeResponse requestSendMessageObject logLevel logLevelInfo message = do
-  responseSendMessage <- makeRequest token typeResponse requestSendMessageObject logLevel logLevelInfo message :: IO (Maybe SendMessage)
+makeRequestTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo message = do
+  responseSendMessage <- makeRequest token "sendMessage" requestSendMessageObject logLevel logLevelInfo message :: IO (Maybe SendMessage)
   return (responseSendMessage)
+
+-- makeRequestTelegramm ::
+makeRequestTelegrammGetUpdates token requestSendMessageObject logLevel logLevelInfo message = do
+  responseGetUpdate <- makeRequest token "getUpdates" requestSendMessageObject logLevel logLevelInfo message    :: IO (Maybe ResultRequest)
+  return (responseGetUpdate)

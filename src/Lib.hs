@@ -7,25 +7,25 @@ import           Prelude       hiding (id)
 import           Services.ParseCommandLine (Parse(Err, Value))
 import           App.Types.Config
 import           App.Types.ConfigTelegram
-import           App.Types.ConfigVcontakte
+import           App.Types.ConfigVkontakte
 
 
 
 
 
-printPrettyVcontakte :: SetupVcontakte -> String
-printPrettyVcontakte (SetupVcontakte urlVcontakte nameVcontakte
-      userNameVcontakte tokenVcontakte descriptionVcontakte
-      aboutVcontakte commandVcontakte) = ""
+printPrettyVkontakte :: SetupVkontakte -> String
+printPrettyVkontakte (SetupVkontakte urlVkontakte nameVkontakte
+      userNameVkontakte tokenVkontakte descriptionVkontakte
+      aboutVkontakte commandVkontakte) = ""
 {-  "\n" ++
-  "urlVcontakte -         " ++ urlVcontakte         ++ "\n" ++
-  "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
-  "userNameVcontakte -    " ++ userNameVcontakte    ++ "\n" ++
-  "tokenVcontakte -       " ++ tokenVcontakte       ++ "\n" ++
-  "descriptionVcontakte - " ++ descriptionVcontakte ++ "\n" ++
-  "aboutVcontakte -       " ++ aboutVcontakte       ++ "\n" ++
-  "commandVcontakte -     " ++ commandVcontakte     ++ "\n" ++
-  "----------------------end printPrettyVcontakte------------"-}
+  "urlVkontakte -         " ++ urlVkontakte         ++ "\n" ++
+  "tokenVkontakte -       " ++ tokenVkontakte       ++ "\n" ++
+  "userNameVkontakte -    " ++ userNameVkontakte    ++ "\n" ++
+  "tokenVkontakte -       " ++ tokenVkontakte       ++ "\n" ++
+  "descriptionVkontakte - " ++ descriptionVkontakte ++ "\n" ++
+  "aboutVkontakte -       " ++ aboutVkontakte       ++ "\n" ++
+  "commandVkontakte -     " ++ commandVkontakte     ++ "\n" ++
+  "----------------------end printPrettyVkontakte------------"-}
 
 printPrettyTelegramm :: SetupTelegramm -> String
 printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm

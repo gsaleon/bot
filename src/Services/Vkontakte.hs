@@ -1,0 +1,2 @@
+module Services.Vkontakte where
+

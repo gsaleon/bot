@@ -61,6 +61,18 @@ instance FromJSON ResponseGetMe where
     supports_inline_queries     <- result .: "supports_inline_queries"
     return ResponseGetMe{..}
 
+data SendGetUpdate = SendGetUpdate
+                   { timeout :: Int
+                   , limit   :: Int
+                   , offset  :: Int
+                   } deriving (Show)
+
+instance ToJSON SendGetUpdate where
+  toJSON SendGetUpdate {..} = object [
+    "timeout" .= timeout,
+    "limit"   .= limit,
+    "offset"  .= offset              ]
+
 -- makeLocalTime :: String -> String
 makeLocalTime timeEpoch = do
   timezone  <- getCurrentTimeZone
@@ -85,30 +97,7 @@ instance FromJSON SendMessage where
   parseJSON (Object s) = SendMessage
     <$> s .: "result"
   parseJSON _          = mzero
-{-
-data ValueReq = ValueReq
-              { update_idVal      :: Int
-              , message_id        :: Int              
-              , idChatVal         :: Int
-              , first_nameChatVal :: String
-              , last_nameChatVal  :: String
-              , typeChatVal       :: String
-              , text              :: String
-              } deriving (Show, Eq)
 
-instance FromJSON ValueReq where
-  parseJSON = withObject "ValueReq" $ \o -> do
-    update_idVal   <- o       .: "update_id"
-    message        <- o       .: "message"
-    message_id     <- message .: "message_id"
-    chat           <- message .: "chat"
-    idChatVal      <- chat    .: "id"
-    first_nameChatVal <- chat .: "first_name"
-    last_nameChatVal  <- chat .: "last_name"
-    typeChatVal    <- chat    .: "type"
-    text           <- message .: "text"
-    return ValueReq{..}
--}
 data Update = Update
             { update_idUpdate :: Int
             , messageUpdate   :: Message
@@ -196,18 +185,6 @@ instance FromJSON Chat where
     last_nameChat                  <- c .:? "last_name"  .!= ""
     return Chat {..}
 
-data SendGetUpdate = SendGetUpdate
-                   { timeout :: Int
-                   , limit   :: Int
-                   , offset  :: Int
-                   } deriving (Show)
-
-instance ToJSON SendGetUpdate where
-  toJSON SendGetUpdate {..} = object [
-    "timeout" .= timeout,
-    "limit"   .= limit,
-    "offset"  .= offset              ]
-
 data SendMessageTo = SendMessageTo
                  { textTo                :: String
                  , chat_idTo             :: Int
@@ -247,7 +224,7 @@ instance ToJSON SendMessageHideKeyboard where
       "text"         .= textHideKeyboard,
       "chat_id"      .= chat_idHideKeyboard,
       "reply_markup" .= reply_markupHideKeyboard
-           ]
+                                               ]
 
 -- ----------------------------------------------------------------------
 {-data InlineKeyboardMarkup = InlineKeyboardMarkup [[InlineKeyboardButton]]
@@ -304,8 +281,9 @@ data  ReplyKeyboardHide =  ReplyKeyboardHide
                         } deriving (Show)
 
 instance ToJSON ReplyKeyboardHide where
-  toJSON (ReplyKeyboardHide hide_keyboard) = object [
-    "hide_keyboard" .= hide_keyboard     ]  
+  toJSON (ReplyKeyboardHide hide_keyboard) = object
+    [ "hide_keyboard" .= hide_keyboard
+    ]  
 
 data HandleTelegram = HandleTelegram
     { requestTelegram :: Request -> Manager -> IO () }

@@ -27,17 +27,17 @@ library
   exposed-modules:
       App.Handlers.HandleLog
       App.Handlers.HandleTelegramm
-      App.Handlers.HandleVcontakte
+      App.Handlers.HandleVkontakte
       App.Types.Config
       App.Types.ConfigTelegram
-      App.Types.ConfigVcontakte
+      App.Types.ConfigVkontakte
       App.Types.Log
       Lib
       Services.LogM
       Services.ParseCommandLine
       Services.Server
       Services.Telegramm
-      Services.Vcontakte
+      Services.Vkontakte
   other-modules:
       Paths_bot_main
   hs-source-dirs:

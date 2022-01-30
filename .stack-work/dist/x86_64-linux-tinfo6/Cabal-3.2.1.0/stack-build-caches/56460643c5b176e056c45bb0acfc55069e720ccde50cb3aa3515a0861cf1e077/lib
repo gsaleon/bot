@@ -1,5 +1,7 @@
 /home/gsaleon/MyProject/bot/src/App/Types/ConfigTelegram.hs:
-  hash: 92872ef3232282b7ff7f654615c8b86477e0ca7ed8536e44e1f98ec7c2d051aa
+  hash: d3aa74bd577a7506c5b362e66b3888560e655b1de70f1f385ff86eb5e32f9f4a
+/home/gsaleon/MyProject/bot/src/Services/Vkontakte.hs:
+  hash: e4347f5c680fe7391a9490f994b32732867a2cc527e2e84975dd4f4357d7e570
 /home/gsaleon/MyProject/bot/src/Services/LogM.hs:
   hash: 2b6373a13d731fadac0135e4c4533f7aa498b905385646e83da573a48d32d2bd
 /home/gsaleon/MyProject/bot/README.md:
@@ -8,8 +10,12 @@
   hash: d8da13f8282ca264935824ceee81be745dd88f6f2d7809178d269eb72084bcdf
 /home/gsaleon/MyProject/bot/ChangeLog.md:
   hash: 3bf0975fc1a216be669b46c73ae4fc6a98baa74faff3347a4a2e43677faa1487
+/home/gsaleon/MyProject/bot/src/App/Types/ConfigVkontakte.hs:
+  hash: 8e6fb448feca7931f7a9a7ad13338e0cd530bc57b61d217cd9e1a5b9f0427957
+/home/gsaleon/MyProject/bot/src/App/Handlers/HandleVkontakte.hs:
+  hash: cd866a3595ff747ce18064031a948268e1ba70b278880d95cda0a096266edbbd
 /home/gsaleon/MyProject/bot/bot-main.cabal:
-  hash: 8a96c72a1db6b697c069f5a4e12afc638839a0656c6a78a66ba994cd584751b5
+  hash: 98be3bd2d5b19d94b6adb960713d8d1f77b3c841f04792047af305c7da43079e
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleTelegramm.hs:
   hash: 411f74d8d2d954b8c840ee2337d962e92d5c7fcb8c7dbb03246092fb1b3104c8
 /home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/cabal_macros.h:
@@ -18,10 +24,8 @@
   hash: 7afa7fcfd2a1ac2d5fe86672db5828460a736519680da0b9fac4d91e5f227817
 /home/gsaleon/.stack/programs/x86_64-linux/ghc-tinfo6-8.10.7/lib/ghc-8.10.7/include/ghcversion.h:
   hash: c013160c9aa8a98f4638616496dce720c23ceca8ef9d6b3212b654642fbda5e4
-/home/gsaleon/MyProject/bot/src/Services/Vcontakte.hs:
-  hash: 2aa82f043748019a8b9d7bfab1488b8c18024ae4d10f52727d785e51624c269f
 /home/gsaleon/MyProject/bot/src/Lib.hs:
-  hash: a79b4f895467d5ecb70e585d164d7fbae24854dc87c130be407b4cd6687d8f6f
+  hash: c87682f3e7beaa0b842fec1f103d710bd72b684fdd7dbf4a45aa338f2f9e937e
 /home/gsaleon/MyProject/bot/src/App/Types/Config.hs:
   hash: 9944eec8a25ea470fc60c6f8c965d9de4ef03cfd103666fff8802d279939d89a
 /home/gsaleon/MyProject/bot/src/Services/Telegramm.hs:
@@ -32,11 +36,7 @@
   hash: ddc458dc7fbeea2eca45d3e74d21423b07b7fdeb5d16807917603dafc19c2baa
 /home/gsaleon/MyProject/bot/src/App/Types/Log.hs:
   hash: 752fdece0f5651496b4813de596c4d2205582e35d7f1adc199b3d37fbeca5f55
-/home/gsaleon/MyProject/bot/src/App/Handlers/HandleVcontakte.hs:
-  hash: 51e98f1080d14390fee783350ca002ded6ced472f444d611c0dfa2ed7ebb37cf
-/home/gsaleon/MyProject/bot/src/App/Types/ConfigVcontakte.hs:
-  hash: 33a459b788332bf712eeb9fcb5df2a8c6519bb7f4743df57abc50b6d0ff76ea1
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleLog.hs:
   hash: 3b39453e51f28c9b7058ecd68cc4a3332cb5f0b2a18ab43dec2e468294d99e3e
 /home/gsaleon/MyProject/bot/src/Services/Server.hs:
-  hash: 28832e334ce29ccad6925ab78954552cfbaa5e078c37c986bb1ceeede3080f43
+  hash: 515e712c207aca91f71d6a726549004ca2bc24f97a0c549c92fcca55d4aac126

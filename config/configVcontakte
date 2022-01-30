@@ -1,9 +1,0 @@
-{
-  "urlVcontakte": "https://api.vcontakte.org/",
-  "nameVcontakte": "repeat_send_bot_xbz",
-  "userNameVcontakte": "RepeatSend_bot_xbz",
-  "tokenVcontakte": "2100731571:AAGIjVTEVJXymGPbU31hQGUiz11qmMB_q00_AAAAAAAAA",
-  "descriptionVcontakte": "This is a repetitions bot for Telegramm and Vcontakte",
-  "aboutVcontakte": "someText about bot",
-  "commandVcontakte": "/start, /help, /repeat, /value, /quit ..."
-}
