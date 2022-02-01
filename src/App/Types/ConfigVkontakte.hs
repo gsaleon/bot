@@ -8,22 +8,18 @@ import           Data.Aeson
 import           Control.Monad        (mzero)
 
 data SetupVkontakte = SetupVkontakte
-                    { urlVkontakte         :: String
-                    , nameVkontakte        :: String
-                    , userNameVkontakte    :: String
-                    , tokenVkontakte       :: String
-                    , descriptionVkontakte :: String
-                    , aboutVkontakte       :: String
-                    , commandVkontakte     :: String
+                    { urlVkontakte   :: String
+                    , tokenVkontakte :: String
+                    , version        :: Float   -- 5.131 in use
+                    , lang           :: Int     -- 0-ru, 3-en
+                    , test_mode      :: Int     -- 0-normal, 1-test
                     } deriving Show
 
 instance FromJSON SetupVkontakte where
   parseJSON (Object setupVkontakte) = SetupVkontakte
     <$> setupVkontakte .: "urlVkontakte"
-    <*> setupVkontakte .: "nameVkontakte"
-    <*> setupVkontakte .: "userNameVkontakte"
     <*> setupVkontakte .: "tokenVkontakte"
-    <*> setupVkontakte .: "descriptionVkontakte"
-    <*> setupVkontakte .: "aboutVkontakte"
-    <*> setupVkontakte .: "commandVkontakte"
+    <*> setupVkontakte .: "version"
+    <*> setupVkontakte .: "lang"
+    <*> setupVkontakte .: "test_mode"
   parseJSON _                       = mzero
