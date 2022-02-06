@@ -107,8 +107,8 @@ data Update = Update
 instance FromJSON Update where
   parseJSON = withObject "Update" $ \u -> do
     update_idUpdate <- u .: "update_id"
-    messageUpdate   <- u .:? "message"        .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
-    callback_query  <- u .:? "callback_query" .!= CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, dataCallbackQuery = "", messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, inline_message_id = ""}
+    messageUpdate   <- u .:? "message"        .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = "", sticker = Stiker {file_id = "", width = 0, height = 0, file_size = 0, thumb = PhotoSize {thumbFileId = "", thumbWidth = 0, thumbHeight = 0, thumbFileSize = 0}}}
+    callback_query  <- u .:? "callback_query" .!= CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, dataCallbackQuery = "", messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = "", sticker = Stiker {file_id = "", width = 0, height = 0, file_size = 0, thumb = PhotoSize {thumbFileId = "", thumbWidth = 0, thumbHeight = 0, thumbFileSize = 0}}}, inline_message_id = ""}
     return Update {..}
 
 data CallbackQuery = CallbackQuery
@@ -123,7 +123,7 @@ instance FromJSON CallbackQuery where
   parseJSON = withObject "CallbackQuery" $ \c -> do
     idCallbackQuery      <- c .: "id"
     fromCallbackQuery    <- c .: "from"
-    messageCallbackQuery <- c .:? "message"           .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
+    messageCallbackQuery <- c .:? "message"           .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = "", sticker = Stiker {file_id = "", width = 0, height = 0, file_size = 0, thumb = PhotoSize {thumbFileId = "", thumbWidth = 0, thumbHeight = 0, thumbFileSize = 0}}}
     inline_message_id    <- c .:? "inline_message_id" .!= ""
     dataCallbackQuery    <- c .: "data"
     return CallbackQuery{..}
@@ -152,19 +152,53 @@ data Message = Message
              , forward_date      :: Int
              -- , reply_to_message  :: Message
              , textMessage       :: String
+             , sticker           :: Stiker
              } deriving (Show, Eq)
 
 instance FromJSON Message where
   parseJSON = withObject "Message" $ \m -> do
     message_idMessage <- m .: "message_id"
-    from              <- m .:? "from"             .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
+    from              <- m .:? "from"         .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
     date              <- m .: "date"
     chat              <- m .: "chat"
-    forward_from      <- m .:? "forward_from"     .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
-    forward_date      <- m .:? "forward_date"     .!= 0
+    forward_from      <- m .:? "forward_from" .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
+    forward_date      <- m .:? "forward_date" .!= 0
     -- reply_to_message  <- m .:? "reply_to_message" .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
-    textMessage       <- m .:? "text"      .!= ""
+    textMessage       <- m .:? "text"         .!= ""
+    sticker           <- m .:? "sticker"      .!= Stiker {file_id = "", width = 0, height = 0, file_size = 0, thumb = PhotoSize {thumbFileId = "", thumbWidth = 0, thumbHeight = 0, thumbFileSize = 0}}
     return Message{..}
+
+data Stiker = Stiker
+            { file_id       :: String
+            , width         :: Int
+            , height        :: Int
+            , file_size     :: Int
+            , thumb         :: PhotoSize
+            } deriving (Show, Eq)
+
+instance FromJSON Stiker where
+  parseJSON = withObject "Stiker" $ \sticker -> do
+    file_id   <- sticker .: "file_id"
+    width     <- sticker .: "width"
+    height    <- sticker .: "height"
+    file_size <- sticker .:? "file_size" .!= 0
+    thumb     <- sticker .:? "thumb"     .!= PhotoSize {thumbFileId = "", thumbWidth = 0, thumbHeight = 0, thumbFileSize = 0}
+    return Stiker {..}
+
+data PhotoSize = PhotoSize
+               { thumbFileId   :: String
+               , thumbWidth    :: Int
+               , thumbHeight   :: Int
+               , thumbFileSize :: Int
+               } deriving (Show, Eq)
+
+instance FromJSON PhotoSize where
+  parseJSON = withObject "PhotoSize" $ \p -> do
+    thumbFileId   <- p .: "file_id"
+    thumbWidth    <- p .: "width"
+    thumbHeight   <- p .: "height"
+    thumbFileSize <- p .:? "file_size" .!= 0
+    return PhotoSize {..}
 
 data Chat = Chat
           { idChat         :: Int
@@ -177,25 +211,38 @@ data Chat = Chat
 
 instance FromJSON Chat where
   parseJSON = withObject "Chat" $ \c -> do
-    idChat                         <- c .: "id"
-    typeChat                       <- c .: "type"
-    title                          <- c .:? "title"      .!= ""
-    usernameChat                   <- c .:? "username"   .!= ""
-    first_nameChat                 <- c .:? "first_name" .!= ""
-    last_nameChat                  <- c .:? "last_name"  .!= ""
+    idChat         <- c .: "id"
+    typeChat       <- c .: "type"
+    title          <- c .:? "title"      .!= ""
+    usernameChat   <- c .:? "username"   .!= ""
+    first_nameChat <- c .:? "first_name" .!= ""
+    last_nameChat  <- c .:? "last_name"  .!= ""
     return Chat {..}
 
 data SendMessageTo = SendMessageTo
-                 { textTo                :: String
-                 , chat_idTo             :: Int
-                 , reply_to_message_idTo :: Int
-                 } deriving (Show)
+                   { textTo                :: String
+                   , chat_idTo             :: Int
+                   , reply_to_message_idTo :: Int
+                   } deriving (Show)
 
 instance ToJSON SendMessageTo where
   toJSON SendMessageTo {..} = object [
     "text"                .= textTo,
     "chat_id"             .= chat_idTo,
     "reply_to_message_id" .= reply_to_message_idTo
+                                     ]
+
+data SendStickerTo = SendStickerTo
+                   { chat_idSticker             :: Int
+                   , stickerTo                  :: String
+                   , reply_to_message_idSticker :: Int
+                   } deriving (Show)
+
+instance ToJSON SendStickerTo where
+  toJSON SendStickerTo {..} = object [
+    "chat_id"             .= chat_idSticker,
+    "sticker"             .= stickerTo,
+    "reply_to_message_id" .= reply_to_message_idSticker
                                      ]
 
 data SendMessageWithKey = SendMessageWithKey

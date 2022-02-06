@@ -41,7 +41,7 @@ import           App.Types.Config
 import           App.Types.ConfigTelegram
 import           App.Types.Log
 import           Services.LogM                    
-import           Services.Server                  (server, makeRequestTelegrammGetUpdates)
+import           Services.Server                  (server, makeTelegrammGetUpdates)
 import           Services.Telegramm               (makeRequest)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegramm     (handleTelegram)
@@ -171,11 +171,8 @@ main = do
   let token = tokenTelegramm (fromJust setupTelegramm)  
   let requestObjectGetMe = object []
   responseGetMe <- makeRequestTelegrammGetMe token requestObjectGetMe logLevel logLevelInfo message
-{-  case responseGetMe of
-    Nothing            -> die "Error response getMe, check bot and tokenTelegramm in /config/tmp/configTelegramm"
-    Just responseGetMe -> putStrLn $ printResponseGetMe responseGetMe-}
-  if first_nameResponseGetMe (fromJust responseGetMe) /= nameTelegramm (fromJust setupTelegramm)
-             || usernameResponseGetMe (fromJust responseGetMe) /= userNameTelegramm (fromJust setupTelegramm)
+  if first_nameResponseGetMe responseGetMe /= nameTelegramm (fromJust setupTelegramm)
+             || usernameResponseGetMe responseGetMe /= userNameTelegramm (fromJust setupTelegramm)
     then do
             logWarning handleLogWarning logLevel logLevelInfo
               $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
@@ -191,13 +188,13 @@ main = do
   let longPolling = pollingGeneral workGeneral
   let repeatN = repeatGeneral workGeneral
   let requestGetUpdateObject = SendGetUpdate longPolling 100 1     --SendGetUpdate {timeout, limit, offset}
-  responseGetUpdate <- makeRequestTelegrammGetUpdates token requestGetUpdateObject
-                         logLevel logLevelInfo message  :: IO (Maybe ResultRequest)
-  putStrLn (show responseGetUpdate)
+  responseGetUpdate <- makeTelegrammGetUpdates token requestGetUpdateObject
+                         logLevel logLevelInfo message  :: IO ResultRequest
+  -- putStrLn (show responseGetUpdate)
   let offsetGetUpdate = 
-        if (result $ fromJust responseGetUpdate) == []
+        if (result $ responseGetUpdate) == []
           then 1
-          else (update_idUpdate $ last $ result $ fromJust responseGetUpdate) + 1
+          else (update_idUpdate $ last $ result $ responseGetUpdate) + 1
   let userList = [(0, repeatN)] :: [(Int, Int)]
   server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
 
@@ -217,5 +214,5 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
 
 -- makeRequestTelegramm ::
 makeRequestTelegrammGetMe token requestSendMessageObject logLevel logLevelInfo message = do
-  responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo message    :: IO (Maybe ResponseGetMe)
+  responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo message    :: IO ResponseGetMe
   return (responseGetMe)
