@@ -29,7 +29,7 @@
 /home/gsaleon/MyProject/bot/src/App/Types/Config.hs:
   hash: 9944eec8a25ea470fc60c6f8c965d9de4ef03cfd103666fff8802d279939d89a
 /home/gsaleon/MyProject/bot/src/Services/Telegramm.hs:
-  hash: bdf23086ffa5379d876760ecc31de18c2febcb783e9324307f37816425457734
+  hash: afe3f4cfbb7f80a000e7c42e09ccc4fdc03dc7e0c56c6ea6b076913acfc0ea6f
 /home/gsaleon/MyProject/bot/package.yaml:
   hash: 22e03f00e7793a9a18cd5484af008879cfce9a80800606638f47e358ab040f51
 /home/gsaleon/MyProject/bot/.stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/Paths_bot_main.hs:
@@ -39,4 +39,4 @@
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleLog.hs:
   hash: 3b39453e51f28c9b7058ecd68cc4a3332cb5f0b2a18ab43dec2e468294d99e3e
 /home/gsaleon/MyProject/bot/src/Services/Server.hs:
-  hash: dba6c1a0a5336b7aea7fd0e621dc00983a975146b10d9bd0d1584fda032e7202
+  hash: 342a7300bc7e2de2b1f8266ea2c82abb1af507d3861013125608065afc3dc575

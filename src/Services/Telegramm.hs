@@ -67,14 +67,14 @@ makeSendMessage token url object logLevel logLevelInfo message = do
   if statusCodeResponse == 200
     then do
       logInfo handleLogInfo logLevel logLevelInfo
-        $ message ++ "The status code send message " ++ url ++ " was: " ++ show statusCodeResponse
+        $ message ++ "The status code " ++ url ++ " was: " ++ show statusCodeResponse
       logDebug handleLogDebug logLevel logLevelInfo
-        $ message ++ "The status code send message " ++ url ++ " was: " ++ show statusCodeResponse
+        $ message ++ "The status code " ++ url ++ " was: " ++ show statusCodeResponse
     else do
       logError handleLogError logLevel logLevelInfo
-        $ message ++ "The status code send message " ++ url ++ " was: " ++ show statusCodeResponse ++ " error response"
+        $ message ++ "The status code " ++ url ++ " was: " ++ show statusCodeResponse ++ " error response"
       logDebug handleLogDebug logLevel logLevelInfo
-        $ message ++ "The status code send message " ++ url ++ " was: " ++ show statusCodeResponse ++ " error response"
+        $ message ++ "The status code " ++ url ++ " was: " ++ show statusCodeResponse ++ " error response"
   let responseGet = decode $ responseBody response
   case responseGet of
     Nothing          -> do

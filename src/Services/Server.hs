@@ -17,7 +17,6 @@ import           Services.LogM
 server :: Maybe SetupTelegramm -> String -> [(String, FilePath)] ->
                           String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
 server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate = do
-  putStr "."
   let requestSendMessageObject = SendGetUpdate longPolling 1 offsetGetUpdate
   -- putStrLn ("offsetGetUpdate old valee" ++ show offsetGetUpdate)
   responseGetUpdate <- makeTelegrammGetUpdates token requestSendMessageObject logLevel logLevelInfo message
@@ -111,16 +110,13 @@ server setupTelegramm logLevel logLevelInfo token message userList longPolling o
               let repeatNumber = if (filter (\x -> fst x == userID) userList) /= []
                                     then (snd . head) $ filter (\x -> fst x == userID) userList
                                     else (snd . head) userList
-              putStrLn ("stickerValue = " ++ show stickerValue)
+              -- putStrLn ("stickerValue = " ++ show stickerValue)
               let requestSendMessageObject = SendStickerTo
                                               (idChatTelegramm)
                                               (stickerValue)
                                               (messageId)
-              putStrLn (show requestSendMessageObject)
-              stick <- makeTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo message
-              putStrLn (show stick)
-{-              replicateM_ repeatNumber ((makeTelegrammSendMessage token requestSendMessageObject logLevel
-                                        logLevelInfo message) >>= \responseSendMessage -> return ())-}
+              replicateM_ repeatNumber ((makeTelegrammSendSticker token requestSendMessageObject logLevel
+                                        logLevelInfo message) >>= \responseSendMessage -> return ())
               server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
             else do
               logDebug handleLogDebug logLevel logLevelInfo
@@ -139,3 +135,8 @@ makeTelegrammSendMessage token requestSendMessageObject logLevel logLevelInfo me
 makeTelegrammGetUpdates token requestSendMessageObject logLevel logLevelInfo message = do
   responseGetUpdate <- makeRequest token "getUpdates" requestSendMessageObject logLevel logLevelInfo message    :: IO ResultRequest
   return (responseGetUpdate)
+
+-- makeRequestTelegramm ::
+makeTelegrammSendSticker token requestSendMessageObject logLevel logLevelInfo message = do
+  responseSendMessage <- makeSendMessage token "sendSticker" requestSendMessageObject logLevel logLevelInfo message :: IO SendMessage
+  return (responseSendMessage)

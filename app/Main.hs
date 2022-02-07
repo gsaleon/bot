@@ -187,7 +187,7 @@ main = do
             return ()
   let longPolling = pollingGeneral workGeneral
   let repeatN = repeatGeneral workGeneral
-  let requestGetUpdateObject = SendGetUpdate longPolling 100 1     --SendGetUpdate {timeout, limit, offset}
+  let requestGetUpdateObject = SendGetUpdate longPolling 100 1
   responseGetUpdate <- makeTelegrammGetUpdates token requestGetUpdateObject
                          logLevel logLevelInfo message  :: IO ResultRequest
   -- putStrLn (show responseGetUpdate)
