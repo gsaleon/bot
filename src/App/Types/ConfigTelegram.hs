@@ -11,30 +11,28 @@ import           Data.Time.LocalTime   (getCurrentTimeZone, utcToLocalTime)
 import           Data.Time             (formatTime, defaultTimeLocale)
 import           Data.Time.Clock.POSIX (posixSecondsToUTCTime)
 import           Network.HTTP.Client   (Request, Manager)
--- import           GHC.Generics
--- import           Data.Time.Format     (makeLocalTime)
 
-data SetupTelegramm = SetupTelegramm
-                    { urlTelegramm            :: String
-                    , nameTelegramm           :: String
-                    , userNameTelegramm       :: String
-                    , tokenTelegramm          :: String
-                    , descriptionTelegramm    :: String
-                    , aboutTelegramm          :: String
-                    , commandTelegramm        :: String
-                    , questionTelegrammRepeat :: String
+data SetupTelegram = SetupTelegram
+                    { urlTelegram            :: String
+                    , nameTelegram           :: String
+                    , userNameTelegram       :: String
+                    , tokenTelegram          :: String
+                    , descriptionTelegram    :: String
+                    , aboutTelegram          :: String
+                    , commandTelegram        :: String
+                    , questionTelegramRepeat :: String
                     } deriving Show
 
-instance FromJSON SetupTelegramm where
-  parseJSON (Object setupTelegramm) = SetupTelegramm
-    <$> setupTelegramm .: "urlTelegramm"
-    <*> setupTelegramm .: "nameTelegramm"
-    <*> setupTelegramm .: "userNameTelegramm"
-    <*> setupTelegramm .: "tokenTelegramm"
-    <*> setupTelegramm .: "descriptionTelegramm"
-    <*> setupTelegramm .: "aboutTelegramm"
-    <*> setupTelegramm .: "commandTelegramm"
-    <*> setupTelegramm .: "questionTelegrammRepeat"
+instance FromJSON SetupTelegram where
+  parseJSON (Object setupTelegram) = SetupTelegram
+    <$> setupTelegram .: "urlTelegram"
+    <*> setupTelegram .: "nameTelegram"
+    <*> setupTelegram .: "userNameTelegram"
+    <*> setupTelegram .: "tokenTelegram"
+    <*> setupTelegram .: "descriptionTelegram"
+    <*> setupTelegram .: "aboutTelegram"
+    <*> setupTelegram .: "commandTelegram"
+    <*> setupTelegram .: "questionTelegramRepeat"
   parseJSON _                       = mzero
 
 data ResponseGetMe  = ResponseGetMe
@@ -81,7 +79,7 @@ makeLocalTime timeEpoch = do
   return timeNow
 
 newtype ResultRequest = ResultRequest
-                      { result :: [Update]    --ValueReq
+                      { result :: [Update]
                       } deriving (Show)
 
 instance FromJSON ResultRequest where
@@ -150,7 +148,6 @@ data Message = Message
              , chat              :: Chat
              , forward_from      :: User
              , forward_date      :: Int
-             -- , reply_to_message  :: Message
              , textMessage       :: String
              , sticker           :: Stiker
              } deriving (Show, Eq)
@@ -163,7 +160,6 @@ instance FromJSON Message where
     chat              <- m .: "chat"
     forward_from      <- m .:? "forward_from" .!= User {idUser = 0, first_name = "", last_name = "", username = ""}
     forward_date      <- m .:? "forward_date" .!= 0
-    -- reply_to_message  <- m .:? "reply_to_message" .!= Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}
     textMessage       <- m .:? "text"         .!= ""
     sticker           <- m .:? "sticker"      .!= Stiker {file_id = "", width = 0, height = 0, file_size = 0, thumb = PhotoSize {thumbFileId = "", thumbWidth = 0, thumbHeight = 0, thumbFileSize = 0}}
     return Message{..}
@@ -220,44 +216,38 @@ instance FromJSON Chat where
     return Chat {..}
 
 data SendMessageTo = SendMessageTo
-                   { textTo                :: String
-                   , chat_idTo             :: Int
-                   , reply_to_message_idTo :: Int
+                   { textTo    :: String
+                   , chat_idTo :: Int
                    } deriving (Show)
 
 instance ToJSON SendMessageTo where
   toJSON SendMessageTo {..} = object [
-    "text"                .= textTo,
-    "chat_id"             .= chat_idTo,
-    "reply_to_message_id" .= reply_to_message_idTo
+    "text"    .= textTo,
+    "chat_id" .= chat_idTo
                                      ]
 
 data SendStickerTo = SendStickerTo
-                   { chat_idSticker             :: Int
-                   , stickerTo                  :: String
-                   , reply_to_message_idSticker :: Int
+                   { chat_idSticker :: Int
+                   , stickerSend    :: String
                    } deriving (Show)
 
 instance ToJSON SendStickerTo where
   toJSON SendStickerTo {..} = object [
-    "chat_id"             .= chat_idSticker,
-    "sticker"             .= stickerTo,
-    "reply_to_message_id" .= reply_to_message_idSticker
+    "chat_id" .= chat_idSticker,
+    "sticker" .= stickerSend
                                      ]
 
 data SendMessageWithKey = SendMessageWithKey
-                 { textWithKey                :: String
-                 , chat_idWithKey             :: Int
-                 , reply_to_message_idWithKey :: Int
-                 , reply_markup               :: ReplyKeyboardMarkup            --InlineKeyboardMarkup
+                 { textWithKey    :: String
+                 , chat_idWithKey :: Int
+                 , reply_markup   :: ReplyKeyboardMarkup
                  }
 
 instance ToJSON SendMessageWithKey where
   toJSON SendMessageWithKey {..} = object [
-      "text"                .= textWithKey,
-      "chat_id"             .= chat_idWithKey,
-      "reply_to_message_id" .= reply_to_message_idWithKey,
-      "reply_markup"        .= reply_markup
+      "text"         .= textWithKey,
+      "chat_id"      .= chat_idWithKey,
+      "reply_markup" .= reply_markup
                                           ]
 
 data SendMessageHideKeyboard = SendMessageHideKeyboard
@@ -273,48 +263,14 @@ instance ToJSON SendMessageHideKeyboard where
       "reply_markup" .= reply_markupHideKeyboard
                                                ]
 
--- ----------------------------------------------------------------------
-{-data InlineKeyboardMarkup = InlineKeyboardMarkup [[InlineKeyboardButton]]
-
-instance ToJSON InlineKeyboardMarkup where
-    toJSON (InlineKeyboardMarkup inline_keyboard) =
-      object  [ "inline_keyboard" .= inline_keyboard
-              ]
-
-data InlineKeyboardButton = InlineKeyboardButton
-                          { textKeyboardButton ::String
-                          , callback_data      ::String
-                          }
-
-instance ToJSON InlineKeyboardButton where
-    toJSON (InlineKeyboardButton textKeyboardButton callback_data) = object
-      [ "text"          .= textKeyboardButton
-      , "callback_data" .= callback_data
-      ]-}
--- ------------------------------------------------------------------------
-
 data ReplyKeyboardMarkup = ReplyKeyboardMarkup
-                         { keyboard          :: [[KeyboardButton]]
-                         -- , resize_keyboard   :: Bool
-                         -- , one_time_keyboard :: Bool
-                         -- , selective         :: Bool
+                         { keyboard :: [[KeyboardButton]]
                          }
 
 instance ToJSON ReplyKeyboardMarkup where
   toJSON ReplyKeyboardMarkup {..} = object [
-    "keyboard"          .= keyboard
-    -- "resize_keyboard"   .= resize_keyboard,
-    -- "one_time_keyboard" .= one_time_keyboard
-    -- "selective"         .= selective
+    "keyboard" .= keyboard
                                            ]
-
-{-instance ToJSON ReplyKeyboardMarkup where
-  toJSON = withObject "ReplyKeyboardMarkup" $ \r -> do
-    keyboard          <- r .: "keyboard"
-    resize_keyboard   <- r .:? "resize_keyboard"   .!= False
-    one_time_keyboard <- r .:? "one_time_keyboard" .!= False
-    selective         <- r .:? "selective"         .!= False
-    return ReplyKeyboardMarkup {..}-}
 
 data  KeyboardButton = KeyboardButton {text :: String}
 

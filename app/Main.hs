@@ -41,10 +41,10 @@ import           App.Types.Config
 import           App.Types.ConfigTelegram
 import           App.Types.Log
 import           Services.LogM                    
-import           Services.Server                  (server, makeTelegrammGetUpdates)
-import           Services.Telegramm               (makeRequest)
+import           Services.Server                  (server, makeTelegramGetUpdates)
+import           Services.Telegram               (makeRequest)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
--- import           App.Handlers.HandleTelegramm     (handleTelegram)
+-- import           App.Handlers.HandleTelegram     (handleTelegram)
 
 main :: IO ()
 main = do
@@ -55,10 +55,10 @@ main = do
   let commandLineParse = parseLine commandLine
   let commandLineParseErr = fromLeft "value" commandLineParse
   let commandLineParseValue = fromRight [("","")] commandLineParse
-  -- putStrLn ("commandLineParse - " ++ show commandLineParse)
-  -- putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
-  -- putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
-  putStrLn ""
+{-  putStrLn ("commandLineParse - " ++ show commandLineParse)
+  putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
+  putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
+  putStrLn ""-}
   
   -- Initialising, make system path
   systemPathStart <- getExecutablePath
@@ -69,7 +69,7 @@ main = do
   
   -- Initialising, control and read config files
   let sysPathConfig    =  systemPath ++ "/config/configBot"      :: FilePath
-  let sysPathTelegramm = systemPath ++ "/config/configTelegramm" :: FilePath
+  let sysPathTelegram = systemPath ++ "/config/configTelegram" :: FilePath
   let sysPathVkontakte = systemPath ++ "/config/configVkontakte" :: FilePath
   let sysPathHelp      = systemPath ++ "/config/configHelp"      :: FilePath
   mapM_ (\(x, y) ->
@@ -89,7 +89,7 @@ main = do
       )
         ) [(sysPathConfig,    "configBot")
           ,(sysPathVkontakte, "configVkontakte")
-          ,(sysPathTelegramm, "configTelegramm")
+          ,(sysPathTelegram, "configTelegram")
           ,(sysPathHelp,      "configHelp")
           ]
 
@@ -128,11 +128,11 @@ main = do
   case setupGeneral of
     Nothing           -> die "Invalid configGeneral JSON!"
     Just setupGeneral -> putStr $ printPrettySetup setupGeneral
-  rawJSONTelegramm <- B.readFile sysPathTelegramm
-  let setupTelegramm = decodeStrict rawJSONTelegramm
-  case setupTelegramm of
-    Nothing             -> die "Invalid configTelegramm JSON!"
-    Just setupTelegramm -> putStr $ printPrettyTelegramm setupTelegramm
+  rawJSONTelegram <- B.readFile sysPathTelegram
+  let setupTelegram = decodeStrict rawJSONTelegram
+  case setupTelegram of
+    Nothing             -> die "Invalid configTelegram JSON!"
+    Just setupTelegram -> putStr $ printPrettyTelegram setupTelegram
   rawJSONVkontakte <- B.readFile sysPathVkontakte
   let setupVkontakte = decodeStrict rawJSONVkontakte
   case setupVkontakte of
@@ -153,7 +153,7 @@ main = do
   
   -- Initialising, make note in log about start programm
   let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
-  -- putStrLn (printPrettySetup workGeneral)
+  putStrLn (show workGeneral)
   progName <- getProgName
   let logLevel = logLevelGeneral workGeneral
   let logLevelInfo = [ ("Debug", sysPathDebugLog), ("Info", sysPathInfoLog)
@@ -168,39 +168,44 @@ main = do
   -- Initialising, control work bot
   putStrLn "-------------------------------"
   message <- makeLogMessage progName ""
-  let token = tokenTelegramm (fromJust setupTelegramm)  
-  let requestObjectGetMe = object []
-  responseGetMe <- makeRequestTelegrammGetMe token requestObjectGetMe logLevel logLevelInfo message
-  if first_nameResponseGetMe responseGetMe /= nameTelegramm (fromJust setupTelegramm)
-             || usernameResponseGetMe responseGetMe /= userNameTelegramm (fromJust setupTelegramm)
+  if (serviceGeneral workGeneral) == "telegram"
     then do
-            logWarning handleLogWarning logLevel logLevelInfo
-              $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
-            logDebug handleLogDebug logLevel logLevelInfo
-              $ message ++ "Error define nameTelegramm or userNameTelegramm in configTelegramm"
-            return ()
+      let token = tokenTelegram $ fromJust setupTelegram
+      let requestObjectGetMe = object []
+      responseGetMe <- makeRequestTelegramGetMe token requestObjectGetMe logLevel logLevelInfo message
+      if first_nameResponseGetMe responseGetMe /= nameTelegram (fromJust setupTelegram)
+                 || usernameResponseGetMe responseGetMe /= userNameTelegram (fromJust setupTelegram)
+        then do
+                logWarning handleLogWarning logLevel logLevelInfo
+                  $ message ++ "Error define nameTelegram or userNameTelegram in configTelegram"
+                logDebug handleLogDebug logLevel logLevelInfo
+                  $ message ++ "Error define nameTelegram or userNameTelegram in configTelegram"
+                return ()
+        else do
+                logInfo handleLogInfo logLevel logLevelInfo
+                  $ message ++ "Ok check control default setupTelegram"
+                logDebug handleLogDebug logLevel logLevelInfo
+                  $ message ++ "Ok check control default setupTelegram"
+                return ()
+      let longPolling = pollingGeneral workGeneral
+      let repeatN = repeatGeneral workGeneral
+      let requestGetUpdateObject = SendGetUpdate 0 100 1
+      responseGetUpdate <- makeTelegramGetUpdates token requestGetUpdateObject
+                             logLevel logLevelInfo message  :: IO ResultRequest
+      let offsetGetUpdate = 
+            if (result $ responseGetUpdate) == []
+              then 1
+              else (update_idUpdate $ last $ result $ responseGetUpdate) + 1
+      let userList = [(0, repeatN)] :: [(Int, Int)]
+      server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
     else do
-            logInfo handleLogInfo logLevel logLevelInfo
-              $ message ++ "Ok check control default setupTelegramm"
-            logDebug handleLogDebug logLevel logLevelInfo
-              $ message ++ "Ok check control default setupTelegramm"
-            return ()
-  let longPolling = pollingGeneral workGeneral
-  let repeatN = repeatGeneral workGeneral
-  let requestGetUpdateObject = SendGetUpdate longPolling 100 1
-  responseGetUpdate <- makeTelegrammGetUpdates token requestGetUpdateObject
-                         logLevel logLevelInfo message  :: IO ResultRequest
-  -- putStrLn (show responseGetUpdate)
-  let offsetGetUpdate = 
-        if (result $ responseGetUpdate) == []
-          then 1
-          else (update_idUpdate $ last $ result $ responseGetUpdate) + 1
-  let userList = [(0, repeatN)] :: [(Int, Int)]
-  server setupTelegramm logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+      let tokenVk = tokenTelegram (fromJust setupTelegram)
+      die "Sorry, vk is don't work"
+
 
   putStrLn "--------------------Stop---------------------"
 
-fromOutCommandLine :: String -> Maybe SetupGeneral -> [(String, String)] -> (SetupGeneral, [Char])
+fromOutCommandLine :: String -> Maybe SetupGeneral -> [(String, String)] -> (SetupGeneral, String)
 fromOutCommandLine cPE setupGeneral commandLineParseValue =
   if cPE == "value"
     then
@@ -212,7 +217,8 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
       , "Start with default value parametrs"
       )
 
--- makeRequestTelegramm ::
-makeRequestTelegrammGetMe token requestSendMessageObject logLevel logLevelInfo message = do
-  responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo message    :: IO ResponseGetMe
+-- makeRequestTelegram ::
+makeRequestTelegramGetMe token requestSendMessageObject logLevel logLevelInfo message = do
+  responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo
+                      $ message ++ "getMe" :: IO ResponseGetMe
   return (responseGetMe)

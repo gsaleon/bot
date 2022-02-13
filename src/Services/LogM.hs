@@ -4,7 +4,6 @@ import           Data.Time.Clock        (getCurrentTime)
 import           Data.Time.LocalTime    (getCurrentTimeZone, utcToLocalTime)
 import           Data.Time.Format       (formatTime, defaultTimeLocale)
 
-
 import           App.Types.Log
 
 makeLogMessage :: String -> String -> IO String
@@ -14,10 +13,6 @@ makeLogMessage progName mess = do
   let timeNow = filter (/='"') $ show $ formatTime defaultTimeLocale  "%Y-%m-%d %H:%M:%S" $ utcToLocalTime timezone time
   -- let timeNow = take 19 $ show $ utcToLocalTime timezone time
   return ("\n" ++ timeNow ++ " " ++ progName ++ " " ++ mess)
-
-{-
-logM :: HandleLog -> (LogLevel, FilePath) -> String -> IO ()
-logM handleLog logLevel message = writeLog handleLog logLevel message-}
 
 logError :: HandleLog -> String -> [(String, FilePath)] -> String -> IO ()
 logError handleLogError logLevel logLevelInfo message = writeLog handleLogError logLevel logLevelInfo message

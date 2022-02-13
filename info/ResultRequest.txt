@@ -127,3 +127,9 @@ Vk
     inline_keyboard (bool) — поддерживается ли inline-клавиатура ботов клиентом;
     carousel (bool) — поддерживаются ли карусели клиентом;
     lang_id — id используемого языка.
+
+https://oauth.vk.com/blank.html
+  #access_token=d23e3a5e6a98a856e12ba6c9cf132e1367d4ea9bf00fab0c754600329257ada293d99dc8b6781c2cab3c5
+  &expires_in=86400
+  &user_id=686642762
+  &state=123456

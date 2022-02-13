@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+## My config and log files
+**/config
+**/logs
+
+## My tmp file
+**/info
+
 # Stack work directory
 .stack-work/
 

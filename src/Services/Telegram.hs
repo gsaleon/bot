@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Services.Telegramm where
+module Services.Telegram where
 
 import           Network.HTTP.Client
 import           Network.HTTP.Client.TLS

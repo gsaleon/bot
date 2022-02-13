@@ -36,7 +36,7 @@ library
       Services.LogM
       Services.ParseCommandLine
       Services.Server
-      Services.Telegramm
+      Services.Telegram
       Services.Vkontakte
   other-modules:
       Paths_bot_main

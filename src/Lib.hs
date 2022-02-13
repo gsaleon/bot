@@ -26,20 +26,20 @@ printPrettyVkontakte (SetupVkontakte urlVkontakte tokenVkontakte version
   "commandVkontakte -     " ++ commandVkontakte     ++ "\n" ++
   "----------------------end printPrettyVkontakte------------"-}
 
-printPrettyTelegramm :: SetupTelegramm -> String
-printPrettyTelegramm (SetupTelegramm urlTelegramm nameTelegramm
-      userNameTelegramm tokenTelegramm descriptionTelegramm
-      aboutTelegramm commandTelegramm questionTelegrammRepeat) = ""
+printPrettyTelegram :: SetupTelegram -> String
+printPrettyTelegram (SetupTelegram urlTelegram nameTelegram
+      userNameTelegram tokenTelegram descriptionTelegram
+      aboutTelegram commandTelegram questionTelegramRepeat) = ""
 {-  "\n" ++
-  "urlTelegramm -         " ++ urlTelegramm            ++ "\n" ++
-  "tokenTelegramm -       " ++ tokenTelegramm          ++ "\n" ++
-  "userNameTelegramm -    " ++ userNameTelegramm       ++ "\n" ++
-  "tokenTelegramm -       " ++ tokenTelegramm          ++ "\n" ++
-  "descriptionTelegramm - " ++ descriptionTelegramm    ++ "\n" ++
-  "aboutTelegramm -       " ++ aboutTelegramm          ++ "\n" ++
-  "commandTelegramm -     " ++ commandTelegramm        ++ "\n" ++
-  "questionTelegrammRepeat" ++ questionTelegrammRepeat ++"\n" ++
-  "----------------------end printPrettyTelegramm------------"-}
+  "urlTelegram -         " ++ urlTelegram            ++ "\n" ++
+  "tokenTelegram -       " ++ tokenTelegram          ++ "\n" ++
+  "userNameTelegram -    " ++ userNameTelegram       ++ "\n" ++
+  "tokenTelegram -       " ++ tokenTelegram          ++ "\n" ++
+  "descriptionTelegram - " ++ descriptionTelegram    ++ "\n" ++
+  "aboutTelegram -       " ++ aboutTelegram          ++ "\n" ++
+  "commandTelegram -     " ++ commandTelegram        ++ "\n" ++
+  "questionTelegramRepeat" ++ questionTelegramRepeat ++"\n" ++
+  "----------------------end printPrettyTelegram------------"-}
 
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
