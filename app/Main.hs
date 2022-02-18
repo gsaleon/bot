@@ -44,7 +44,7 @@ import           App.Types.Log
 import           Services.LogM                    
 import           Services.Server                  (server, makeTelegramGetUpdates)
 import           Services.Telegram                (makeRequest)
-import           Services.Vkontakte               (vkMessagesGetLongPollServer)
+import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegram     (handleTelegram)
 
@@ -204,13 +204,8 @@ main = do
       let clientIdVk = client_id $ fromJust setupVkontakte
       let groupIdVk = group_id $ fromJust setupVkontakte
       let tokenVk = tokenVkontakte $ fromJust setupVkontakte
-      -- putStrLn (show clientIdVk)
-      req <- vkMessagesGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message
-      let serverVk = longPollServer req
-      let keyVk = longPollkey req
-      let tsVk =longPollTs req
-      putStrLn (show serverVk)
-      putStrLn (show keyVk)
+      req <- vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message
+      mess <- vkConnect req logLevel logLevelInfo message
       die "Sorry, vk is still don't work"
 
 

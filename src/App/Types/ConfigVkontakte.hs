@@ -28,24 +28,33 @@ instance FromJSON SetupVkontakte where
     <*> setupVkontakte .: "test_mode"
   parseJSON _                       = mzero
 
-newtype MessagesGetLongPollServer = MessagesGetLongPollServer
-                                  { response :: SessionKey
-                                  } deriving (Show)
-
-instance FromJSON MessagesGetLongPollServer where
-  parseJSON (Object r) = MessagesGetLongPollServer
-    <$> r .: "response"
-  parseJSON _          = mzero
-
 data SessionKey = SessionKey
-                { longPollServer :: String
-                , longPollkey    :: String
-                , longPollTs     :: Int
+                { vkServer :: String
+                , vkKey    :: String
+                , vkTs     :: String
                 } deriving (Show)
 
 instance FromJSON SessionKey where
   parseJSON = withObject "SessionKey" $ \s -> do
-    longPollServer <- s .: "server"
-    longPollkey    <- s .: "key"
-    longPollTs     <- s .: "ts"
+    r        <- s .: "response"
+    vkKey    <- r .: "key"
+    vkServer <- r .: "server"
+    vkTs     <- r .: "ts"
     return SessionKey {..}
+
+data VkConnect = VkConnect
+               { vkTsNew  :: String
+               , updates  :: Object
+               , typeVk   :: String
+               , objectVk :: Object
+               , text     :: String
+               } deriving (Show)
+
+instance FromJSON VkConnect where
+  parseJSON = withObject "VkConnect" $ \v -> do
+    vkTsNew  <- v        .: "ts"
+    updates  <- v        .: "updates"
+    typeVk   <- updates  .: "type"
+    objectVk <- updates  .: "object"
+    text     <- objectVk .: "text"
+    return VkConnect {..}
