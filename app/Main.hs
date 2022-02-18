@@ -39,10 +39,12 @@ import           Services.ParseCommandLine
 import           Lib
 import           App.Types.Config
 import           App.Types.ConfigTelegram
+import           App.Types.ConfigVkontakte
 import           App.Types.Log
 import           Services.LogM                    
 import           Services.Server                  (server, makeTelegramGetUpdates)
-import           Services.Telegram               (makeRequest)
+import           Services.Telegram                (makeRequest)
+import           Services.Vkontakte               (vkMessagesGetLongPollServer)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegram     (handleTelegram)
 
@@ -199,8 +201,17 @@ main = do
       let userList = [(0, repeatN)] :: [(Int, Int)]
       server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
     else do
-      let tokenVk = tokenTelegram (fromJust setupTelegram)
-      die "Sorry, vk is don't work"
+      let clientIdVk = client_id $ fromJust setupVkontakte
+      let groupIdVk = group_id $ fromJust setupVkontakte
+      let tokenVk = tokenVkontakte $ fromJust setupVkontakte
+      -- putStrLn (show clientIdVk)
+      req <- vkMessagesGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message
+      let serverVk = longPollServer req
+      let keyVk = longPollkey req
+      let tsVk =longPollTs req
+      putStrLn (show serverVk)
+      putStrLn (show keyVk)
+      die "Sorry, vk is still don't work"
 
 
   putStrLn "--------------------Stop---------------------"
@@ -222,3 +233,9 @@ makeRequestTelegramGetMe token requestSendMessageObject logLevel logLevelInfo me
   responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo
                       $ message ++ "getMe" :: IO ResponseGetMe
   return (responseGetMe)
+
+{--- vkImplicitFlow ::
+vkImplicitFlow token requestSendMessageObject logLevel logLevelInfo message = do
+  responseVkImplicitFlow <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo
+                      $ message ++ "getMe" :: IO ResponseVkImplicitFlow
+  return (responseGetMe)-}

@@ -1,6 +1,8 @@
 {
   "urlVkontakte": "https://api.vk.com/method/",
-  "tokenVkontakte": "f6220ff29ecd7e5d84480c76290a4a9888081b94303ca2b6cac7c80918d19ae94ab02ab4847dbe6418c8b",
+  "client_id": 8077679,
+  "group_id": 210378040,
+  "tokenVkontakte": "ec41fcb649d23dbc4d7058d4858ffd55093e61e2578b8e0f972b87e9d4b433a8322ad8c70ea66362fa895",
   "version": 5.131,
   "lang": 0,
   "test_mode": 0   

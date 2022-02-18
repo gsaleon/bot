@@ -14,8 +14,8 @@ import           App.Types.ConfigVkontakte
 
 
 printPrettyVkontakte :: SetupVkontakte -> String
-printPrettyVkontakte (SetupVkontakte urlVkontakte tokenVkontakte version
-      lang test_mode) = ""
+printPrettyVkontakte (SetupVkontakte urlVkontakte client_id 
+    group_id tokenVkontakte version lang test_mode) = ""
 {-  "\n" ++
   "urlVkontakte -         " ++ urlVkontakte         ++ "\n" ++
   "tokenVkontakte -       " ++ tokenVkontakte       ++ "\n" ++

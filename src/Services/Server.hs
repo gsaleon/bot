@@ -11,7 +11,7 @@ import           Prelude                  hiding  (id)
 
 import           App.Types.ConfigTelegram
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogDebug, handleLogInfo)
-import           Services.Telegram               (makeRequest, makeSendMessage)
+import           Services.Telegram                (makeRequest, makeSendMessage)
 import           Services.LogM
 
 server :: Maybe SetupTelegram -> String -> [(String, FilePath)] ->
@@ -27,7 +27,7 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
       let value = messageUpdate . head . result $ responseGetUpdate
       let textTelegram = textMessage $ value
       let idChatTelegram = idChat . chat $ value
-      let messageId = message_idMessage $ value
+      -- let messageId = message_idMessage $ value
       let offsetGetUpdate = (update_idUpdate . head . result $ responseGetUpdate) + 1
       -- putStrLn ("offsetGetUpdate new valee" ++ show offsetGetUpdate)
       let userID = idUser . from $ value
