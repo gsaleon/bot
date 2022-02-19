@@ -8,21 +8,25 @@ import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
 import           Control.Monad                    (replicateM_)
 import           Prelude                  hiding  (id)
+import           Control.Concurrent
 
 import           App.Types.ConfigTelegram
+import           App.Types.ConfigVkontakte
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogDebug, handleLogInfo)
 import           Services.Telegram                (makeRequest, makeSendMessage)
 import           Services.LogM
+import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect)
 
-server :: Maybe SetupTelegram -> String -> [(String, FilePath)] ->
+serverTelegram :: Maybe SetupTelegram -> String -> [(String, FilePath)] ->
                           String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
-server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate = do
-  putStr "."
+serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate = do
   let requestSendMessageObject = SendGetUpdate longPolling 1 offsetGetUpdate
   -- putStrLn ("offsetGetUpdate old valee" ++ show offsetGetUpdate)
   responseGetUpdate <- makeTelegramGetUpdates token requestSendMessageObject logLevel logLevelInfo message
   if (result $ responseGetUpdate) == []
-    then server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+    then do
+      threadDelay 100000
+      serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
     else do
       let value = messageUpdate . head . result $ responseGetUpdate
       let textTelegram = textMessage $ value
@@ -46,7 +50,7 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
               (makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message) >>= \r -> return ()
               -- putStrLn ("For userId - " ++ show userID ++ ", set namber repeat - " ++ show button ++ ", userList: " ++ show userListNew)
               logDebug handleLogDebug logLevel logLevelInfo $ message ++ "hide keyboard"
-              server setupTelegram logLevel logLevelInfo token message userListNew longPolling offsetGetUpdate
+              serverTelegram setupTelegram logLevel logLevelInfo token message userListNew longPolling offsetGetUpdate
             else
               if (head $ textTelegram) /= '/'
                 then do
@@ -57,7 +61,7 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
                   let requestSendMessageObject = SendMessageTo textTelegram idChatTelegram
                   replicateM_ repeatNumber ((makeTelegramSendMessage token requestSendMessageObject logLevel
                                                 logLevelInfo message) >>= \responseSendMessage -> return ())
-                  server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+                  serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
                 else case head $ words $ textTelegram of
                   "/start"    -> do
                       let requestSendMessageObject = SendMessageTo
@@ -65,14 +69,14 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
                                                       (idChatTelegram)
                       (makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message) >>= \r -> return ()
                       logDebug handleLogDebug logLevel logLevelInfo $ message ++ "command /start"
-                      server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+                      serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
                   "/help"     -> do
                       let requestSendMessageObject = SendMessageTo
                                                       (fromJust $ commandTelegram <$> setupTelegram)
                                                       (idChatTelegram)
                       (makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message) >>= \r -> return ()
                       logDebug handleLogDebug logLevel logLevelInfo $ message ++ "command /help"
-                      server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+                      serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
                   "/settings" -> do
                       let requestSendMessageObject = SendMessageWithKey
                                                       (fromJust $ questionTelegramRepeat <$> setupTelegram)
@@ -87,7 +91,7 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
                       (makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message) >>= \r -> return ()
                       logInfo handleLogInfo logLevel logLevelInfo $ message ++ "command /settings"
                       logDebug handleLogDebug logLevel logLevelInfo $ message ++ "command /settings"
-                      server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+                      serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
                   "/quit" -> do
                       let requestSendMessageObject = SendMessageTo "Senk you very much, bye..." idChatTelegram
                       (makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message) >>= \r -> return ()
@@ -98,7 +102,7 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
                       let requestSendMessageObject = SendMessageTo "Unknow command, please insert value without '/'" idChatTelegram
                       (makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message) >>= \r -> return ()
                       logWarning handleLogWarning logLevel logLevelInfo $ message ++ "Unknow command (include first '/')"
-                      server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+                      serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
         else
           if (stickerValue) /= []
             then do
@@ -108,15 +112,34 @@ server setupTelegram logLevel logLevelInfo token message userList longPolling of
               let requestSendMessageObject = SendStickerTo idChatTelegram stickerValue
               replicateM_ repeatNumber ((makeTelegramSendSticker token requestSendMessageObject logLevel
                                         logLevelInfo message) >>= \responseSendMessage -> return ())
-              server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+              serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
             else do
               logDebug handleLogDebug logLevel logLevelInfo
                 $ message ++ "Unknow value parametr: not text, not sticker"
               logWarning handleLogWarning logLevel logLevelInfo
                 $ message ++ "Unknow value parametr: not text, not sticker"
               putStrLn "Unknow value parametr: not text, not sticker"
-              server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+              serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
 
+-- serverVkontakte :: String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
+serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey = do
+  updateVk <- vkConnect sessionKey logLevel logLevelInfo message
+  if (updates updateVk) == []
+    then do
+      threadDelay 100000
+      serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
+    else do
+      let sessionKeyNew = sessionKey {vkTs = vkTsNew updateVk}
+      -- putStrLn (show sessionKeyNew)
+      
+      serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
+
+  serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
+
+
+
+
+--additional functions
 -- makeRequestTelegram ::
 makeTelegramSendMessage token requestSendMessageObject logLevel logLevelInfo message = do
   responseSendMessage <- makeSendMessage token "sendMessage" requestSendMessageObject logLevel logLevelInfo message :: IO SendMessage

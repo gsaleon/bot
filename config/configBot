@@ -1,5 +1,5 @@
 {
-  "pollingGeneral": 60,
+  "pollingGeneral": 25,
   "repeatGeneral": 3,
   "logLevelGeneral": "info",
   "serviceGeneral": "telegram"

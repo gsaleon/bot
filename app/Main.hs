@@ -42,7 +42,7 @@ import           App.Types.ConfigTelegram
 import           App.Types.ConfigVkontakte
 import           App.Types.Log
 import           Services.LogM                    
-import           Services.Server                  (server, makeTelegramGetUpdates)
+import           Services.Server                  (serverTelegram, makeTelegramGetUpdates, serverVkontakte)
 import           Services.Telegram                (makeRequest)
 import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
@@ -172,8 +172,9 @@ main = do
   message <- makeLogMessage progName ""
   if (serviceGeneral workGeneral) == "telegram"
     then do
+      --service Telegram start
       let token = tokenTelegram $ fromJust setupTelegram
-      let requestObjectGetMe = object []
+      let requestObjectGetMe = object []      
       responseGetMe <- makeRequestTelegramGetMe token requestObjectGetMe logLevel logLevelInfo message
       if first_nameResponseGetMe responseGetMe /= nameTelegram (fromJust setupTelegram)
                  || usernameResponseGetMe responseGetMe /= userNameTelegram (fromJust setupTelegram)
@@ -199,14 +200,21 @@ main = do
               then 1
               else (update_idUpdate $ last $ result $ responseGetUpdate) + 1
       let userList = [(0, repeatN)] :: [(Int, Int)]
-      server setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
+      serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
     else do
+      --service Vkontakte start
       let clientIdVk = client_id $ fromJust setupVkontakte
       let groupIdVk = group_id $ fromJust setupVkontakte
       let tokenVk = tokenVkontakte $ fromJust setupVkontakte
-      req <- vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message
-      mess <- vkConnect req logLevel logLevelInfo message
+      sessionKey <- vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message
+      let longPolling = pollingGeneral workGeneral
+      let repeatN = repeatGeneral workGeneral
+      let userList = [(0, repeatN)] :: [(Int, Int)]
+      serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
+      
       die "Sorry, vk is still don't work"
+
+
 
 
   putStrLn "--------------------Stop---------------------"

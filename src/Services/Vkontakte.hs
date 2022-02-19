@@ -8,32 +8,12 @@ import           Data.Aeson                       (decode, encode, ToJSON, FromJ
 import           Network.HTTP.Types.Status        (statusCode)
 import           Data.Maybe                       (fromJust)
 import           System.Exit                      (die)
+import           Data.Time.Clock                  (getCurrentTime, utctDayTime)
 -- import qualified Data.ByteString.Lazy.Char8    as BLC
 
 import           Services.LogM
 import           App.Handlers.HandleLog
 import           App.Types.ConfigVkontakte
-
-vkAuhorize :: Int -> Int -> String ->
-               [(String, FilePath)] -> String -> IO ()
-vkAuhorize clientIdVk groupIdVk logLevel logLevelInfo message = do
-  manager <- newManager tlsManagerSettings
-  let vkUrlImplicitFlow = "https://oauth.vk.com/authorize?client_id="
-        ++ (show clientIdVk)
-        ++ "&group_ids=" ++ (show groupIdVk)
-        ++ "&display=page"
-        ++ "&redirect_uri=https://oauth.vk.com/blank.htmlk"
-        ++ "&scope=messages"
-        ++ "&response_type=code"
-        ++ "&v=5.131"
-        ++ "&state=123456"
-  Prelude.putStrLn vkUrlImplicitFlow
-  request <- parseRequest vkUrlImplicitFlow
-  response <- httpLbs request manager
-  let statusCodeResponse = statusCode $ responseStatus response
-  Prelude.putStrLn ("---------------------------------------------------")
-  Prelude.putStrLn (show statusCodeResponse)
-  print (response)
 
 vkGroupsGetLongPollServer :: String -> Int -> String ->
                [(String, FilePath)] -> String -> IO (SessionKey)
@@ -43,16 +23,10 @@ vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message = do
         ++ "?group_id=" ++ (show groupIdVk)
         ++ "&access_token=" ++ tokenVk
         ++ "&v=5.131"
-  putStrLn ("vkGroupsGetLongPollServer= " ++ vkGroupsGetLongPollServer)
   request <- parseRequest vkGroupsGetLongPollServer
   response <- httpLbs request manager
   let statusCodeResponse = statusCode $ responseStatus response
   let sessionKey = decode $ responseBody response
-  putStrLn (show sessionKey)
-  --let responseGetLongPollServer = BLU.pack answer
-  putStrLn ("---------------------------------------------------")
-  -- putStrLn (show statusCodeResponse)
-  --Prelude.putStrLn (show responseGetLongPollServer)
   return (fromJust $ sessionKey)
 
 vkConnect :: SessionKey -> String -> [(String, FilePath)] -> String -> IO (VkConnect)
@@ -63,14 +37,35 @@ vkConnect sessionKey logLevel logLevelInfo message = do
         ++ "&key=" ++ (vkKey sessionKey)
         ++ "&ts=" ++ (vkTs sessionKey)
         ++ "&wait=25"
-  putStrLn ("vkConnect= " ++ vkConnect)
+  -- putStrLn ("vkConnect= " ++ vkConnect)
   request <- parseRequest vkConnect
   response <- httpLbs request manager
   let statusCodeResponse = statusCode $ responseStatus response
   putStrLn (show $ responseBody response)
-  let vkConnect = decode $ responseBody response
-  putStrLn (show vkConnect)
-  return (fromJust $ vkConnect)
+  let updateVk = decode $ responseBody response
+  -- putStrLn ("ts=" ++ (vkTsNew $ fromJust updateVk) ++ ", text=" ++ (text . head . updates $ fromJust updateVk))
+  return (fromJust $ updateVk)
+
+{-vkSendMessage :: 
+vkSendMessage
+  rnd <- getCurrentTime >>= return . head . words . show . toRational . utctDayTime
+  manager <- newManager tlsManagerSettings
+  let vkConnect = "https://api.vk.com/method/messages.send"
+        ++ "?random_id=" ++ rnd
+        ++ "&group_id=" ++ show $ groupIdVk
+        ++ "&message=" ++ 
+        ++ "&access_token=" ++ tokenVk
+        ++ "&v=5.131"
+  -- putStrLn ("vkConnect= " ++ vkConnect)
+  request <- parseRequest vkConnect
+  response <- httpLbs request manager
+  let statusCodeResponse = statusCode $ responseStatus response
+  putStrLn (show $ responseBody response)
+  let updateVk = decode $ responseBody response
+-}
+
+
+
 
   --messages.getLongPollServer
   --groups.getLongPollServer

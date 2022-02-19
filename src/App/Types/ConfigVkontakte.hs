@@ -44,17 +44,24 @@ instance FromJSON SessionKey where
 
 data VkConnect = VkConnect
                { vkTsNew  :: String
-               , updates  :: Object
-               , typeVk   :: String
-               , objectVk :: Object
-               , text     :: String
-               } deriving (Show)
+               , updates  :: [UpdateVk]
+               } deriving (Show, Eq)
 
 instance FromJSON VkConnect where
   parseJSON = withObject "VkConnect" $ \v -> do
     vkTsNew  <- v        .: "ts"
     updates  <- v        .: "updates"
-    typeVk   <- updates  .: "type"
-    objectVk <- updates  .: "object"
-    text     <- objectVk .: "text"
     return VkConnect {..}
+
+data UpdateVk = UpdateVk
+              { typevk   :: String
+              , objectVk :: Object
+              , text     :: String
+              } deriving (Show, Eq)
+
+instance FromJSON UpdateVk where
+  parseJSON = withObject "UpdateVk" $ \u -> do
+    typevk   <- u        .: "type"
+    objectVk <- u        .: "object"
+    text     <- objectVk .: "text"
+    return UpdateVk {..}
