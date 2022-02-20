@@ -1,7 +1,3 @@
-ResultRequest {result = [Update {update_idUpdate = 565934768, messageUpdate = Message {message_idMessage = 331, from = User {idUser = 2023781845, first_name = "Garin", last_name = "Sergej", username = ""}, date = 1642888217, chat = Chat {idChat = 2023781845, typeChat = "private", title = "", usernameChat = "", first_nameChat = "Garin", last_nameChat = "Sergej"}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = "/settings"}, callback_query = CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, inline_message_id = "", dataCallbackQuery = ""}}]}
-
-ResultRequest {result = [Update {update_idUpdate = 565934850, messageUpdate = Message {message_idMessage = 491, from = User {idUser = 2023781845, first_name = "Garin", last_name = "Sergej", username = ""}, date = 1643115507, chat = Chat {idChat = 2023781845, typeChat = "private", title = "", usernameChat = "", first_nameChat = "Garin", last_nameChat = "Sergej"}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = "5"}, callback_query = CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, inline_message_id = "", dataCallbackQuery = ""}}]}
-
 ResultRequest {result = [Update {update_idUpdate = 565934992, messageUpdate = Message {message_idMessage = 856, from = User {idUser = 2023781845, first_name = "Garin", last_name = "Sergej", username = ""}, date = 1644120115, chat = Chat {idChat = 2023781845, typeChat = "private", title = "", usernameChat = "", first_nameChat = "Garin", last_nameChat = "Sergej"}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, callback_query = CallbackQuery {idCallbackQuery = "", fromCallbackQuery = User {idUser = 0, first_name = "", last_name = "", username = ""}, messageCallbackQuery = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, inline_message_id = "", dataCallbackQuery = ""}}]}
 
 ResultRequest {result = [Update {update_idUpdate = 565934769, messageUpdate = Message {message_idMessage = 0, from = User {idUser = 0, first_name = "", last_name = "", username = ""}, date = 0, chat = Chat {idChat = 0, typeChat = "", title = "", usernameChat = "", first_nameChat = "", last_nameChat = ""}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = ""}, callback_query = CallbackQuery {idCallbackQuery = "8692076840696844230", fromCallbackQuery = User {idUser = 2023781845, first_name = "Garin", last_name = "Sergej", username = ""}, messageCallbackQuery = Message {message_idMessage = 332, from = User {idUser = 2100731571, first_name = "repeat_send_bot", last_name = "", username = "RepeatSend_bot"}, date = 1642888218, chat = Chat {idChat = 2023781845, typeChat = "private", title = "", usernameChat = "", first_nameChat = "Garin", last_nameChat = "Sergej"}, forward_from = User {idUser = 0, first_name = "", last_name = "", username = ""}, forward_date = 0, textMessage = "Select the number of repetitions:"}, inline_message_id = "", dataCallbackQuery = "1"}}]}
@@ -151,56 +147,61 @@ https://oauth.vk.com/blank.html
   &user_id=686642762
 
 
-{"ts":"4"
-,"updates":[{"type":"wall_post_new"
-            ,"object":{"id":28
-                      ,"from_id":-123456
-                      ,"owner_id":-123456
-                      ,"date":1519631591
-                      ,"marked_as_ads":0
-                      ,"post_type":"post"
-                      ,"text":"Post text"
-                      ,"can_edit":1
-                      ,"created_by":564321
-                      ,"can_delete":1
-                      ,"comments":{"count":0}}
-                      ,"group_id":123456
-                      }
-           ]
-}
-
 "{\"ts\":\"6\"
 ,\"updates\":[{\"type\":\"message_new\"
               ,\"object\":{\"message\":{\"date\":1645214700
-                          ,\"from_id\":686642762
-                          ,\"id\":18
-                          ,\"out\":0
-                          ,\"attachments\":[]
-                          ,\"conversation_message_id\":1
-                          ,\"fwd_messages\":[]
-                          ,\"important\":false
-                          ,\"is_hidden\":false
-                          ,\"peer_id\":686642762
-                          ,\"random_id\":0
-                          ,\"text\":\"hvnvnbv\"
-                          }
-              ,\"client_info\":{\"button_actions\":[\"text\"
-                                                   ,\"vkpay\"
-                                                   ,\"open_app\"
-                                                   ,\"location\"
-                                                   ,\"open_link\"
-                                                   ,\"callback\"
-                                                   ,\"intent_subscribe\"
-                                                   ,\"intent_unsubscribe\"
-                                                   ]
-                               ,\"keyboard\":true
-                               ,\"inline_keyboard\":true
-                               ,\"carousel\":true
-                               ,\"lang_id\":0
-                               }
+                                       ,\"from_id\":686642762
+                                       ,\"id\":18
+                                       ,\"out\":0
+                                       ,\"attachments\":[]
+                                       ,\"conversation_message_id\":1
+                                       ,\"fwd_messages\":[]
+                                       ,\"important\":false
+                                       ,\"is_hidden\":false
+                                       ,\"peer_id\":686642762
+                                       ,\"random_id\":0
+                                       ,\"text\":\"hvnvnbv\"
+                                       }
+                          ,\"client_info\":{\"button_actions\":[\"text\"
+                                                               ,\"vkpay\"
+                                                               ,\"open_app\"
+                                                               ,\"location\"
+                                                               ,\"open_link\"
+                                                               ,\"callback\"
+                                                               ,\"intent_subscribe\"
+                                                               ,\"intent_unsubscribe\"
+                                                               ]
+                                           ,\"keyboard\":true
+                                           ,\"inline_keyboard\":true
+                                           ,\"carousel\":true
+                                           ,\"lang_id\":0
+                                           }
                           }
               ,\"group_id\":210378040
               ,\"event_id\":\"ec3fc94620c6621e7caeac8e8bd8fc1c4e76ef50\"
               }
              ]
  }\r\n"
+
+"{\"ts\":\"36\"
+ ,\"updates\":[{\"type\":\"message_reply\"
+               ,\"object\":{\"date\":1645336515
+                           ,\"from_id\":686642762
+                           ,\"id\":48
+                           ,\"out\":1
+                           ,\"admin_author_id\":686642762
+                           ,\"attachments\":[]
+                           ,\"conversation_message_id\":31
+                           ,\"fwd_messages\":[]
+                           ,\"important\":false
+                           ,\"is_hidden\":false
+                           ,\"peer_id\":686642762
+                           ,\"random_id\":0
+                           ,\"text\":\"123qwe123qwe\"
+                           }
+               ,\"group_id\":210378040
+               ,\"event_id\":\"e8e67ebfdf9ad6a7580d0833b2990cbca4d76ab2\"
+               }
+              ]
+ }\r\n"
+

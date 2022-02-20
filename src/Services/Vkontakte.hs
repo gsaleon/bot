@@ -9,6 +9,7 @@ import           Network.HTTP.Types.Status        (statusCode)
 import           Data.Maybe                       (fromJust)
 import           System.Exit                      (die)
 import           Data.Time.Clock                  (getCurrentTime, utctDayTime)
+import           Control.Exception                (throwIO, try, IOException)
 -- import qualified Data.ByteString.Lazy.Char8    as BLC
 
 import           Services.LogM
@@ -39,7 +40,12 @@ vkConnect sessionKey logLevel logLevelInfo message = do
         ++ "&wait=25"
   -- putStrLn ("vkConnect= " ++ vkConnect)
   request <- parseRequest vkConnect
-  response <- httpLbs request manager
+  resp <- try $ httpLbs request manager :: IO (Either IOException a)
+  response <- case resp of
+                Left err  -> do
+                               throwIO err
+                Right res -> do
+                               return res
   let statusCodeResponse = statusCode $ responseStatus response
   putStrLn (show $ responseBody response)
   let updateVk = decode $ responseBody response

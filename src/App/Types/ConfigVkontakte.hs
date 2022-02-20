@@ -56,12 +56,23 @@ instance FromJSON VkConnect where
 data UpdateVk = UpdateVk
               { typevk   :: String
               , objectVk :: Object
+              , fromId   :: Int              
               , text     :: String
               } deriving (Show, Eq)
 
 instance FromJSON UpdateVk where
   parseJSON = withObject "UpdateVk" $ \u -> do
     typevk   <- u        .: "type"
-    objectVk <- u        .: "object"
-    text     <- objectVk .: "text"
-    return UpdateVk {..}
+    case typevk of
+      "message_reply" -> do        
+        objectVk <- u        .: "object"
+        fromId   <- objectVk .: "from_id"
+        text     <- objectVk .: "text"
+        return UpdateVk {..}
+      "message_new"   -> do
+        objectVk  <- u         .: "object"
+        messageUp <- objectVk  .: "message"
+        fromId    <- messageUp .: "from_id"
+        text      <- messageUp .: "text"
+        return UpdateVk {..}
+      _               -> fail ("unknown message type: " ++ typevk)

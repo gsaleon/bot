@@ -9,6 +9,7 @@ import           Data.Maybe                       (fromJust)
 import           Control.Monad                    (replicateM_)
 import           Prelude                  hiding  (id)
 import           Control.Concurrent
+import           Control.Exception                (throwIO, try)
 
 import           App.Types.ConfigTelegram
 import           App.Types.ConfigVkontakte

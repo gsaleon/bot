@@ -13,7 +13,7 @@
 /home/gsaleon/MyProject/bot/ChangeLog.md:
   hash: 3bf0975fc1a216be669b46c73ae4fc6a98baa74faff3347a4a2e43677faa1487
 /home/gsaleon/MyProject/bot/src/App/Types/ConfigVkontakte.hs:
-  hash: 55f84dbee74b561f3f8bf3708b2a0569dffac9a7bd89ddeee00e88a2e6bb2959
+  hash: a76b7e0f19ee7bb992aa195b6ffc5a943991c15dd3c3a53eff76059893188640
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleVkontakte.hs:
   hash: cd866a3595ff747ce18064031a948268e1ba70b278880d95cda0a096266edbbd
 /home/gsaleon/MyProject/bot/bot-main.cabal:
@@ -39,4 +39,4 @@
 /home/gsaleon/MyProject/bot/src/App/Handlers/HandleLog.hs:
   hash: 3b39453e51f28c9b7058ecd68cc4a3332cb5f0b2a18ab43dec2e468294d99e3e
 /home/gsaleon/MyProject/bot/src/Services/Server.hs:
-  hash: 8eef5540d750aa0da911f24fea57e80aa1d60e490fc959b3f509235ae3b6e7a9
+  hash: b3a82d251a5af26cc900c2f1f9a5747175548bf3c45bd3d17516430c4088412a
