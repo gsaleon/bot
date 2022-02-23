@@ -6,6 +6,7 @@ module App.Types.ConfigVkontakte where
 
 import           Data.Aeson
 import           Control.Monad        (mzero)
+import           Data.Foldable        (asum)
 
 data SetupVkontakte = SetupVkontakte
                     { urlVkontakte   :: String
@@ -57,7 +58,7 @@ data UpdateVk = UpdateVk
               { typevk   :: String
               , objectVk :: Object
               , fromId   :: Int              
-              , text     :: String
+              , textVk   :: String
               } deriving (Show, Eq)
 
 instance FromJSON UpdateVk where
@@ -67,12 +68,21 @@ instance FromJSON UpdateVk where
       "message_reply" -> do        
         objectVk <- u        .: "object"
         fromId   <- objectVk .: "from_id"
-        text     <- objectVk .: "text"
+        textVk   <- objectVk .: "text"
         return UpdateVk {..}
       "message_new"   -> do
         objectVk  <- u         .: "object"
         messageUp <- objectVk  .: "message"
         fromId    <- messageUp .: "from_id"
-        text      <- messageUp .: "text"
+        textVk    <- messageUp .: "text"
         return UpdateVk {..}
       _               -> fail ("unknown message type: " ++ typevk)
+
+data ResponseVkSendMessage = ResponseVkSendMessage {messageId :: Int}
+  | ErrorVkSendMessage {errorMessVk :: Object, errorMessageVk :: String} deriving (Show)
+
+instance FromJSON ResponseVkSendMessage where
+  parseJSON = withObject "ResponseVkSendMessage" $ \r -> asum [
+    ResponseVkSendMessage <$> r .: "response",
+    ErrorVkSendMessage    <$> r .: "error" <*> r .: "error_msg"
+                                                              ]

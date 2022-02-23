@@ -34,14 +34,14 @@ vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message = do
   response <- httpLbs request manager
   let statusCodeResponse = statusCode $ responseStatus response
   -- let statusCodeResponse = getResponseStatusCode response
-  putStrLn ("statusCode vkGroupsGetLongPollServer-" ++ (show statusCodeResponse))
+  -- putStrLn ("statusCode vkGroupsGetLongPollServer-" ++ (show statusCodeResponse))
   let sessionKey = decode $ responseBody response
   return (fromJust $ sessionKey)
 
 vkConnect :: Int -> SessionKey -> String -> [(String, FilePath)] -> String -> IO (VkConnect)
 vkConnect longPolling sessionKey logLevel logLevelInfo message = do
   let pollingTime = responseTimeoutMicro $ (longPolling + 5) * 1000000
-  putStrLn (show pollingTime)
+  -- putStrLn (show pollingTime)
   manager <- newManager tlsManagerSettings {managerResponseTimeout = pollingTime}
   let vkConnect = (vkServer sessionKey)
         ++ "?act=a_check"
@@ -52,34 +52,44 @@ vkConnect longPolling sessionKey logLevel logLevelInfo message = do
   request <- parseRequest vkConnect
   response <- retryOnTimeout $ httpLbs request manager
   let updateVk = decode $ responseBody response
-  putStrLn (show updateVk)
+  -- putStrLn (show updateVk)
   -- putStrLn ("ts=" ++ (vkTsNew $ fromJust updateVk) ++ ", text=" ++ (text . head . updates $ fromJust updateVk))
   return (fromJust $ updateVk)
 
-{-vkSendMessage :: 
-vkSendMessage
-  rnd <- getCurrentTime >>= return . head . words . show . toRational . utctDayTime
+-- vkSendMessage :: 
+vkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel logLevelInfo message = do
+  rnd <- getCurrentTime >>= return . getNineSymbol . head . words . show . toRational . utctDayTime
   manager <- newManager tlsManagerSettings
-  let vkConnect = "https://api.vk.com/method/messages.send"
+  let vkSendMes = "https://api.vk.com/method/messages.send"
         ++ "?random_id=" ++ rnd
-        ++ "&group_id=" ++ show $ groupIdVk
-        ++ "&message=" ++ 
+        -- ++ "&group_id=" ++ (show $ groupIdVk)
+        ++ "&peer_id =" ++ (show $ messageFrom)
+        ++ "&message=" ++ messageVk
         ++ "&access_token=" ++ tokenVk
         ++ "&v=5.131"
-  -- putStrLn ("vkConnect= " ++ vkConnect)
-  request <- parseRequest vkConnect
+  putStrLn ("vkSendMes= " ++ vkSendMes)
+  request <- parseRequest vkSendMes
   response <- httpLbs request manager
   let statusCodeResponse = statusCode $ responseStatus response
   putStrLn (show $ responseBody response)
-  let updateVk = decode $ responseBody response
--}
+  let vkSendMes = decode $ responseBody response
+  putStrLn ("vkSendMes-" ++ (show $ vkSendMes))
+  return (fromJust $ vkSendMes)
 
+
+
+--additional functions
 retryOnTimeout :: IO a -> IO a
 retryOnTimeout action = catch action $ \(_ :: HttpException) -> do
     putStrLn "Timed out. Trying again."
     threadDelay 1000000
     retryOnTimeout action
 
+getNineSymbol :: String -> String
+getNineSymbol lst = let numberSymbol = length lst in
+  if numberSymbol > 9
+    then drop (numberSymbol - 9) lst
+    else lst
 
   --messages.getLongPollServer
   --groups.getLongPollServer

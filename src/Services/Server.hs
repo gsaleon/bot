@@ -15,7 +15,7 @@ import           App.Types.ConfigVkontakte
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogDebug, handleLogInfo)
 import           Services.Telegram                (makeRequest, makeSendMessage)
 import           Services.LogM
-import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect)
+import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect, vkSendMessage)
 
 serverTelegram :: Maybe SetupTelegram -> String -> [(String, FilePath)] ->
                           String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
@@ -129,9 +129,16 @@ serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPollin
       threadDelay 100000
       serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
     else do
+      let groupIdVk = group_id $ fromJust setupVkontakte
+      let tokenVk = tokenVkontakte $ fromJust setupVkontakte
       let sessionKeyNew = sessionKey {vkTs = vkTsNew updateVk}
-      -- putStrLn (show sessionKeyNew)
+      let messageFrom = fromId . head . updates $ updateVk
+      let messageVk = textVk . head . updates $ updateVk
+      putStrLn ("messageFrom-" ++ (show messageFrom) ++ ", messageVk-" ++ messageVk)
       
+      replicateM_ 3 ((makeVkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel
+                                   logLevelInfo message) >>= \responseSendMessage -> return ())
+
       serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
 
   -- serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
@@ -153,4 +160,9 @@ makeTelegramGetUpdates token requestSendMessageObject logLevel logLevelInfo mess
 -- makeRequestTelegram ::
 makeTelegramSendSticker token requestSendMessageObject logLevel logLevelInfo message = do
   responseSendMessage <- makeSendMessage token "sendSticker" requestSendMessageObject logLevel logLevelInfo message :: IO SendMessage
+  return (responseSendMessage)
+
+-- makeVkSendMessage
+makeVkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel logLevelInfo message = do
+  responseSendMessage <- vkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel logLevelInfo message :: IO ResponseVkSendMessage
   return (responseSendMessage)
