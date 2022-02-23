@@ -9,7 +9,6 @@ import           Data.Maybe                       (fromJust)
 import           Control.Monad                    (replicateM_)
 import           Prelude                  hiding  (id)
 import           Control.Concurrent
-import           Control.Exception                (throwIO, try)
 
 import           App.Types.ConfigTelegram
 import           App.Types.ConfigVkontakte
@@ -124,7 +123,7 @@ serverTelegram setupTelegram logLevel logLevelInfo token message userList longPo
 
 -- serverVkontakte :: String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
 serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey = do
-  updateVk <- vkConnect sessionKey logLevel logLevelInfo message
+  updateVk <- vkConnect longPolling sessionKey logLevel logLevelInfo message
   if (updates updateVk) == []
     then do
       threadDelay 100000
@@ -135,7 +134,7 @@ serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPollin
       
       serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
 
-  serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
+  -- serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
 
 
 

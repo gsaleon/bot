@@ -71,10 +71,10 @@ main = do
   
   -- Initialising, control and read config files
   let sysPathConfig    =  systemPath ++ "/config/configBot"      :: FilePath
-  let sysPathTelegram = systemPath ++ "/config/configTelegram" :: FilePath
+  let sysPathTelegram  = systemPath ++ "/config/configTelegram"  :: FilePath
   let sysPathVkontakte = systemPath ++ "/config/configVkontakte" :: FilePath
   let sysPathHelp      = systemPath ++ "/config/configHelp"      :: FilePath
-  mapM_ (\(x, y) ->
+  mapM_ (\(x, y) ->                                                   --  forM_ вместо mapM_ в этом коде?
     catch (readFile x >>= (\a -> putStr ""))
       (\e ->  case e of
         _  | isAlreadyExistsError e -> error 

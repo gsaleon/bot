@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Services.Vkontakte where
 
@@ -9,7 +10,12 @@ import           Network.HTTP.Types.Status        (statusCode)
 import           Data.Maybe                       (fromJust)
 import           System.Exit                      (die)
 import           Data.Time.Clock                  (getCurrentTime, utctDayTime)
-import           Control.Exception                (throwIO, try, IOException)
+import           Data.Either                      (fromRight, isRight)
+import           Control.Monad                    (when)
+import           Control.Exception                (try, catch)
+import           Control.Concurrent               (threadDelay)
+-- import           System.Timeout                   (timeout)
+
 -- import qualified Data.ByteString.Lazy.Char8    as BLC
 
 import           Services.LogM
@@ -27,28 +33,26 @@ vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message = do
   request <- parseRequest vkGroupsGetLongPollServer
   response <- httpLbs request manager
   let statusCodeResponse = statusCode $ responseStatus response
+  -- let statusCodeResponse = getResponseStatusCode response
+  putStrLn ("statusCode vkGroupsGetLongPollServer-" ++ (show statusCodeResponse))
   let sessionKey = decode $ responseBody response
   return (fromJust $ sessionKey)
 
-vkConnect :: SessionKey -> String -> [(String, FilePath)] -> String -> IO (VkConnect)
-vkConnect sessionKey logLevel logLevelInfo message = do
-  manager <- newManager tlsManagerSettings
+vkConnect :: Int -> SessionKey -> String -> [(String, FilePath)] -> String -> IO (VkConnect)
+vkConnect longPolling sessionKey logLevel logLevelInfo message = do
+  let pollingTime = responseTimeoutMicro $ (longPolling + 5) * 1000000
+  putStrLn (show pollingTime)
+  manager <- newManager tlsManagerSettings {managerResponseTimeout = pollingTime}
   let vkConnect = (vkServer sessionKey)
         ++ "?act=a_check"
         ++ "&key=" ++ (vkKey sessionKey)
         ++ "&ts=" ++ (vkTs sessionKey)
-        ++ "&wait=25"
+        ++ "&wait=" ++ (show longPolling)
   -- putStrLn ("vkConnect= " ++ vkConnect)
   request <- parseRequest vkConnect
-  resp <- try $ httpLbs request manager :: IO (Either IOException a)
-  response <- case resp of
-                Left err  -> do
-                               throwIO err
-                Right res -> do
-                               return res
-  let statusCodeResponse = statusCode $ responseStatus response
-  putStrLn (show $ responseBody response)
+  response <- retryOnTimeout $ httpLbs request manager
   let updateVk = decode $ responseBody response
+  putStrLn (show updateVk)
   -- putStrLn ("ts=" ++ (vkTsNew $ fromJust updateVk) ++ ", text=" ++ (text . head . updates $ fromJust updateVk))
   return (fromJust $ updateVk)
 
@@ -70,7 +74,11 @@ vkSendMessage
   let updateVk = decode $ responseBody response
 -}
 
-
+retryOnTimeout :: IO a -> IO a
+retryOnTimeout action = catch action $ \(_ :: HttpException) -> do
+    putStrLn "Timed out. Trying again."
+    threadDelay 1000000
+    retryOnTimeout action
 
 
   --messages.getLongPollServer
