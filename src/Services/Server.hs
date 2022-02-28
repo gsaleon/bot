@@ -15,7 +15,7 @@ import           App.Types.ConfigVkontakte
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogDebug, handleLogInfo)
 import           Services.Telegram                (makeRequest, makeSendMessage)
 import           Services.LogM
-import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect, vkSendMessage)
+import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkGetUpdate, vkSendMessage)
 
 serverTelegram :: Maybe SetupTelegram -> String -> [(String, FilePath)] ->
                           String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
@@ -123,7 +123,8 @@ serverTelegram setupTelegram logLevel logLevelInfo token message userList longPo
 
 -- serverVkontakte :: String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
 serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey = do
-  updateVk <- vkConnect longPolling sessionKey logLevel logLevelInfo message
+  updateVk <- vkGetUpdate longPolling sessionKey logLevel logLevelInfo message
+  -- putStrLn ("VkGetUpdate -" ++ show updateVk)
   if (updates updateVk) == []
     then do
       threadDelay 100000
@@ -132,12 +133,15 @@ serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPollin
       let groupIdVk = group_id $ fromJust setupVkontakte
       let tokenVk = tokenVkontakte $ fromJust setupVkontakte
       let sessionKeyNew = sessionKey {vkTs = vkTsNew updateVk}
-      let messageFrom = fromId . head . updates $ updateVk
-      let messageVk = textVk . head . updates $ updateVk
-      putStrLn ("messageFrom-" ++ (show messageFrom) ++ ", messageVk-" ++ messageVk)
+      let updateVkValue = updates updateVk
+      -- putStrLn (show . fromJust $ head updateVkValue)
+
+      -- let peerIdMessage = peerId . head . updates $ updateVk
+      -- let messageVk = textVk . head . updates $ updateVk
+      -- putStrLn ("peerIdMessage-" ++ (show peerIdMessage) ++ ", messageVk-" ++ messageVk)
       
-      replicateM_ 3 ((makeVkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel
-                                   logLevelInfo message) >>= \responseSendMessage -> return ())
+      -- replicateM_ 1 ((makeVkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel
+                                   -- logLevelInfo message) >>= \responseSendMessage -> return ())
 
       serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
 
@@ -163,6 +167,6 @@ makeTelegramSendSticker token requestSendMessageObject logLevel logLevelInfo mes
   return (responseSendMessage)
 
 -- makeVkSendMessage
-makeVkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel logLevelInfo message = do
-  responseSendMessage <- vkSendMessage messageFrom groupIdVk tokenVk messageVk logLevel logLevelInfo message :: IO ResponseVkSendMessage
+makeVkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel logLevelInfo message = do
+  responseSendMessage <- vkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel logLevelInfo message :: IO ResponseVkSendMessage
   return (responseSendMessage)

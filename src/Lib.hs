@@ -3,6 +3,7 @@ module Lib where
 import           Data.Maybe           (fromJust, isJust)
 import           Data.List            (find)
 import           Prelude       hiding (id)
+-- import           System.Info          (os)
 
 import           Services.ParseCommandLine (Parse(Err, Value))
 import           App.Types.Config
@@ -95,7 +96,7 @@ fromRight b _         = b
 
 makeSystemPath :: FilePath -> (FilePath, Os)
 makeSystemPath str =
-  if '/' `elem` str
+  if '/' `elem` str                  -- if os = "linux" or ""
     then ((makeSystemPath' str) ++ "/bot/", Linux)
     else ((makeSystemPath'' str) ++ "\\bot", Windows)
   where

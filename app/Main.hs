@@ -44,7 +44,7 @@ import           App.Types.Log
 import           Services.LogM                    
 import           Services.Server                  (serverTelegram, makeTelegramGetUpdates, serverVkontakte)
 import           Services.Telegram                (makeRequest)
-import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkConnect)
+import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkGetUpdate)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegram     (handleTelegram)
 
@@ -236,9 +236,3 @@ makeRequestTelegramGetMe token requestSendMessageObject logLevel logLevelInfo me
   responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo
                       $ message ++ "getMe" :: IO ResponseGetMe
   return (responseGetMe)
-
-{--- vkImplicitFlow ::
-vkImplicitFlow token requestSendMessageObject logLevel logLevelInfo message = do
-  responseVkImplicitFlow <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo
-                      $ message ++ "getMe" :: IO ResponseVkImplicitFlow
-  return (responseGetMe)-}

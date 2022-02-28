@@ -130,7 +130,7 @@ or error:
 https://oauth.vk.com/authorize?client_id=807767&display=page&redirect_uri=https://oauth.vk.com/blank.htmlk&scope=friends&response_type=token&v=5.131&state=123456
 {"error":"invalid_request","error_description":"application was deleted"}
 
-https://oauth.vk.com/authorize?client_id=8077679&display=page&redirect_uri=https://oauth.vk.com/blank.htmlk&scope=groups&response_type=token&v=5.131&state=123456
+
 
 https://oauth.vk.com/blank.html
   #access_token=3f023cec6b8fd0bde5a52bb7962dec9bd26478fde8a63891df208952a286e5c6f8da94297885b8239a540
@@ -138,13 +138,22 @@ https://oauth.vk.com/blank.html
   &user_id=686642762
   &state=123456
 
-https://oauth.vk.com/authorize?client_id=8077679&display=page&response_type=code&redirect_uri=https://oauth.vk.com/blank.htmlk&group_ids=210378040&v=5.131&scope=messages&state=123456
+https://oauth.vk.com/authorize?client_id=8083582&display=page&response_type=code&redirect_uri=https://oauth.vk.com/blank.htmlk&group_ids=210378040&v=5.131&scope=messages&state=123456
+ответ
+https://oauth.vk.com/blank.html#code=56efa0f74d771152c8&state=123456
 
 vkadmin - id: 6121396
 https://oauth.vk.com/blank.html
   #access_token=512c66652a1e1138d5fce5e7e9267d1cc59269edc4c2733220767a72ed69f3e51bcefec2c292686461754
   &expires_in=0
   &user_id=686642762
+
+Запрос прав для бота
+https://oauth.vk.com/authorize?client_id=8089487&display=page&response_type=code&redirect_uri=https://oauth.vk.com/blank.htmlk&group_ids=210917751&v=5.131&scope=messages&state=123456
+ответ сервера
+https://oauth.vk.com/blank.html#code=21071ce3f74b0ac30d&state=123456
+https://oauth.vk.com/blank.html#code=e7cc9a8ad6420d808f&state=123456
+
 
 
 "{\"ts\":\"6\"
@@ -205,3 +214,14 @@ https://oauth.vk.com/blank.html
               ]
  }\r\n"
 
+Client-id bot
+8089487 - new
+8083582 - old
+
+210378040
+Новое сообщество
+210917751
+
+d9ff20c48a9adc1f33425c15a7227f4dc58431c20d756ba9047c2a937fd44201876e686c803d49a8dc53e
+Новый ключ
+a4ec3a3c497cabdf117e3aa59b2360bbc0e701d3bd31ed455acf92332fa45113895cb58a3c1187910b1fd
