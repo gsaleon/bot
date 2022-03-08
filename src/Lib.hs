@@ -11,8 +11,13 @@ import           App.Types.ConfigTelegram
 import           App.Types.ConfigVkontakte
 
 
-
-
+printPrettyworkGeneral :: SetupGeneral -> String
+printPrettyworkGeneral (SetupGeneral pollingGeneral repeatGeneral
+                          logLevelGeneral serviceGeneral) =
+  "Polling: " ++ show pollingGeneral ++ " sek" ++
+  ", Number repeat: " ++  show repeatGeneral ++
+  ", Loglevel: " ++ show logLevelGeneral ++
+  ", Service: " ++ serviceGeneral
 
 printPrettyVkontakte :: SetupVkontakte -> String
 printPrettyVkontakte (SetupVkontakte urlVkontakte client_id 

@@ -36,7 +36,7 @@ instance FromJSON SetupVkontakte where
 data SessionKey = SessionKey
                 { vkServer :: String
                 , vkKey    :: String
-                , vkTs     :: Int
+                , vkTs     :: String
                 -- , vkPts    :: Int
                 } deriving (Show)
 
@@ -50,8 +50,8 @@ instance FromJSON SessionKey where
     return SessionKey {..}
 
 data VkGetUpdate = VkGetUpdate
-               { vkTsNew  :: Int
-               , updates  :: [Maybe [Maybe' Int]]
+               { vkTsNew  :: String
+               , updates  :: [VkMessage]
                } deriving (Show, Eq)
 
 instance FromJSON VkGetUpdate where
@@ -59,9 +59,69 @@ instance FromJSON VkGetUpdate where
         <$> v .: "ts"
         <*> v .: "updates"
 
-data VkGetUpdateMessage = VkGetUpdateMessage
-               { vkTsNewMess  :: Int
-               , updatesMess  :: [Maybe [Maybe' String]]
+{-data VkMessage = VkMessageReplay {fromIdReplay :: Int, peerIdReplay :: Int, textMessageReplay :: String}
+               | VkMessageNew {fromIdNew :: Int, peerIdNew :: Int, textMessageNew :: String}
+               deriving (Eq, Show)-}
+
+{-instance FromJSON VkMessage where
+  parseJSON obj =
+    asum
+         [ parseVkMessageReplay obj
+         , parseVkMessageNew obj
+         ]
+    where
+      parseVkMessageReplay = withObject "VkMessageReplay" $ \obj -> do
+        o                 <- obj .: "object"
+        fromIdReplay      <- o   .: "from_id"
+        peerIdReplay      <- o   .: "peer_id"
+        textMessageReplay <- o   .: "text"
+        return VkMessageReplay {..}
+      parseVkMessageNew = withObject "VkMessageReplay" $ \obj -> do
+        o              <- obj .: "object"
+        m              <- o   .: "message"
+        fromIdNew      <- m   .: "from_id"
+        peerIdNew      <- m   .: "peer_id"
+        textMessageNew <- m   .: "text"
+        return VkMessageNew {..}-}
+
+
+data VkMessage = VkMessage {fromId :: Int, peerId :: Int, textMessVk :: String, typeMessage :: String}
+               deriving (Eq, Show)
+
+instance FromJSON VkMessage where
+  parseJSON obj =
+    asum
+         [ parseVkMessageReplay obj
+         , parseVkMessageNew obj
+         , parseVkMessageTypingState obj
+         ]
+    where
+      parseVkMessageReplay = withObject "VkMessageReplay" $ \obj -> do
+        typeMessage <- obj .: "type"
+        o           <- obj .: "object"
+        fromId      <- o   .: "from_id"
+        peerId      <- o   .: "peer_id"
+        textMessVk  <- o   .: "text"
+        return VkMessage {..}
+      parseVkMessageNew = withObject "VkMessageNew" $ \obj -> do
+        typeMessage <- obj .: "type"
+        o           <- obj .: "object"
+        m           <- o   .: "message"
+        fromId      <- m   .: "from_id"
+        peerId      <- m   .: "peer_id"
+        textMessVk  <- m   .: "text"
+        return VkMessage {..}
+      parseVkMessageTypingState = withObject "VkMessageTypingState" $ \obj -> do
+        typeMessage <- obj .: "type"
+        o           <- obj .: "object"
+        fromId      <- o   .: "from_id"
+        peerId      <- o   .: "to_id"
+        textMessVk  <- o   .: "state"
+        return VkMessage {..}
+
+{-data VkGetUpdateMessage = VkGetUpdateMessage
+               { vkTsNewMess  :: String
+               , updatesMess  :: [Maybe [VkArray String]]
                } deriving (Show, Eq)
 
 instance FromJSON VkGetUpdateMessage where
@@ -69,13 +129,13 @@ instance FromJSON VkGetUpdateMessage where
         <$> v .: "ts"
         <*> v .: "updates"
 
-newtype Maybe' a = Maybe' (Maybe a) deriving (Eq, Ord, Show)
+newtype VkArray a = VkArray (Maybe a) deriving (Eq, Ord, Show)
 
-instance FromJSON a => FromJSON (Maybe' a) where
+instance FromJSON a => FromJSON (VkArray a) where
   parseJSON v = do
     case fromJSON v of
-      Success a -> return (Maybe' $ Just a)
-      _         -> return (Maybe' $ Nothing)
+      Success a -> return (VkArray $ Just a)
+      _         -> return (VkArray $ Nothing)-}
 
 
 data ResponseVkSendMessage = ResponseVkSendMessage {messageId :: Int}

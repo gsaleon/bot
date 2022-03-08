@@ -124,35 +124,23 @@ Vk
     carousel (bool) — поддерживаются ли карусели клиентом;
     lang_id — id используемого языка.
 
-Implicit Flow для получения ключа доступа пользователя
-
-or error:
-https://oauth.vk.com/authorize?client_id=807767&display=page&redirect_uri=https://oauth.vk.com/blank.htmlk&scope=friends&response_type=token&v=5.131&state=123456
-{"error":"invalid_request","error_description":"application was deleted"}
-
-
-
-https://oauth.vk.com/blank.html
-  #access_token=3f023cec6b8fd0bde5a52bb7962dec9bd26478fde8a63891df208952a286e5c6f8da94297885b8239a540
-  &expires_in=86400
-  &user_id=686642762
-  &state=123456
-
-https://oauth.vk.com/authorize?client_id=8083582&display=page&response_type=code&redirect_uri=https://oauth.vk.com/blank.htmlk&group_ids=210378040&v=5.131&scope=messages&state=123456
+Implicit Flow для получения ключа доступа
+1. Получаем ключ доступа пользователя
+запрос:
+https://oauth.vk.com/authorize?client_id=8083582&redirect_uri=https://oauth.vk.com/blank.html&group_ids=210917751&display=page&response_type=token&scope=messages,manage&v=5.131&state=123456
 ответ
-https://oauth.vk.com/blank.html#code=56efa0f74d771152c8&state=123456
+https://oauth.vk.com/blank.html#expires_in=0&access_token_210917751=ffc6a45c70ad132b654f72c60361c334a5c754a38836f1c527d38babe7f29c721de7e5706beb770eb968d&state=123456
+
+https://oauth.vk.com/blank.html#expires_in=0&access_token_210917751=4bf0a794647d4ed0ee7fe10804dfe808d01aa131dc573bfae019607904866aa782bfa79f99d5640ef6d38
+
+access_token_210917751=c2ce904f973ba5a1b1ba9531047fcb4774c3ccede8a80b8294a2d7ce5ffa709b4ea844eee024a09b071b9
+
+Это ключ доступа сообщества "Тестовое сообщество ..."
+ffc6a45c70ad132b654f72c60361c334a5c754a38836f1c527d38babe7f29c721de7e5706beb770eb968d
+Права доступа: управление сообществом, сообщения сообщества
+Создан С. Гариным, 6 мар в 18:54 для приложения echo bot haskell
 
 vkadmin - id: 6121396
-https://oauth.vk.com/blank.html
-  #access_token=512c66652a1e1138d5fce5e7e9267d1cc59269edc4c2733220767a72ed69f3e51bcefec2c292686461754
-  &expires_in=0
-  &user_id=686642762
-
-Запрос прав для бота
-https://oauth.vk.com/authorize?client_id=8089487&display=page&response_type=code&redirect_uri=https://oauth.vk.com/blank.htmlk&group_ids=210917751&v=5.131&scope=messages&state=123456
-ответ сервера
-https://oauth.vk.com/blank.html#code=21071ce3f74b0ac30d&state=123456
-https://oauth.vk.com/blank.html#code=e7cc9a8ad6420d808f&state=123456
 
 
 
@@ -214,6 +202,36 @@ https://oauth.vk.com/blank.html#code=e7cc9a8ad6420d808f&state=123456
               ]
  }\r\n"
 
+"{\"ts\":\"26\"
+ ,\"updates\":[{\"type\":\"message_typing_state\"
+              ,\"object\":{\"state\":\"typing\"
+                          ,\"from_id\":-210917751\
+                          ,\"to_id\":686642762
+                          }
+              ,\"group_id\":210917751
+              ,\"event_id\":\"1f1b67d31425d754e926c8ee57bdbc35aacecbae\"
+               }
+              ,{\"type\":\"message_reply\"
+               ,\"object\":{\"date\":1646738689
+                           ,\"from_id\":686642762
+                           ,\"id\":75
+                           ,\"out\":1
+                           ,\"admin_author_id\":686642762
+                           ,\"attachments\":[]
+                           ,\"conversation_message_id\":15
+                           ,\"fwd_messages\":[]
+                           ,\"important\":false
+                           ,\"is_hidden\":false
+                           ,\"peer_id\":686642762
+                           ,\"random_id\":0
+                           ,\"text\":\"\\/echo bot haskell ljdfdfsd\"
+                           }
+               ,\"group_id\":210917751
+               ,\"event_id\":\"cd82462bdc20292b14b9c3c764bc06d061430bec\"
+               }
+              ]
+ }\r\n"
+
 Client-id bot
 8089487 - new
 8083582 - old
@@ -225,3 +243,25 @@ Client-id bot
 d9ff20c48a9adc1f33425c15a7227f4dc58431c20d756ba9047c2a937fd44201876e686c803d49a8dc53e
 Новый ключ
 a4ec3a3c497cabdf117e3aa59b2360bbc0e701d3bd31ed455acf92332fa45113895cb58a3c1187910b1fd
+
+"{\"response\":{\"server\":\"im.vk.com\\/nim210917751\",\"key\":\"4f027e54a8450428a799f77d3f004a6b8054b0d7\",\"ts\":1857437699,\"pts\":10000012}}"
+
+
+data MyData = MyIntData Int | MyStringData String deriving (Eq, Show)
+
+instance Aeson.FromJSON MyData where
+    parseJSON iobj =
+        asum
+            [ parseIntData iobj
+            , parseStringData iobj
+            ]
+      where
+        parseIntData = Aeson.withObject "Int Data" $ \obj -> do
+            int <- obj .: "someInt"
+            pure $ MyIntData int
+        parseStringData = Aeson.withObject "String Data" $ \obj -> do
+            str <- obj .: "someString"
+            pure $ MyStringData str
+
+i в iobj — это initial?
+

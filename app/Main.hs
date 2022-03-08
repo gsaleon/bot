@@ -28,6 +28,9 @@ import           System.IO.Error                  ( isAlreadyExistsError, isDoes
                                                   , isAlreadyExistsError, isAlreadyExistsError
                                                   , isAlreadyExistsError, isAlreadyInUseError
                                                   )
+import           Data.Time.Clock                  (getCurrentTime)
+import           Data.Time.LocalTime              (getCurrentTimeZone, utcToLocalTime)
+import           Data.Time.Format                 (formatTime, defaultTimeLocale)
 import           Data.Aeson                       (decodeStrict, object)
 import           System.Environment               (getArgs, getExecutablePath, getProgName)
 import           Debug.Trace()                               -- для отладки, по готовности проги - удалить!!
@@ -44,37 +47,41 @@ import           App.Types.Log
 import           Services.LogM                    
 import           Services.Server                  (serverTelegram, makeTelegramGetUpdates, serverVkontakte)
 import           Services.Telegram                (makeRequest)
-import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkGetUpdate)
+import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkGetUpdate, vkSendMessage)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
 -- import           App.Handlers.HandleTelegram     (handleTelegram)
 
 main :: IO ()
 main = do
   putStrLn "------------------Start--------------------"
-  
   -- Initialising, read command line arguments
   commandLine <- getArgs
   let commandLineParse = parseLine commandLine
   let commandLineParseErr = fromLeft "value" commandLineParse
   let commandLineParseValue = fromRight [("","")] commandLineParse
-{-  putStrLn ("commandLineParse - " ++ show commandLineParse)
-  putStrLn ("commandLineParseErr - " ++ show commandLineParseErr)
-  putStrLn ("commandLineParseValue - " ++ show commandLineParseValue)
-  putStrLn ""-}
-  
   -- Initialising, make system path
   systemPathStart <- getExecutablePath
   let systemPath = fst $ makeSystemPath systemPathStart :: FilePath
   let operSystem = snd $ makeSystemPath systemPathStart :: Os
-  -- putStrLn ("systemPathStart - " ++ show systemPathStart)
-  putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
-  
-  -- Initialising, control and read config files
+  -- putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
+  let sysPathHelp = systemPath ++ "/config/configHelp"  :: FilePath
+  -- Print help
+  case commandLineParseErr of
+    "help"          -> do
+        helpBig <- readFile sysPathHelp
+        putStrLn helpBig
+        die "Stop running"
+    "parsingError"  -> do
+        die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+    "multipleValue" -> do
+        die "Multiple value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
+    _               -> putStr ""
+
+  -- Control and read config files
   let sysPathConfig    =  systemPath ++ "/config/configBot"      :: FilePath
   let sysPathTelegram  = systemPath ++ "/config/configTelegram"  :: FilePath
   let sysPathVkontakte = systemPath ++ "/config/configVkontakte" :: FilePath
-  let sysPathHelp      = systemPath ++ "/config/configHelp"      :: FilePath
-  mapM_ (\(x, y) ->                                                   --  forM_ вместо mapM_ в этом коде?
+  mapM_ (\(x, y) ->                      --  forM_ вместо mapM_ в этом коде?
     catch (readFile x >>= (\a -> putStr ""))
       (\e ->  case e of
         _  | isAlreadyExistsError e -> error 
@@ -84,8 +91,7 @@ main = do
         _  | isEOFError e           -> error
                ("Error: End of file " ++ y)
         _  | isPermissionError e    -> error
-               ("Error: We don't have permission to read this \
-                 \ file " ++ y)
+               ("Error: We don't have permission to read this file " ++ y)
         _                           -> putStrLn
                ("Uncaught exception " ++ y) >> ioError e
       )
@@ -95,7 +101,7 @@ main = do
           ,(sysPathHelp,      "configHelp")
           ]
 
-  -- Initialising, control log files
+  -- Control log files
   let sysPathDebugLog   = systemPath ++ "/logs/Debug.log"   :: FilePath
   let sysPathErrorLog   = systemPath ++ "/logs/Error.log"   :: FilePath
   let sysPathInfoLog    = systemPath ++ "/logs/Info.log"    :: FilePath
@@ -103,8 +109,8 @@ main = do
   mapM_ (\(x, y) ->
     catch (openFile x ReadWriteMode >>= hClose)
       (\e ->  case e of
-{-        _  | isAlreadyExistsError e -> error 
-               ("Error: File " ++ y ++ " alredy exists")-}
+        _  | isAlreadyExistsError e -> error 
+               ("Error: File " ++ y ++ " alredy exists")
         _  | isDoesNotExistError e  -> putStrLn
                ("File " ++ y ++ " not found, create file")
                -- writeFile x ""
@@ -113,8 +119,7 @@ main = do
         _  | isEOFError e           -> error
                ("Error: End of file " ++ y)
         _  | isPermissionError e    -> error
-               ("Error: We don't have permission to read this \
-                 \ file " ++ y)
+               ("Error: We don't have permission to read this file " ++ y)
         _                           -> putStrLn
                ("Uncaught exception " ++ y) >> ioError e
       )
@@ -124,7 +129,7 @@ main = do
           ,(sysPathWarningLog, "Warning.log")
           ]
 
-  -- Initialising, control config files
+  -- Read config files
   rawJSONConfig <- B.readFile sysPathConfig
   let setupGeneral = decodeStrict rawJSONConfig 
   case setupGeneral of
@@ -140,36 +145,27 @@ main = do
   case setupVkontakte of
     Nothing             -> die "Invalid configVkontakte JSON!"
     Just setupVkontakte -> putStr $ printPrettyVkontakte setupVkontakte
-
-  -- Print help, initialising with (or not) command line arguments
-  case commandLineParseErr of
-    "help"          -> do
-        helpBig <- readFile sysPathHelp
-        putStrLn helpBig
-        die "Stop running"
-    "parsingError"  -> do
-        die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
-    "multipleValue" -> do
-        die "Multiple value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
-    _               -> putStr ""
-  
-  -- Initialising, make note in log about start programm
+ 
+  -- Make note in log about start programm
   let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
-  putStrLn (show workGeneral)
   progName <- getProgName
   let logLevel = logLevelGeneral workGeneral
   let logLevelInfo = [ ("Debug", sysPathDebugLog), ("Info", sysPathInfoLog)
                      , ("Warning", sysPathWarningLog), ("Error", sysPathErrorLog)
                      ] :: [(String, FilePath)]         
   let mess = snd $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
-  putStrLn mess
-  message' <- makeLogMessage progName mess
+  putStr mess
+  putStrLn $ printPrettyworkGeneral workGeneral
+  message' <- makeLogMessage progName (mess ++ printPrettyworkGeneral workGeneral)
   logInfo handleLogInfo logLevel logLevelInfo message'
   logDebug handleLogDebug logLevel logLevelInfo message'
   
-  -- Initialising, control work bot
+  -- Start bot
   putStrLn "-------------------------------"
   message <- makeLogMessage progName ""
+  let longPolling = pollingGeneral workGeneral
+  let repeatN = repeatGeneral workGeneral
+  let userList = [(0, repeatN)] :: [(Int, Int)]
   if (serviceGeneral workGeneral) == "telegram"
     then do
       --service Telegram start
@@ -190,8 +186,6 @@ main = do
                 logDebug handleLogDebug logLevel logLevelInfo
                   $ message ++ "Ok check control default setupTelegram"
                 return ()
-      let longPolling = pollingGeneral workGeneral
-      let repeatN = repeatGeneral workGeneral
       let requestGetUpdateObject = SendGetUpdate 0 100 1
       responseGetUpdate <- makeTelegramGetUpdates token requestGetUpdateObject
                              logLevel logLevelInfo message  :: IO ResultRequest
@@ -199,7 +193,6 @@ main = do
             if (result $ responseGetUpdate) == []
               then 1
               else (update_idUpdate $ last $ result $ responseGetUpdate) + 1
-      let userList = [(0, repeatN)] :: [(Int, Int)]
       serverTelegram setupTelegram logLevel logLevelInfo token message userList longPolling offsetGetUpdate
     else do
       --service Vkontakte start
@@ -207,15 +200,7 @@ main = do
       let groupIdVk = group_id $ fromJust setupVkontakte
       let tokenVk = tokenVkontakte $ fromJust setupVkontakte
       sessionKey <- vkGroupsGetLongPollServer tokenVk groupIdVk logLevel logLevelInfo message
-      let longPolling = pollingGeneral workGeneral
-      let repeatN = repeatGeneral workGeneral
-      let userList = [(0, repeatN)] :: [(Int, Int)]
       serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
-      
-      die "Sorry, vk is still don't work"
-
-
-
 
   putStrLn "--------------------Stop---------------------"
 
@@ -224,11 +209,11 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
   if cPE == "value"
     then
       ( fromCommandLine (fromJust setupGeneral) commandLineParseValue
-      , "Start with value define in command line"
+      , "Start with value define in command line: "
       )
     else
       ( fromJust setupGeneral
-      , "Start with default value parametrs"
+      , "Start with default value parametrs: "
       )
 
 -- makeRequestTelegram ::
