@@ -3,12 +3,18 @@
 module Services.Server where
 
 -- import           Data.Aeson                       (encode)
-import           Data.Char                        (digitToInt)
+import           Data.Char                        (digitToInt, isDigit)
 import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
 import           Control.Monad                    (replicateM_)
 import           Prelude                  hiding  (id)
 import           Control.Concurrent
+import qualified Data.Text.Lazy.IO           as T
+import           Data.Text.Encoding               (decodeUtf8)
+import           Data.Text                        (Text, unpack, drop, pack)
+import           Data.ByteString.Lazy             (toStrict)
+import           Data.Aeson                       (encode)
+import qualified Network.URI.Encode        as NUE (encode, decode)
 
 import           App.Types.ConfigTelegram
 import           App.Types.ConfigVkontakte
@@ -16,7 +22,7 @@ import           App.Handlers.HandleLog           (handleLogWarning, handleLogDe
 import           Services.Telegram                (makeRequest, makeSendMessage)
 import           Services.LogM
 import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkGetUpdate, vkSendMessage
-                                                  , vkAllowMessagesFromGroup)
+                                                  , vkSendMessageWithKeyboard)
 
 serverTelegram :: Maybe SetupTelegram -> String -> [(String, FilePath)] ->
                           String -> String -> [(Int, Int)] -> Int -> Int -> IO ()
@@ -132,29 +138,49 @@ serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPollin
   -- putStrLn ("sessionKeyNew- " ++ sessionKeyNewValue)
   -- putStrLn ("updateVkValue- " ++ show updateVkValue)
   -- vkAllowMessFromGroup <- vkAllowMessagesFromGroup groupIdVk tokenVk logLevel logLevelInfo message
-  if updateVkValue == []
+  if updateVkValue /= []
     then do
-      threadDelay 100000
-      serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
-    else do
       let from_Id = fromId . head $ updateVkValue
+      let id_Mess = idMess . head $ updateVkValue
       let typeMessVk = typeMessage . head $ updateVkValue
       let peer_Id = peerId . head $ updateVkValue
       let messageVk = textMessVk . head $ updateVkValue
       let sessionKeyNew = sessionKey {vkTs = sessionKeyNewValue}
-      putStrLn ("peer_Id- " ++ show peer_Id ++ ", messageVk- " ++ messageVk ++ ", typeMessVk- " ++ typeMessVk)
-      if and [from_Id > 0, or [typeMessVk == "message_new", typeMessVk == "message_reply"]]
+      let repeatNumber = if (filter (\x -> fst x == from_Id) userList) /= []
+                            then (snd . head) $ filter (\x -> fst x == from_Id) userList
+                            else (snd . head) userList
+      -- putStrLn ("from_Id- " ++ show from_Id ++ ", peer_Id- " ++ show peer_Id ++ ", id_Mess- " ++ show id_Mess ++"\n" ++
+      --           "messageVk- " ++ messageVk ++ ", typeMessVk- " ++ typeMessVk)
+      -- if and [from_Id > 0, or [typeMessVk == "message_new", typeMessVk == "message_reply"]]
+      if and [(isDigit . head $ messageVk), ((digitToInt . head $ messageVk) >= 1), ((digitToInt . head $ messageVk) <= 5)]
         then do
-          replicateM_ 3 ((makeVkSendMessage from_Id groupIdVk tokenVk messageVk logLevel
-                                   logLevelInfo message) >>= \responseSendMessage -> return ())
+          let userListNew = (from_Id, digitToInt . head $ messageVk) : userList :: [(Int, Int)]
           threadDelay 100000
-          serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
-        else
-          serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
+          serverVkontakte setupVkontakte logLevel logLevelInfo message userListNew longPolling sessionKeyNew
+        else case messageVk of
+          "/About" -> do
+            makeVkSendMessageWithKeyboard peer_Id keyboardHelp tokenVk "/About-dfsdf" logLevel logLevelInfo message
+            serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
+          "/Help"  -> do
+            makeVkSendMessageWithKeyboard peer_Id keyboardHelp tokenVk "/Help-sdsdf" logLevel logLevelInfo message
+            serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
+          "/Setting" -> do
+            makeVkSendMessageWithKeyboard peer_Id keyboardNumber tokenVk "Enter number repeat- " logLevel logLevelInfo message
+            serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
+          "/Quit" -> do
+            makeVkSendMessage from_Id id_Mess tokenVk "/Bye..." logLevel logLevelInfo message
+            die "Senk you very much, bye..."
+          _ -> do
+            replicateM_ (repeatNumber - 1) ((makeVkSendMessage from_Id id_Mess tokenVk messageVk logLevel
+                                               logLevelInfo message) >>= \r -> return ())
+            makeVkSendMessageWithKeyboard peer_Id keyboardHelp tokenVk messageVk logLevel logLevelInfo message
+            threadDelay 100000
+            serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKeyNew
+    else do
+      threadDelay 100000
+      serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
 
   -- serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey
-
-
 
 
 --additional functions
@@ -174,9 +200,36 @@ makeTelegramSendSticker token requestSendMessageObject logLevel logLevelInfo mes
   return (responseSendMessage)
 
 -- makeVkSendMessage
-makeVkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel logLevelInfo message = do
-  responseSendMessage <- vkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel logLevelInfo message :: IO ResponseVkSendMessage
+makeVkSendMessage peerIdMessage id_Mess tokenVk messageVk logLevel logLevelInfo message = do
+  responseSendMessage <- vkSendMessage peerIdMessage id_Mess tokenVk messageVk logLevel logLevelInfo message :: IO ResponseVkSendMessage
   return (responseSendMessage)
+
+makeVkSendMessageWithKeyboard peerIdMessage keyboardHelp tokenVk messageVk logLevel logLevelInfo message = do
+  responseSendMessage <- vkSendMessageWithKeyboard peerIdMessage keyboardHelp tokenVk messageVk logLevel logLevelInfo message :: IO ResponseVkSendMessage
+  return (responseSendMessage)
+
+keyboardHelp :: String
+keyboardHelp = NUE.encode . unpack . decodeUtf8 . toStrict $ encode KeyboardVkSetting {
+    one_time = True,
+    inline = False,
+    buttons = [[
+        ButtonArray {color = "negative",  action = ButtonValue {label = "/About",   payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "positive",  action = ButtonValue {label = "/Help",    payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "primary",   action = ButtonValue {label = "/Setting", payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "secondary", action = ButtonValue {label = "/Quit",    payload = PayloadValue "", _type = "text"}}
+              ]]                                                                      }
+
+keyboardNumber :: String
+keyboardNumber = NUE.encode . unpack . decodeUtf8 . toStrict $ encode KeyboardVkSetting {
+    one_time = False,
+    inline = True,
+    buttons = [[
+        ButtonArray {color = "negative",  action = ButtonValue {label = "1", payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "positive",  action = ButtonValue {label = "2", payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "primary",   action = ButtonValue {label = "3", payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "secondary", action = ButtonValue {label = "4", payload = PayloadValue "", _type = "text"}},
+        ButtonArray {color = "negative",  action = ButtonValue {label = "5", payload = PayloadValue "", _type = "text"}}
+              ]]                                                                        }
 
 -- getValue :: VkMessage -> p1 -> p2 -> a
 -- getValue mess f1 f2 = case mess of

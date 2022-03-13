@@ -9,13 +9,15 @@ import           Data.Aeson                       (decode, encode, ToJSON, FromJ
 import           Data.List                        (intercalate)
 import           Network.HTTP.Types.Status        (statusCode)
 import           Data.Maybe                       (fromJust)
-import           System.Exit                      (die, ExitCode(..))
+-- import           System.Exit                      (die, ExitCode(..))
 import           Data.Time.Clock                  (getCurrentTime, utctDayTime)
 import           Data.Either                      (fromRight, isRight)
 import           Control.Monad                    (when)
 import           Control.Exception                (try, catch)
 import           Control.Concurrent               (threadDelay)
 -- import           System.Timeout                   (timeout)
+-- import           Data.ByteString.Base64.URL       (encodeBase64', decodeBase64)
+import qualified Data.ByteString.Lazy.Char8    as L8
 
 -- import qualified Data.ByteString.Lazy.Char8    as BLC
 
@@ -91,29 +93,30 @@ vkGetUpdate longPolling sessionKey logLevel logLevelInfo message = do
   return (fromJust updateVk)
 
 -- vkSendMessage :: 
-vkAllowMessagesFromGroup groupIdVk tokenVk logLevel logLevelInfo message = do
-  rnd <- rndNumber
-  manager <- newManager tlsManagerSettings
-  let messagesAllowMessagesFromGroup = "https://api.vk.com/method/messages.allowMessagesFromGroup"
-        ++ "?group_id" ++ (show groupIdVk)
-        ++ "&key=" ++ rnd
-        ++ "&access_token=" ++ tokenVk
-        ++ "&v=5.131"
-  request <- parseRequest messagesAllowMessagesFromGroup
-  response <- httpLbs request manager
-  putStrLn (show $ responseBody response)
-  let vkAllowMessagesFromGroup = decode $ responseBody response :: Maybe Int
-  putStrLn ("vkAllowMessagesFromGroup-" ++ (show $ vkAllowMessagesFromGroup))
-  return (fromJust $ vkAllowMessagesFromGroup)
+-- vkAllowMessagesFromGroup groupIdVk tokenVk logLevel logLevelInfo message = do
+--   rnd <- rndNumber
+--   manager <- newManager tlsManagerSettings
+--   let messagesAllowMessagesFromGroup = "https://api.vk.com/method/messages.allowMessagesFromGroup"
+--         ++ "?group_id" ++ (show groupIdVk)
+--         ++ "&key=" ++ rnd
+--         ++ "&access_token=" ++ tokenVk
+--         ++ "&v=5.131"
+--   request <- parseRequest messagesAllowMessagesFromGroup
+--   response <- httpLbs request manager
+--   putStrLn (show $ responseBody response)
+--   let vkAllowMessagesFromGroup = decode $ responseBody response :: Maybe Int
+--   putStrLn ("vkAllowMessagesFromGroup-" ++ (show $ vkAllowMessagesFromGroup))
+--   return (fromJust $ vkAllowMessagesFromGroup)
 
 -- vkSendMessage :: 
-vkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel logLevelInfo message = do
+vkSendMessage peerIdMessage id_Mess tokenVk messageVk logLevel logLevelInfo message = do
   rnd <- rndNumber
   manager <- newManager tlsManagerSettings
   let vkSendMes = "https://api.vk.com/method/messages.send"
         ++ "?access_token=" ++ tokenVk
         ++ "&random_id=" ++ rnd
         ++ "&peer_id=" ++ (show $ peerIdMessage)
+        -- ++ "&reply_to=" ++ (show $ id_Mess)
         ++ "&message=" ++ messageVk
         ++ "&v=5.131"
   putStrLn ("vkSendMes= " ++ vkSendMes)
@@ -125,7 +128,52 @@ vkSendMessage peerIdMessage groupIdVk tokenVk messageVk logLevel logLevelInfo me
   putStrLn ("vkSendMes-" ++ (show $ vkSendMes))
   return (fromJust $ vkSendMes)
 
+-- vkSendMessage :: 
+vkSendMessageWithKeyboard peerIdMessage keyboardHelp tokenVk messageVk logLevel logLevelInfo message = do
+  rnd <- rndNumber
+  manager <- newManager tlsManagerSettings
+  let vkSendMes = "https://api.vk.com/method/messages.send"
+        ++ "?access_token=" ++ tokenVk
+        ++ "&random_id=" ++ rnd
+        ++ "&peer_id=" ++ (show $ peerIdMessage)
+        ++ "&keyboard=" ++ keyboardHelp
+        ++ "&message=" ++ messageVk
+        ++ "&v=5.131"
+  putStrLn ("vkSendMes= " ++ vkSendMes)
+------------------------------------
+-- let urlEncodedBytestring = Data.Bytestring.Base64.URL.encode . L8.toStrict $ encode requestObject
 
+-- postJSON :: IO ()
+-- postJSON = do
+--     manager <- newManager tlsManagerSettings
+--     -- Nested JSON object to POST:
+--     let requestObject = object
+--             [ "event" .= ("App launched." :: String)
+--             , "properties"  .=  object [  "distinct_id" .= ("user" :: String)
+--                                        ,  "token"       .= ("f793bae9548d8e123cef251fd81df487" :: String)
+--                                        ]
+--             ]  
+--     initialRequest <- parseRequest "http://api.mixpanel.com/track"
+--     let request = initialRequest
+--             { method = "POST"
+--             , requestBody = RequestBodyLBS $ encode requestObject
+--             , requestHeaders =
+--                 [ ("Content-Type", "application/json; charset=utf-8")
+--                 ]
+--             }
+--     response <- httpLbs request manager
+--     putStrLn $ "The status code was: "
+--             ++ show (statusCode $ responseStatus response)
+--     L8.putStrLn $ responseBody response
+-----------------------------------
+  request <- parseRequest vkSendMes
+  response <- httpLbs request manager
+  let statusCodeResponse = statusCode $ responseStatus response
+  putStrLn (show $ responseBody response)
+  let vkSendMes = decode $ responseBody response
+  putStrLn ("vkSendMes-" ++ (show $ vkSendMes))
+  return (fromJust $ vkSendMes)
+  -- return ()
 
 --additional functions
 retryOnTimeout :: IO a -> IO a

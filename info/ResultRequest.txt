@@ -85,24 +85,6 @@ result = [Update {update_idUpdate = 565934994
 
 
 Vk
-Когда произойдет новое событие или истечет время ожидания, сервер вернет Вам ответ в формате JSON: 
-{"ts":"4"
-,"updates":[{"type":"wall_post_new"
-            ,"object":{"id":28
-                      ,"from_id":-123456
-                      ,"owner_id":-123456
-                      ,"date":1519631591
-                      ,"marked_as_ads":0
-                      ,"post_type":"post"
-                      ,"text":"Post text"
-                      ,"can_edit":1
-                      ,"created_by":564321
-                      ,"can_delete":1
-                      ,"comments":{"count":0}}
-                      ,"group_id":123456}
-           ]
-}
-
 информация о доступных функциях будет приходить вместе с событием message_new в Callback API и Bots Long Poll API. Она будет находиться в объекте client_info:
 "client_info": {"button_actions": ["text"
                                   ,"vkpay"
@@ -141,8 +123,6 @@ ffc6a45c70ad132b654f72c60361c334a5c754a38836f1c527d38babe7f29c721de7e5706beb770e
 Создан С. Гариным, 6 мар в 18:54 для приложения echo bot haskell
 
 vkadmin - id: 6121396
-
-
 
 "{\"ts\":\"6\"
 ,\"updates\":[{\"type\":\"message_new\"
@@ -232,6 +212,19 @@ vkadmin - id: 6121396
               ]
  }\r\n"
 
+"{\"ts\":\"27\"
+ ,\"updates\":[{\"type\":\"message_typing_state\"
+               ,\"object\":{\"state\":\"typing\"
+                           ,\"from_id\":-210917751
+                           ,\"to_id\":686642762
+                           }
+               ,\"group_id\":210917751
+               ,\"event_id\":\"e44fed7364e248bddfa5081a835564c7824e9097\"
+               }
+              ]
+ }\r\n"
+
+
 Client-id bot
 8089487 - new
 8083582 - old
@@ -246,7 +239,60 @@ a4ec3a3c497cabdf117e3aa59b2360bbc0e701d3bd31ed455acf92332fa45113895cb58a3c118791
 
 "{\"response\":{\"server\":\"im.vk.com\\/nim210917751\",\"key\":\"4f027e54a8450428a799f77d3f004a6b8054b0d7\",\"ts\":1857437699,\"pts\":10000012}}"
 
+https://api.vk.com/method/messages.send?access_token=4bf0a794647d4ed0ee7fe10804dfe808d01aa131dc573bfae019607904866aa782bfa79f99d5640ef6d38&random_id=303096481&peer_id=686642762&message=nbmnbmn bmnbmnb kjkj&v=5.131
 
+keyboard vk (json)
+{  
+   "one_time":false,
+   "buttons":[
+      [  
+         {  
+            "action":{  
+               "type":"text",
+               "payload":"{\"button\": \"1\"}",
+               "label":"Red"
+            },
+            "color":"negative"
+         },
+         {  
+            "action":{  
+               "type":"text",
+               "payload":"{\"button\": \"2\"}",
+               "label":"Green"
+            },
+            "color":"positive"
+         },
+         {  
+            "action":{  
+               "type":"text",
+               "payload":"{\"button\": \"2\"}",
+               "label":"Blue"
+            },
+            "color":"primary"
+         },
+         {  
+            "action":{  
+               "type":"text",
+               "payload":"{\"button\": \"2\"}",
+               "label":"White"
+            },
+            "color":"secondary"
+         }
+      ]
+   ]
+}
+
+buttons = Object $ fromList [ ("color", String "negative", Object $ fromList [("type", String "text"), ("payload", Object $ fromList ["button", String "About me"]), ("label", String "Red")]
+                             ]
+
+------------------------------------------------
+import GHC.Exts    -- (fromList)
+
+val :: Value
+val = Object $ fromList [
+  ("numbers", Array $ fromList [Number 1, Number 2, Number 3]),
+  ("boolean", Bool True) ]
+-------------------------------------------------
 data MyData = MyIntData Int | MyStringData String deriving (Eq, Show)
 
 instance Aeson.FromJSON MyData where

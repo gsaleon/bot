@@ -143,6 +143,17 @@
   (major1) == 1 && (major2) == 9 && (minor) <= 3)
 #endif /* MIN_VERSION_time */
 
+/* package uri-encode-1.5.0.7 */
+#ifndef VERSION_uri_encode
+#define VERSION_uri_encode "1.5.0.7"
+#endif /* VERSION_uri_encode */
+#ifndef MIN_VERSION_uri_encode
+#define MIN_VERSION_uri_encode(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  5 || \
+  (major1) == 1 && (major2) == 5 && (minor) <= 0)
+#endif /* MIN_VERSION_uri_encode */
+
 /* tool alex-3.2.4 */
 #ifndef TOOL_VERSION_alex
 #define TOOL_VERSION_alex "3.2.4"
@@ -309,10 +320,10 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_PACKAGE_KEY
-#define CURRENT_PACKAGE_KEY "bot-main-0.1.0.0-GkpV9uWUKFy9pP337gArZi"
+#define CURRENT_PACKAGE_KEY "bot-main-0.1.0.0-IOVD1A4ha9oJ8Tto4t2exf"
 #endif /* CURRENT_PACKAGE_KEY */
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-GkpV9uWUKFy9pP337gArZi"
+#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-IOVD1A4ha9oJ8Tto4t2exf"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"

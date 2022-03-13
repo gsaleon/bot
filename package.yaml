@@ -32,6 +32,7 @@ dependencies:
 - text
 - conduit
 - conduit-extra
+- uri-encode
 
 library:
   source-dirs:           src

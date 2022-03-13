@@ -7,9 +7,9 @@ module App.Types.ConfigVkontakte where
 import           Data.Aeson
 -- import           Control.Monad        (mzero)
 import           Data.Foldable        (asum)
-import           Data.Text            (unpack)
-import           Data.Maybe           (catMaybes)
-import           Control.Applicative
+-- import           Data.Text            (unpack)
+-- import           Data.Maybe           (catMaybes)
+-- import           Control.Applicative
 import           Control.Monad
 
 data SetupVkontakte = SetupVkontakte
@@ -85,8 +85,12 @@ instance FromJSON VkGetUpdate where
         return VkMessageNew {..}-}
 
 
-data VkMessage = VkMessage {fromId :: Int, peerId :: Int, textMessVk :: String, typeMessage :: String}
-               deriving (Eq, Show)
+data VkMessage = VkMessage
+               { fromId :: Int
+               , peerId :: Int
+               , idMess :: Int
+               , textMessVk :: String
+               , typeMessage :: String } deriving (Eq, Show)
 
 instance FromJSON VkMessage where
   parseJSON obj =
@@ -100,6 +104,7 @@ instance FromJSON VkMessage where
         typeMessage <- obj .: "type"
         o           <- obj .: "object"
         fromId      <- o   .: "from_id"
+        idMess      <- o   .: "id"
         peerId      <- o   .: "peer_id"
         textMessVk  <- o   .: "text"
         return VkMessage {..}
@@ -108,6 +113,7 @@ instance FromJSON VkMessage where
         o           <- obj .: "object"
         m           <- o   .: "message"
         fromId      <- m   .: "from_id"
+        idMess      <- m   .: "id"
         peerId      <- m   .: "peer_id"
         textMessVk  <- m   .: "text"
         return VkMessage {..}
@@ -115,6 +121,7 @@ instance FromJSON VkMessage where
         typeMessage <- obj .: "type"
         o           <- obj .: "object"
         fromId      <- o   .: "from_id"
+        idMess      <- o   .: "id"
         peerId      <- o   .: "to_id"
         textMessVk  <- o   .: "state"
         return VkMessage {..}
@@ -135,11 +142,53 @@ instance FromJSON a => FromJSON (VkArray a) where
   parseJSON v = do
     case fromJSON v of
       Success a -> return (VkArray $ Just a)
-      _         -> return (VkArray $ Nothing)-}
+      _         -> return (VkArray $ Nothing) :: String
+-}
 
+data KeyboardVkSetting = KeyboardVkSetting
+                       { one_time :: Bool
+                       , inline   :: Bool
+                       , buttons  :: [[ButtonArray]]
+                       } deriving (Show, Eq)
 
-data ResponseVkSendMessage = ResponseVkSendMessage {messageId :: Int}
-  | ErrorVkSendMessage {errorMessVk :: Object, errorMessageVk :: String} deriving (Show)
+instance ToJSON KeyboardVkSetting where
+  toJSON KeyboardVkSetting {..} = object [
+    "one_time" .= one_time,
+    "inline"   .= inline,
+    "buttons"  .= buttons                ]
+
+data ButtonArray = ButtonArray
+                 { color  :: String
+                 , action :: ButtonValue
+                 } deriving (Show, Eq)
+
+instance ToJSON ButtonArray where
+  toJSON ButtonArray {..} = object [
+    "action" .= action,
+    "color"  .= color              ]
+
+data ButtonValue = ButtonValue
+                 { _type :: String
+                 , label      :: String
+                 , payload    :: PayloadValue
+                 } deriving (Show, Eq)
+
+instance ToJSON ButtonValue where
+  toJSON ButtonValue {..} = object [
+    "type"    .= _type,
+    "label"   .= label,
+    "payload" .= payload        ]
+
+data PayloadValue = PayloadValue
+                  { payloadValue :: String
+                  } deriving (Show, Eq)
+
+instance ToJSON PayloadValue where
+  toJSON PayloadValue {..} = object [
+     "payloadValue" .= payloadValue ]
+
+data ResponseVkSendMessage = ResponseVkSendMessage { messageId :: Int }
+  | ErrorVkSendMessage { errorMessVk :: Object, errorMessageVk :: String } deriving (Show)
 
 instance FromJSON ResponseVkSendMessage where
   parseJSON = withObject "ResponseVkSendMessage" $ \r -> asum [
