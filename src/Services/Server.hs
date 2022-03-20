@@ -131,7 +131,7 @@ serverTelegram setupTelegram logLevel logLevelInfo token message userList longPo
 serverVkontakte :: Maybe SetupVkontakte -> String -> [(String, FilePath)] -> String -> [(Int, Int)] -> Int -> SessionKey -> IO ()
 serverVkontakte setupVkontakte logLevel logLevelInfo message userList longPolling sessionKey = do
   let tokenVk = tokenVkontakte $ fromJust setupVkontakte
-  let groupIdVk = group_id $ fromJust setupVkontakte
+  let groupIdVk = groupVkId $ fromJust setupVkontakte
   updateVk <- vkGetUpdate longPolling sessionKey logLevel logLevelInfo message
   let sessionKeyNewValue = vkTsNew $ updateVk
   let updateVkValue    = updates $ updateVk

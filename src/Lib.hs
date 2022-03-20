@@ -20,8 +20,8 @@ printPrettyworkGeneral (SetupGeneral pollingGeneral repeatGeneral
   ", Service: " ++ serviceGeneral
 
 printPrettyVkontakte :: SetupVkontakte -> String
-printPrettyVkontakte (SetupVkontakte urlVkontakte client_id 
-    group_id tokenVkontakte version lang test_mode) = ""
+printPrettyVkontakte (SetupVkontakte groupVkId tokenVkontakte
+  descriptionVk aboutVk commandVk questionVk) = ""
 {-  "\n" ++
   "urlVkontakte -         " ++ urlVkontakte         ++ "\n" ++
   "tokenVkontakte -       " ++ tokenVkontakte       ++ "\n" ++
@@ -33,13 +33,10 @@ printPrettyVkontakte (SetupVkontakte urlVkontakte client_id
   "----------------------end printPrettyVkontakte------------"-}
 
 printPrettyTelegram :: SetupTelegram -> String
-printPrettyTelegram (SetupTelegram urlTelegram nameTelegram
-      userNameTelegram tokenTelegram descriptionTelegram
-      aboutTelegram commandTelegram questionTelegramRepeat) = ""
+printPrettyTelegram (SetupTelegram tokenTelegram
+  descriptionTelegram aboutTelegram commandTelegram
+  questionTelegramRepeat) = ""
 {-  "\n" ++
-  "urlTelegram -         " ++ urlTelegram            ++ "\n" ++
-  "tokenTelegram -       " ++ tokenTelegram          ++ "\n" ++
-  "userNameTelegram -    " ++ userNameTelegram       ++ "\n" ++
   "tokenTelegram -       " ++ tokenTelegram          ++ "\n" ++
   "descriptionTelegram - " ++ descriptionTelegram    ++ "\n" ++
   "aboutTelegram -       " ++ aboutTelegram          ++ "\n" ++
@@ -47,9 +44,22 @@ printPrettyTelegram (SetupTelegram urlTelegram nameTelegram
   "questionTelegramRepeat" ++ questionTelegramRepeat ++"\n" ++
   "----------------------end printPrettyTelegram------------"-}
 
+{-printPrettySetup' :: SetupGeneral' -> String
+printPrettySetup' (SetupGeneral pollingGeneral' repeatGeneral'
+  logLevelGeneral' serviceGeneral' tokenTelegram' descriptionTelegram'
+  aboutTelegram' commandTelegram' questionTelegramRepeat' clientVkId'
+  groupVkId' tokenVkontakte' descriptionVk' aboutVk' commandVk'
+  questionVk' data1' data2' data3' data4' data5')= ""-}
+{-  "\n" ++
+  "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
+  "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
+  "logLevelGeneral -      " ++ show logLevelGeneral ++ "\n" ++
+  "serviceGeneral -       " ++ show serviceGeneral  ++ "\n" ++
+  "----------------------end printPrettySetup----------------"-}
+
 printPrettySetup :: SetupGeneral -> String
 printPrettySetup (SetupGeneral pollingGeneral repeatGeneral
-      logLevelGeneral serviceGeneral) = ""
+  logLevelGeneral serviceGeneral)= ""
 {-  "\n" ++
   "pollingGeneral -       " ++ show pollingGeneral  ++ "\n" ++
   "repeatGeneral -        " ++ show repeatGeneral   ++ "\n" ++
@@ -99,11 +109,11 @@ fromRight :: [(String,String)] -> Parse a b -> [(String,String)]
 fromRight _ (Value b) = b
 fromRight b _         = b
 
-makeSystemPath :: FilePath -> (FilePath, Os)
+makeSystemPath :: FilePath -> FilePath
 makeSystemPath str =
-  if '/' `elem` str                  -- if os = "linux" or ""
-    then ((makeSystemPath' str) ++ "/bot/", Linux)
-    else ((makeSystemPath'' str) ++ "\\bot", Windows)
+  if '/' `elem` str      -- if os = "linux" or ""
+    then ((makeSystemPath' str) ++ "/bot/")
+    else ((makeSystemPath'' str) ++ "\\bot")
   where
     makeSystemPath' [] = []
     makeSystemPath' (x0:x1:x2:x3:x4:xs)

@@ -13,10 +13,7 @@ import           Data.Time.Clock.POSIX (posixSecondsToUTCTime)
 import           Network.HTTP.Client   (Request, Manager)
 
 data SetupTelegram = SetupTelegram
-                    { urlTelegram            :: String
-                    , nameTelegram           :: String
-                    , userNameTelegram       :: String
-                    , tokenTelegram          :: String
+                    { tokenTelegram          :: String
                     , descriptionTelegram    :: String
                     , aboutTelegram          :: String
                     , commandTelegram        :: String
@@ -24,16 +21,13 @@ data SetupTelegram = SetupTelegram
                     } deriving Show
 
 instance FromJSON SetupTelegram where
-  parseJSON (Object setupTelegram) = SetupTelegram
-    <$> setupTelegram .: "urlTelegram"
-    <*> setupTelegram .: "nameTelegram"
-    <*> setupTelegram .: "userNameTelegram"
-    <*> setupTelegram .: "tokenTelegram"
-    <*> setupTelegram .: "descriptionTelegram"
-    <*> setupTelegram .: "aboutTelegram"
-    <*> setupTelegram .: "commandTelegram"
-    <*> setupTelegram .: "questionTelegramRepeat"
-  parseJSON _                       = mzero
+  parseJSON = withObject "SetupTelegram" $ \s -> do
+    tokenTelegram          <- s .: "tokenTelegram"
+    descriptionTelegram    <- s .: "descriptionTelegram"
+    aboutTelegram          <- s .: "aboutTelegram"
+    commandTelegram        <- s .: "commandTelegram"
+    questionTelegramRepeat <- s .: "questionTelegramRepeat"
+    return SetupTelegram {..}
 
 data ResponseGetMe  = ResponseGetMe
                     { okResponseGetMe             :: Bool

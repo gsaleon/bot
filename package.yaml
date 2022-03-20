@@ -33,6 +33,8 @@ dependencies:
 - conduit
 - conduit-extra
 - uri-encode
+- yaml
+- directory
 
 library:
   source-dirs:           src

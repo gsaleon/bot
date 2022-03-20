@@ -13,25 +13,33 @@ import           Data.Foldable        (asum)
 import           Control.Monad
 
 data SetupVkontakte = SetupVkontakte
-                    { urlVkontakte   :: String
-                    , client_id      :: Int
-                    , group_id       :: Int
+                    { groupVkId      :: Int
                     , tokenVkontakte :: String
-                    , version        :: Float   -- 5.131 in use
-                    , lang           :: Int     -- 0-ru, 3-en
-                    , test_mode      :: Int     -- 0-normal, 1-test
+                    , descriptionVk  :: String
+                    , aboutVk        :: String
+                    , commandVk      :: String
+                    , questionVk     :: String
                     } deriving Show
 
 instance FromJSON SetupVkontakte where
-  parseJSON (Object setupVkontakte) = SetupVkontakte
-    <$> setupVkontakte .: "urlVkontakte"
-    <*> setupVkontakte .: "client_id"
-    <*> setupVkontakte .: "group_id"
-    <*> setupVkontakte .: "tokenVkontakte"
-    <*> setupVkontakte .: "version"
-    <*> setupVkontakte .: "lang"
-    <*> setupVkontakte .: "test_mode"
-  parseJSON _                       = mzero
+  parseJSON = withObject "SetupVkontakte" $ \s -> do
+    groupVkId       <- s .: "groupVkId"
+    tokenVkontakte <- s .: "tokenVkontakte"
+    descriptionVk  <- s .: "descriptionVk"
+    aboutVk        <- s .: "aboutVk"
+    commandVk      <- s .: "commandVk"
+    questionVk     <- s .: "questionVk"
+    return SetupVkontakte {..}
+
+-- instance FromJSON SetupVkontakte where
+--   parseJSON (Object setupVkontakte) = SetupVkontakte
+--     <$> setupVkontakte .: "group_id"
+--     <*> setupVkontakte .: "tokenVkontakte"
+--     <*> setupVkontakte .: "descriptionVk"
+--     <*> setupVkontakte .: "aboutVk"
+--     <*> setupVkontakte .: "commandVk"
+--     <*> setupVkontakte .: "questionVk"
+--   parseJSON _                       = mzero
 
 data SessionKey = SessionKey
                 { vkServer :: String

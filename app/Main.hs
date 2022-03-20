@@ -2,26 +2,14 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE CPP #-}
 
-module Main ( main,  LogLevel (..), Os (..), Service (..)
+module Main ( main,  LogLevel (..), Service (..)
             ) where
 
---import qualified Data.Text as T
--- import           Network.HTTP.Conduit     -- as Con
--- import           Network.HTTP.Client        as Cli
--- import           Network.HTTP.Simple
--- import           Network.HTTP.Client.TLS
--- import           Network.HTTP.Types.Status        (statusCode)
--- import           Data.Text                        (Text)
-
--- import qualified Data.ByteString.Lazy.Char8 as L8
--- import qualified Data.ByteString.Lazy       as L
 import qualified Data.ByteString            as B  (readFile)
 import           Control.Exception                (catch)
--- import           Data.Conduit                     (($$))
--- import           Network.HTTP.Client.Conduit      (bodyReaderSource)
--- import           Data.Aeson.Parser                (json)
--- import           Data.Conduit.Attoparsec          (sinkParser)
 import           System.IO                        (openFile, IOMode(ReadWriteMode), hClose)
 import           System.IO.Error                  ( isAlreadyExistsError, isDoesNotExistError
                                                   , isEOFError, isPermissionError
@@ -37,6 +25,12 @@ import           Debug.Trace()                               -- для отла�
 import           System.Exit                      (die)
 import           Data.Maybe                       (fromJust)
 import           Prelude                  hiding  (id)
+import           Data.Yaml
+import           GHC.Generics
+import           Data.Yaml                        (decodeFileEither, (.:), parseEither, prettyPrintParseException)
+-- import           Data.Map                         ( Map )
+import           Control.Applicative              ( (<$>) )
+import           System.FilePath                  (FilePath, (</>))
 
 import           Services.ParseCommandLine
 import           Lib
@@ -49,7 +43,14 @@ import           Services.Server                  (serverTelegram, makeTelegramG
 import           Services.Telegram                (makeRequest)
 import           Services.Vkontakte               (vkGroupsGetLongPollServer, vkGetUpdate, vkSendMessage)
 import           App.Handlers.HandleLog           (handleLogWarning, handleLogInfo, handleLogDebug)
--- import           App.Handlers.HandleTelegram     (handleTelegram)
+
+
+data BotSetup = BotSetup { setupGeneral   :: SetupGeneral
+                         , setupTelegram  :: SetupTelegram
+                         , setupVkontakte :: SetupVkontakte
+                         } deriving Show
+
+type ErrorMsg = String
 
 main :: IO ()
 main = do
@@ -59,17 +60,18 @@ main = do
   let commandLineParse = parseLine commandLine
   let commandLineParseErr = fromLeft "value" commandLineParse
   let commandLineParseValue = fromRight [("","")] commandLineParse
+  
   -- Initialising, make system path
   systemPathStart <- getExecutablePath
-  let systemPath = fst $ makeSystemPath systemPathStart :: FilePath
-  let operSystem = snd $ makeSystemPath systemPathStart :: Os
-  -- putStrLn ("systemPath - " ++ show systemPath ++ " OS: " ++ show operSystem)
-  let sysPathHelp = systemPath ++ "/config/configHelp"  :: FilePath
+  let systemPath = makeSystemPath systemPathStart :: FilePath
+  putStrLn ("systemPath - " ++ show systemPath) 
+  let sysPathHelp = systemPath </> "config" </> "helpRun.txt"  :: FilePath
+  
   -- Print help
   case commandLineParseErr of
     "help"          -> do
-        helpBig <- readFile sysPathHelp
-        putStrLn helpBig
+        helpRun <- readFile sysPathHelp
+        putStrLn helpRun
         die "Stop running"
     "parsingError"  -> do
         die "Usage stack run -- -[Args] or stack run -- -h (--help) for help"
@@ -77,10 +79,8 @@ main = do
         die "Multiple value arguments. Usage stack run -- -[Args] or stack run -- -h (--help) for help"
     _               -> putStr ""
 
-  -- Control and read config files
-  let sysPathConfig    =  systemPath ++ "/config/configBot"      :: FilePath
-  let sysPathTelegram  = systemPath ++ "/config/configTelegram"  :: FilePath
-  let sysPathVkontakte = systemPath ++ "/config/configVkontakte" :: FilePath
+  -- Control config and log files
+  let sysPathConfig = systemPath </> "config" </> "config.yaml" :: FilePath
   mapM_ (\(x, y) ->                      --  forM_ вместо mapM_ в этом коде?
     catch (readFile x >>= (\a -> putStr ""))
       (\e ->  case e of
@@ -95,17 +95,12 @@ main = do
         _                           -> putStrLn
                ("Uncaught exception " ++ y) >> ioError e
       )
-        ) [(sysPathConfig,    "configBot")
-          ,(sysPathVkontakte, "configVkontakte")
-          ,(sysPathTelegram, "configTelegram")
-          ,(sysPathHelp,      "configHelp")
+        ) [(sysPathConfig,    "config.yaml")
           ]
-
-  -- Control log files
-  let sysPathDebugLog   = systemPath ++ "/logs/Debug.log"   :: FilePath
-  let sysPathErrorLog   = systemPath ++ "/logs/Error.log"   :: FilePath
-  let sysPathInfoLog    = systemPath ++ "/logs/Info.log"    :: FilePath
-  let sysPathWarningLog = systemPath ++ "/logs/Warning.log" :: FilePath
+  let sysPathDebugLog   = systemPath </> "logs" </> "Debug.log"   :: FilePath
+  let sysPathErrorLog   = systemPath </> "logs" </> "Error.log"   :: FilePath
+  let sysPathInfoLog    = systemPath </> "logs" </> "Info.log"    :: FilePath
+  let sysPathWarningLog = systemPath </> "logs" </> "Warning.log" :: FilePath
   mapM_ (\(x, y) ->
     catch (openFile x ReadWriteMode >>= hClose)
       (\e ->  case e of
@@ -130,21 +125,24 @@ main = do
           ]
 
   -- Read config files
-  rawJSONConfig <- B.readFile sysPathConfig
-  let setupGeneral = decodeStrict rawJSONConfig 
-  case setupGeneral of
-    Nothing           -> die "Invalid configGeneral JSON!"
-    Just setupGeneral -> putStr $ printPrettySetup setupGeneral
-  rawJSONTelegram <- B.readFile sysPathTelegram
-  let setupTelegram = decodeStrict rawJSONTelegram
-  case setupTelegram of
-    Nothing             -> die "Invalid configTelegram JSON!"
-    Just setupTelegram -> putStr $ printPrettyTelegram setupTelegram
-  rawJSONVkontakte <- B.readFile sysPathVkontakte
-  let setupVkontakte = decodeStrict rawJSONVkontakte
-  case setupVkontakte of
-    Nothing             -> die "Invalid configVkontakte JSON!"
-    Just setupVkontakte -> putStr $ printPrettyVkontakte setupVkontakte
+  parsedValue <- readBotSetup sysPathConfig
+  print parsedValue
+  -- die "End"
+  -- rawJSONConfig <- B.readFile sysPathConfig
+  -- let setupGeneral = decodeStrict rawJSONConfig 
+  -- case setupGeneral of
+  --   Nothing           -> die "Invalid configGeneral JSON!"
+  --   Just setupGeneral -> putStr $ printPrettySetup setupGeneral
+  -- rawJSONTelegram <- B.readFile sysPathTelegram
+  -- let setupTelegram = decodeStrict rawJSONTelegram
+  -- case setupTelegram of
+  --   Nothing             -> die "Invalid configTelegram JSON!"
+  --   Just setupTelegram -> putStr $ printPrettyTelegram setupTelegram
+  -- rawJSONVkontakte <- B.readFile sysPathVkontakte
+  -- let setupVkontakte = decodeStrict rawJSONVkontakte
+  -- case setupVkontakte of
+  --   Nothing             -> die "Invalid configVkontakte JSON!"
+  --   Just setupVkontakte -> putStr $ printPrettyVkontakte setupVkontakte
  
   -- Make note in log about start programm
   let workGeneral = fst $ fromOutCommandLine commandLineParseErr setupGeneral commandLineParseValue
@@ -172,20 +170,10 @@ main = do
       let token = tokenTelegram $ fromJust setupTelegram
       let requestObjectGetMe = object []      
       responseGetMe <- makeRequestTelegramGetMe token requestObjectGetMe logLevel logLevelInfo message
-      if first_nameResponseGetMe responseGetMe /= nameTelegram (fromJust setupTelegram)
-                 || usernameResponseGetMe responseGetMe /= userNameTelegram (fromJust setupTelegram)
-        then do
-                logWarning handleLogWarning logLevel logLevelInfo
-                  $ message ++ "Error define nameTelegram or userNameTelegram in configTelegram"
-                logDebug handleLogDebug logLevel logLevelInfo
-                  $ message ++ "Error define nameTelegram or userNameTelegram in configTelegram"
-                return ()
-        else do
-                logInfo handleLogInfo logLevel logLevelInfo
-                  $ message ++ "Ok check control default setupTelegram"
-                logDebug handleLogDebug logLevel logLevelInfo
-                  $ message ++ "Ok check control default setupTelegram"
-                return ()
+      -- logInfo handleLogInfo logLevel logLevelInfo
+      --   $ message ++ "Ok check control default setupTelegram"
+      -- logDebug handleLogDebug logLevel logLevelInfo
+      --   $ message ++ "Ok check control default setupTelegram"
       let requestGetUpdateObject = SendGetUpdate 0 100 1
       responseGetUpdate <- makeTelegramGetUpdates token requestGetUpdateObject
                              logLevel logLevelInfo message  :: IO ResultRequest
@@ -216,8 +204,22 @@ fromOutCommandLine cPE setupGeneral commandLineParseValue =
       , "Start with default value parametrs: "
       )
 
+readBotSetup :: FilePath -> IO (Either ErrorMsg BotSetup)
+readBotSetup file =
+  (\val -> case val of
+      (Right yamlObj) -> do
+        setupGeneral   <- parseEither (.: "setupGeneral") yamlObj
+        setupTelegram  <- parseEither (.: "setupTelegram") yamlObj
+        setupVkontakte <- parseEither (.: "setupVkontakte") yamlObj
+        return $ BotSetup setupGeneral setupTelegram setupVkontakte
+      (Left exception) -> Left $ prettyPrintParseException exception
+    )
+    <$> decodeFileEither file
+
 -- makeRequestTelegram ::
 makeRequestTelegramGetMe token requestSendMessageObject logLevel logLevelInfo message = do
   responseGetMe <- makeRequest token "getMe" requestSendMessageObject logLevel logLevelInfo
                       $ message ++ "getMe" :: IO ResponseGetMe
   return (responseGetMe)
+
+

@@ -66,6 +66,17 @@
   (major1) == 1 && (major2) == 3 && (minor) <= 5)
 #endif /* MIN_VERSION_conduit_extra */
 
+/* package directory-1.3.6.0 */
+#ifndef VERSION_directory
+#define VERSION_directory "1.3.6.0"
+#endif /* VERSION_directory */
+#ifndef MIN_VERSION_directory
+#define MIN_VERSION_directory(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 6)
+#endif /* MIN_VERSION_directory */
+
 /* package filepath-1.4.2.1 */
 #ifndef VERSION_filepath
 #define VERSION_filepath "1.4.2.1"
@@ -153,6 +164,17 @@
   (major1) == 1 && (major2) <  5 || \
   (major1) == 1 && (major2) == 5 && (minor) <= 0)
 #endif /* MIN_VERSION_uri_encode */
+
+/* package yaml-0.11.7.0 */
+#ifndef VERSION_yaml
+#define VERSION_yaml "0.11.7.0"
+#endif /* VERSION_yaml */
+#ifndef MIN_VERSION_yaml
+#define MIN_VERSION_yaml(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  11 || \
+  (major1) == 0 && (major2) == 11 && (minor) <= 7)
+#endif /* MIN_VERSION_yaml */
 
 /* tool alex-3.2.4 */
 #ifndef TOOL_VERSION_alex
@@ -320,10 +342,10 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_PACKAGE_KEY
-#define CURRENT_PACKAGE_KEY "bot-main-0.1.0.0-IOVD1A4ha9oJ8Tto4t2exf"
+#define CURRENT_PACKAGE_KEY "bot-main-0.1.0.0-3x9ZkvenjLzGF6ppt7wfCx"
 #endif /* CURRENT_PACKAGE_KEY */
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-IOVD1A4ha9oJ8Tto4t2exf"
+#define CURRENT_COMPONENT_ID "bot-main-0.1.0.0-3x9ZkvenjLzGF6ppt7wfCx"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"
